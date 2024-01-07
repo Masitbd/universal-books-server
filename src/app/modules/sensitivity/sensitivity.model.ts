@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { ISensitivity } from './sinsitivity.interfaces';
+import { ISensitivity } from './sensitivity.interfaces';
 
 const SensitivitySchema = new Schema<ISensitivity>(
   {
