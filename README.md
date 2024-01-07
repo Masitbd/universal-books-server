@@ -4,6 +4,7 @@
 
 - Api Endpoints
 
+  - /sensitivity (GET to get all the sensitivity information)
   - /sensitivity (POST to create new Sensitivity) - Request Body
 
     ```{
