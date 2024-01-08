@@ -20,7 +20,7 @@ router.get('/sensitivity/:id', sensitivity_controller.fetch_single_sensitivity);
 router.patch(
   '/sensitivity/:id',
   validateRequest(seinsitivity_validation.sensitivity_validator_for_patch),
-  sensitivity_controller.edit_sensitivity
+  sensitivity_controller.update_sensitivity
 );
 
 // Routes for deleting a sensitivity
