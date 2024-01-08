@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Routes for getting all the sensitivity
 router.get('/sensitivity', sensitivity_controller.fetch_sensitivity);
+
 // Route for creating new sensitivity
 router.post(
   '/sensitivity',
@@ -13,6 +14,8 @@ router.post(
   sensitivity_controller.create_sensitivity
 );
 
+// Routes for getting a single sensitivity
+router.get('/sensitivity/:id', sensitivity_controller.fetch_single_sensitivity);
 // Route for Editing existing sensitivity
 router.patch(
   '/sensitivity/:id',

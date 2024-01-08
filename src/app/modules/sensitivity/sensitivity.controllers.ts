@@ -17,6 +17,20 @@ const fetch_sensitivity = catchAsync(
   }
 );
 
+// Contoroller function for getting a specific sensitivity
+const fetch_single_sensitivity = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    const result = await sensitivity_service.get_single_sensitivity(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Sensitivity Featched successfully',
+      data: result,
+    });
+  }
+);
+
 // For creating new sensitivity
 
 const create_sensitivity = catchAsync(
@@ -65,4 +79,5 @@ export const sensitivity_controller = {
   edit_sensitivity,
   remove_sensitivity,
   fetch_sensitivity,
+  fetch_single_sensitivity,
 };
