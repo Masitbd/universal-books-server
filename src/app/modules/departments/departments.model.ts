@@ -1,13 +1,15 @@
-import { Schema, model } from 'mongoose';
+import httpStatus from 'http-status';
+import { model, Schema } from 'mongoose';
+import ApiError from '../../../errors/ApiError';
 import { IDepartment } from './departments.interfaces';
 
 const DepartmentSchema = new Schema<IDepartment>(
   {
-    department_name: {
+    departmentName: {
       type: String,
       required: true,
     },
-    doctor_commision: {
+    doctorCommision: {
       type: Number,
       default: 0,
       required: true,
@@ -25,7 +27,15 @@ const DepartmentSchema = new Schema<IDepartment>(
   }
 );
 
-export const Departments = model<IDepartment>(
-  'Departments',
-  DepartmentSchema
-);
+DepartmentSchema.pre('save', async function (next) {
+  const isExist = await Department.findOne({
+    departmentName: this.departmentName,
+  });
+  console.log(isExist);
+  if (isExist) {
+    throw new ApiError(httpStatus.CONFLICT, 'Department is already exist !');
+  }
+  next();
+});
+
+export const Department = model<IDepartment>('Departments', DepartmentSchema);
