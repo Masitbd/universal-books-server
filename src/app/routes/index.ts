@@ -1,7 +1,14 @@
 import express from 'express';
-import { department_routes } from '../modules/departments/departments.routes';
+import { DepartmentRoutes } from '../modules/departments/departments.routes';
 
 const router = express.Router();
 
-router.use(department_routes);
+const moduleRoutes = [
+  {
+    path: '/depertments',
+    route: DepartmentRoutes,
+  },
+];
+
+moduleRoutes.forEach(route => router.use(route.path, route.route));
 export default router;
