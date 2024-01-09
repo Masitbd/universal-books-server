@@ -15,7 +15,7 @@ const SensitivitySchema = new Schema<ISensitivity>(
       type: String,
       required: true,
     },
-    result_option: [
+    resultOption: [
       {
         value: {
           type: String,

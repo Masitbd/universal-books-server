@@ -7,5 +7,5 @@ export type ISensitivity = {
   value: string;
   label: string;
   description: string;
-  result_option: IResultField[];
+  resultOption: IResultField[];
 };

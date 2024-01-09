@@ -4,7 +4,7 @@ import { ISensitivity } from './sensitivity.interfaces';
 import { Sensitivity } from './sensitivity.model';
 
 // For posting new sensitivity information
-const PostSensitivity = async (
+const postSensitivity = async (
   payload: ISensitivity
 ): Promise<void | ISensitivity> => {
   const result = await Sensitivity.create(payload);
@@ -12,7 +12,7 @@ const PostSensitivity = async (
 };
 
 // Service function for patching existing Sensitivity
-const PatchSensitivity = async (
+const patchSensitivity = async (
   payload: Partial<ISensitivity>,
   id: string
 ): Promise<ISensitivity | null> => {
@@ -23,7 +23,7 @@ const PatchSensitivity = async (
 };
 
 // Service function for deleting a Sensitivity
-const DeleteSensitivity = async (id: string) => {
+const deleteSensitivity = async (id: string) => {
   const result = await Sensitivity.findOneAndDelete({
     _id: id,
   });
@@ -31,7 +31,7 @@ const DeleteSensitivity = async (id: string) => {
 };
 
 // Service function for getting a single Sensitivity
-const GetSingleSensitivity = async (
+const getSingleSensitivity = async (
   id: string
 ): Promise<null | ISensitivity> => {
   const result = await Sensitivity.findOne({ _id: id });
@@ -41,14 +41,14 @@ const GetSingleSensitivity = async (
   return result;
 };
 // Service function for finding all the Sensitivity
-const FindAllSensitivity = async (): Promise<null | ISensitivity[]> => {
+const findAllSensitivity = async (): Promise<null | ISensitivity[]> => {
   const result = await Sensitivity.find();
   return result;
 };
-export const SensitivityService = {
-  PostSensitivity,
-  PatchSensitivity,
-  DeleteSensitivity,
-  FindAllSensitivity,
-  GetSingleSensitivity,
+export const sensitivityService = {
+  postSensitivity,
+  patchSensitivity,
+  deleteSensitivity,
+  findAllSensitivity,
+  getSingleSensitivity,
 };
