@@ -1,6 +1,6 @@
 import express from 'express';
-import { department_routes } from '../modules/departments/departments.routes';
 import { sensivity_routes } from '../modules/sensitivity/sensitivity.routes';
+import { DepartmentRoutes } from '../modules/departments/departments.routes';
 
 const router = express.Router();
 
