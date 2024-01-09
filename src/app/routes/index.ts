@@ -1,9 +1,18 @@
 import express from 'express';
+
+import { DepartmentRoutes } from '../modules/departments/departments.routes';
+import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
+
 const router = express.Router();
 
 const moduleRoutes = [
   {
- sensitivity
+    path: '/sensitivity',
+    route: SensitivityRoutes.router,
+  },
+  {
+    path: '/depertments',
+    route: DepartmentRoutes,
   },
 ];
 

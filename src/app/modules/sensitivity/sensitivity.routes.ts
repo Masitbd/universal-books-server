@@ -26,4 +26,4 @@ router.patch(
 // Routes for deleting a sensitivity
 router.delete('/:id', SensitivityController.RemoveSensitivity);
 
-export const sensivity_routes = { router };
+export const SensitivityRoutes = { router };
