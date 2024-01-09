@@ -1,7 +1,9 @@
-import { Document } from 'mongoose';
+import { Model } from "mongoose";
 
 export type ISpecimen = {
   value: string;
   description: string;
   label: string;
-} & Document;
+}
+
+export type SpecimenModel = Model<ISpecimen, Record<string, unknown>>;

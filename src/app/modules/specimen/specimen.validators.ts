@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const specimen_validator = z.object({
+const SpecimenValidator = z.object({
     body: z.object({
         value: z.string({
             required_error: 'Value is required'
@@ -15,6 +15,6 @@ const specimen_validator = z.object({
 })
 
 
-export const specimen_validation = {
-    specimen_validator
+export const SpecimenValidation = {
+    SpecimenValidator
 }

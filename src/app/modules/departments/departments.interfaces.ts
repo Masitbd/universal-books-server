@@ -1,6 +1,9 @@
-import { Document } from 'mongoose';
+import { Model } from 'mongoose';
+
 export type IDepartment = {
-  department_name: string;
-  doctor_commision: number;
+  departmentName: string;
+  doctorCommision: number;
   description: string;
-} & Document;
+};
+
+export type DepartmentModel = Model<IDepartment, Record<string, unknown>>;

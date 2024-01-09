@@ -1,12 +1,17 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { department_controller } from './departments.controllers';
-import { department_validation } from './departments.validations';
+import { DepartmentController } from './departments.controllers';
+import { departmentValidation } from './departments.validations';
 const router = express.Router();
 
 router.post(
-  '/departments',
-  validateRequest(department_validation.create_department),
-  department_controller.create_department
+  '/create-department',
+  validateRequest(departmentValidation.createDepartmentZodSchema),
+  DepartmentController.createDepartment
 );
-export const department_routes = router;
+router.get('/:id', DepartmentController.getSingleDepartment);
+router.get('/', DepartmentController.getAllDepartment);
+router.patch('/:id', DepartmentController.updateDepartment);
+router.delete('/:id', DepartmentController.deleteDepartment);
+
+export const DepartmentRoutes = router;

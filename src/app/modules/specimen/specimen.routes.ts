@@ -2,19 +2,14 @@ import express from 'express';
 
 const router = express.Router();
 
-// This routes for getting all the Specimen
-router.get('/specimen');
+router.get('/');
 
-// This route for creating a new specimen
-router.post('/specimen');
+router.post('/');
 
-// This route for getting a single specimen
-router.get('/specimen/:id');
+router.get('/:id');
 
-// This route for Editing  a single specimen
-router.patch('/specimen');
+router.patch('/:id');
 
-// This route for deleting a specimen
-router.delete('/specimen');
+router.delete('/:id');
 
-export const specimen_routes = router;
+export const SpecimenRoutes = router;

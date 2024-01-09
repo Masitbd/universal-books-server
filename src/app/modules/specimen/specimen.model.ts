@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { ISpecimen } from './specimen.interfaces';
+import { ISpecimen, SpecimenModel } from './specimen.interfaces';
 
-const SpecimenSchema = new Schema<ISpecimen>(
+const SpecimenSchema = new Schema<ISpecimen, SpecimenModel>(
   {
     value: {
       type: String,
@@ -24,4 +24,4 @@ const SpecimenSchema = new Schema<ISpecimen>(
   }
 );
 
-export const Specimen = model<ISpecimen>('Specimens', SpecimenSchema);
+export const Specimen = model<ISpecimen, SpecimenModel>('Specimens', SpecimenSchema);

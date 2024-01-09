@@ -4,7 +4,7 @@ import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 
 //Controller function for getting all the specimen
-const fetch_specimen = catchAsync(
+const FetchSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = 'hello';
     sendResponse(res, {
@@ -17,7 +17,7 @@ const fetch_specimen = catchAsync(
 );
 
 // Controller function for getting a specific specimen
-const fetch_single_specimen = catchAsync(
+const FetchSingleSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = 'hello';
     sendResponse(res, {
@@ -30,7 +30,7 @@ const fetch_single_specimen = catchAsync(
 );
 
 // For creating new specimen
-const create_specimen = catchAsync(
+const CreateSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = 'hello';
     sendResponse(res, {
@@ -43,7 +43,7 @@ const create_specimen = catchAsync(
 );
 
 // Controller function for editing existing specimen
-const edit_specimen = catchAsync(
+const EditSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = 'hello';
     sendResponse(res, {
@@ -56,7 +56,7 @@ const edit_specimen = catchAsync(
 );
 
 // Controller function for remove specimen
-const remove_specimen = catchAsync(
+const RemoveSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = 'hello';
     sendResponse(res, {
@@ -68,10 +68,11 @@ const remove_specimen = catchAsync(
   }
 );
 
-export const specimen_controller = {
-  create_specimen,
-  edit_specimen,
-  remove_specimen,
-  fetch_single_specimen,
-  fetch_specimen,
+export const SpecimenController = {
+  CreateSpecimen,
+  EditSpecimen,
+  FetchSingleSpecimen,
+  FetchSpecimen,
+  RemoveSpecimen,
+
 };
