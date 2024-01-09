@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
+import { SpecimenService } from './specimen.services';
 
 //Controller function for getting all the specimen
-const FetchSpecimen = catchAsync(
+const getAllSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = 'hello';
+    const result = await SpecimenService.getAllSpecimen() ;
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -17,9 +18,10 @@ const FetchSpecimen = catchAsync(
 );
 
 // Controller function for getting a specific specimen
-const FetchSingleSpecimen = catchAsync(
+const getSingleSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = 'hello';
+    const id = req.params.id;
+    const result = await SpecimenService.getSingleSpecimen(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -30,9 +32,9 @@ const FetchSingleSpecimen = catchAsync(
 );
 
 // For creating new specimen
-const CreateSpecimen = catchAsync(
+const createSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = 'hello';
+    const result = SpecimenService.createSpecimen(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -43,9 +45,9 @@ const CreateSpecimen = catchAsync(
 );
 
 // Controller function for editing existing specimen
-const EditSpecimen = catchAsync(
+const updateSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = 'hello';
+    const result = SpecimenService.updateSpecimen(req.body, req.params.id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -56,9 +58,9 @@ const EditSpecimen = catchAsync(
 );
 
 // Controller function for remove specimen
-const RemoveSpecimen = catchAsync(
+const deleteSpecimen = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = 'hello';
+    const result = SpecimenService.deleteSpecimen(req.params.id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -69,10 +71,9 @@ const RemoveSpecimen = catchAsync(
 );
 
 export const SpecimenController = {
-  CreateSpecimen,
-  EditSpecimen,
-  FetchSingleSpecimen,
-  FetchSpecimen,
-  RemoveSpecimen,
-
+  createSpecimen,
+  updateSpecimen,
+  getSingleSpecimen,
+  getAllSpecimen,
+  deleteSpecimen,
 };
