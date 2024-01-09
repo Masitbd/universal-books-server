@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const sensitivity_validator = z.object({
+const sensitivityValidator = z.object({
   body: z.object({
     value: z.string({
       required_error: 'Value is required',
@@ -11,7 +11,7 @@ const sensitivity_validator = z.object({
     label: z.string({
       required_error: 'Label is required',
     }),
-    result_option: z.array(
+    resultOption: z.array(
       z.object({
         label: z.string({ required_error: 'Label is required' }),
         value: z.string({ required_error: 'Value is required' }),
@@ -21,7 +21,7 @@ const sensitivity_validator = z.object({
   }),
 });
 
-const sensitivity_validator_for_patch = z.object({
+const sensitivityValidatorForPatch = z.object({
   body: z.object({
     value: z
       .string({
@@ -38,7 +38,7 @@ const sensitivity_validator_for_patch = z.object({
         required_error: 'Label is required',
       })
       .optional(),
-    result_option: z
+    resultOption: z
       .array(
         z
           .object({
@@ -51,7 +51,7 @@ const sensitivity_validator_for_patch = z.object({
       .optional(),
   }),
 });
-export const seinsitivity_validation = {
-  sensitivity_validator,
-  sensitivity_validator_for_patch,
+export const sensitivityValidation = {
+  sensitivityValidator,
+  sensitivityValidatorForPatch,
 };
