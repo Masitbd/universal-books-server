@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { ICondition } from './condition.interface';
 
-const condition_schema = new Schema<ICondition>(
+const conditionSchema = new Schema<ICondition>(
   {
     label: {
       type: String,
@@ -24,4 +24,4 @@ const condition_schema = new Schema<ICondition>(
   }
 );
 
-export const Condition = model<ICondition>('Conditions', condition_schema);
+export const Condition = model<ICondition>('Conditions', conditionSchema);

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-const condition_validator = z.object({
+const conditionValidator = z.object({
   body: z.object({
     value: z.string({
       required_error: 'Value is required',
@@ -13,7 +13,7 @@ const condition_validator = z.object({
   }),
 });
 
-const condition_validator_for_patch = z.object({
+const conditionValidatorForPatch = z.object({
   body: z.object({
     value: z
       .string({
@@ -33,7 +33,7 @@ const condition_validator_for_patch = z.object({
   }),
 });
 
-export const condition_validation = {
-  condition_validator,
-  condition_validator_for_patch,
+export const ConditionValidation = {
+  conditionValidator,
+  conditionValidatorForPatch,
 };
