@@ -7,12 +7,12 @@ const router = express.Router();
 
 const moduleRoutes = [
   {
-    path: '/sensitivity',
-    route: SensitivityRoutes.router,
-  },
-  {
     path: '/depertments',
     route: DepartmentRoutes,
+  },
+  {
+    path: '/sensitivity',
+    route: SensitivityRoutes.router,
   },
 ];
 
