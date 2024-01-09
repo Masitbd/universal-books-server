@@ -14,10 +14,6 @@ const moduleRoutes = [
     route: SensitivityRoutes.router,
   },
   {
-    path: '/depertments',
-    route: DepartmentRoutes,
-  },
-  {
     path: '/condition',
     route: ConditionRoutes.routes,
   },
