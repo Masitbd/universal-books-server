@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { sensitivity_service } from './sensitivity.services';
+import { SensitivityService } from './sensitivity.services';
 
 // Controller function for getting all the sensitivity
-const fetch_sensitivity = catchAsync(
+const FetchSensitivity = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await sensitivity_service.find_all_sensitivity();
+    const result = await SensitivityService.FindAllSensitivity();
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -18,10 +18,10 @@ const fetch_sensitivity = catchAsync(
 );
 
 // Contoroller function for getting a specific sensitivity
-const fetch_single_sensitivity = catchAsync(
+const FetchSingleSensitivity = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
-    const result = await sensitivity_service.get_single_sensitivity(id);
+    const result = await SensitivityService.GetSingleSensitivity(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -33,9 +33,9 @@ const fetch_single_sensitivity = catchAsync(
 
 // For creating new sensitivity
 
-const create_sensitivity = catchAsync(
+const CreateSensitivity = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await sensitivity_service.post_sensitivity(req.body);
+    const result = await SensitivityService.PostSensitivity(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -46,11 +46,11 @@ const create_sensitivity = catchAsync(
 );
 
 // Controller function for editing existing sensitivity
-const edit_sensitivity = catchAsync(
+const EditSensitivity = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const payload = req.body;
-    const result = await sensitivity_service.patch_sensitivity(payload, id);
+    const result = await SensitivityService.PatchSensitivity(payload, id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -61,11 +61,11 @@ const edit_sensitivity = catchAsync(
 );
 
 // Controller function for removing a sensitivity
-const remove_sensitivity = catchAsync(
+const RemoveSensitivity = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
 
-    const result = await sensitivity_service.delete_sensitivity(id);
+    const result = await SensitivityService.DeleteSensitivity(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -74,10 +74,10 @@ const remove_sensitivity = catchAsync(
     });
   }
 );
-export const sensitivity_controller = {
-  create_sensitivity,
-  edit_sensitivity,
-  remove_sensitivity,
-  fetch_sensitivity,
-  fetch_single_sensitivity,
+export const SensitivityController = {
+  CreateSensitivity,
+  EditSensitivity,
+  RemoveSensitivity,
+  FetchSensitivity,
+  FetchSingleSensitivity,
 };

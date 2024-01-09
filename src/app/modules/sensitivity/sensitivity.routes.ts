@@ -1,29 +1,29 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { sensitivity_controller } from './sensitivity.controllers';
-import { seinsitivity_validation } from './sentitivity.validators';
+import { SensitivityController } from './sensitivity.controllers';
+import { SeinsitivityValidation } from './sentitivity.validators';
 const router = express.Router();
 
 // Routes for getting all the sensitivity
-router.get('/', sensitivity_controller.fetch_sensitivity);
+router.get('/', SensitivityController.FetchSensitivity);
 
 // Route for creating new sensitivity
 router.post(
   '/',
-  validateRequest(seinsitivity_validation.sensitivity_validator),
-  sensitivity_controller.create_sensitivity
+  validateRequest(SeinsitivityValidation.SensitivityValidator),
+  SensitivityController.CreateSensitivity
 );
 
 // Routes for getting a single sensitivity
-router.get('/:id', sensitivity_controller.fetch_single_sensitivity);
+router.get('/:id', SensitivityController.FetchSingleSensitivity);
 // Route for Editing existing sensitivity
 router.patch(
   '/:id',
-  validateRequest(seinsitivity_validation.sensitivity_validator_for_patch),
-  sensitivity_controller.edit_sensitivity
+  validateRequest(SeinsitivityValidation.SensitivityValidatorForPatch),
+  SensitivityController.EditSensitivity
 );
 
 // Routes for deleting a sensitivity
-router.delete('/:id', sensitivity_controller.remove_sensitivity);
+router.delete('/:id', SensitivityController.RemoveSensitivity);
 
 export const sensivity_routes = { router };
