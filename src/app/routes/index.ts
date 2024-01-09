@@ -4,6 +4,16 @@ import { sensivity_routes } from '../modules/sensitivity/sensitivity.routes';
 
 const router = express.Router();
 
-router.use(department_routes);
-router.use('/sensitivity', sensivity_routes.router);
+const moduleRoutes = [
+  {
+    path: '/depertments',
+    route: DepartmentRoutes,
+  },
+  {
+    path: '/sensitivity',
+    route: sensivity_routes.router,
+  },
+];
+
+moduleRoutes.forEach(route => router.use(route.path, route.route));
 export default router;
