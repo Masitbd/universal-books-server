@@ -1,10 +1,9 @@
 import express from 'express';
-
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
+import { ConditionRoutes } from '../modules/condition/condition.routes';
 
 const router = express.Router();
-
 const moduleRoutes = [
   {
     path: '/sensitivity',
@@ -13,6 +12,10 @@ const moduleRoutes = [
   {
     path: '/depertments',
     route: DepartmentRoutes,
+  },
+  {
+    path: '/condition',
+    route: ConditionRoutes.routes,
   },
 ];
 
