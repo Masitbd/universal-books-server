@@ -2,9 +2,9 @@ import express from 'express';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
+import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 
-<<<<<<< HEAD
-=======
+
 const router = express.Router();
 const moduleRoutes = [
   {
@@ -19,7 +19,12 @@ const moduleRoutes = [
     path: '/condition',
     route: ConditionRoutes.routes,
   },
+  {
+    path: '/specimen',
+    route: SpecimenRoutes.router,
+  },
 ];
->>>>>>> 15536d3cb41fa2d543a8bbe74e4d5c4c604f2e3e
+
+moduleRoutes.forEach(route => router.use(route.path, route.route));
 
 export default router;
