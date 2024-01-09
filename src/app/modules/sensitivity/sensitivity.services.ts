@@ -3,7 +3,6 @@ import ApiError from '../../../errors/ApiError';
 import { ISensitivity } from './sensitivity.interfaces';
 import { Sensitivity } from './sensitivity.model';
 
-// For posting new sensitivity information
 const postSensitivity = async (
   payload: ISensitivity
 ): Promise<void | ISensitivity> => {
@@ -11,7 +10,6 @@ const postSensitivity = async (
   return result;
 };
 
-// Service function for patching existing Sensitivity
 const patchSensitivity = async (
   payload: Partial<ISensitivity>,
   id: string
@@ -22,7 +20,6 @@ const patchSensitivity = async (
   return result;
 };
 
-// Service function for deleting a Sensitivity
 const deleteSensitivity = async (id: string) => {
   const result = await Sensitivity.findOneAndDelete({
     _id: id,
@@ -30,7 +27,6 @@ const deleteSensitivity = async (id: string) => {
   return result;
 };
 
-// Service function for getting a single Sensitivity
 const getSingleSensitivity = async (
   id: string
 ): Promise<null | ISensitivity> => {
