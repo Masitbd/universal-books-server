@@ -11,7 +11,7 @@ const moduleRoutes = [
   },
   {
     path: '/sensitivity',
-    route: SensitivityRoutes.router,
+    route: SensitivityRoutes.routes,
   },
   {
     path: '/condition',
