@@ -1,18 +1,18 @@
 import express from 'express';
+import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
-import { ConditionRoutes } from '../modules/condition/condition.routes';
 
 
 const router = express.Router();
 const moduleRoutes = [
   {
-    path: '/sensitivity',
-    route: SensitivityRoutes.router,
-  },
-  {
     path: '/depertments',
     route: DepartmentRoutes,
+  },
+  {
+    path: '/sensitivity',
+    route: SensitivityRoutes.routes,
   },
   {
     path: '/condition',
