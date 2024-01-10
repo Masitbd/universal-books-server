@@ -3,6 +3,7 @@ import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 
+
 const router = express.Router();
 const moduleRoutes = [
   {
@@ -16,6 +17,7 @@ const moduleRoutes = [
   {
     path: '/condition',
     route: ConditionRoutes.routes,
+
   },
 ];
 
