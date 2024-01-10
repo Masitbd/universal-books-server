@@ -9,14 +9,21 @@ const DepartmentSchema = new Schema<IDepartment>(
       type: String,
       required: true,
     },
-    doctorCommision: {
+    doctorCommisionPer: {
       type: Number,
       default: 0,
       required: true,
     },
+    doctorCommisionFixed: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+    },
     description: {
       type: String,
-      required: true,
     },
   },
   {
@@ -29,7 +36,10 @@ const DepartmentSchema = new Schema<IDepartment>(
 
 DepartmentSchema.pre('save', async function (next) {
   const isExist = await Department.findOne({
-    departmentName: this.departmentName,
+    // departmentName: this.departmentName,
+    departmentName: {
+      $regex: new RegExp('^' + this.departmentName + '$', 'i'),
+    },
   });
   console.log(isExist);
   if (isExist) {
