@@ -46,7 +46,6 @@ const CreateSensitivity = catchAsync(
 );
 
 // Controller function for editing existing sensitivity
-
 const EditSensitivity = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
@@ -75,12 +74,10 @@ const RemoveSensitivity = catchAsync(
     });
   }
 );
-
 export const SensitivityController = {
   CreateSensitivity,
   EditSensitivity,
   RemoveSensitivity,
   FetchSensitivity,
   FetchSingleSensitivity,
-
 };
