@@ -1,8 +1,11 @@
 import express from 'express';
+import { DepartmentRoutes } from '../modules/departments/departments.routes';
 const router = express.Router();
 
 const moduleRoutes = [
   {
+    path: '/depertments',
+    route: DepartmentRoutes,
   },
 ];
 

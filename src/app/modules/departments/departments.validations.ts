@@ -5,12 +5,13 @@ const createDepartmentZodSchema = z.object({
     departmentName: z.string({
       required_error: 'department name is required',
     }),
-    doctorCommision: z.number({
-      required_error: 'doctor commision is required',
-      invalid_type_error: 'doctor commision must be a number',
+    doctorCommisionPer: z.number({
+      required_error: 'doctor commision percentage is required',
+      invalid_type_error: 'doctor commision percentage must be a number',
     }),
-    description: z.string({
-      required_error: 'description is required',
+    doctorCommisionFixed: z.number({
+      required_error: 'doctor commision fixed is required',
+      invalid_type_error: 'doctor commision fixed must be a number',
     }),
   }),
 });
@@ -18,14 +19,15 @@ const createDepartmentZodSchema = z.object({
 const updateDepartmentZodSchema = z.object({
   body: z.object({
     departmentName: z.string({
-      required_error: 'department name is required',
+      required_error: 'Department name is required',
     }),
-    doctorCommision: z.number({
-      required_error: 'doctor commision is required',
-      invalid_type_error: 'doctor commision must be a number',
+    doctorCommisionPer: z.number({
+      required_error: 'Doctor commision percentage is required',
+      invalid_type_error: 'Doctor commision percentage must be a number',
     }),
-    description: z.string({
-      required_error: 'description is required',
+    doctorCommisionFixed: z.number({
+      required_error: 'Doctor commision fixed is required',
+      invalid_type_error: 'Doctor commision fixed must be a number',
     }),
   }),
 });
