@@ -27,11 +27,11 @@ const moduleRoutes = [
   },
   {
     path: '/specimen',
-    route: SpecimenRoutes.router,
+    route: SpecimenRoutes.routes,
   },
   {
     path: '/test-tube',
-    route: VacuumRoutes.router,
+    route: VacuumRoutes.routes,
   },
 ];
 
