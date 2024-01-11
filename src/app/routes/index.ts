@@ -4,6 +4,7 @@ import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
+import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 
 
 const router = express.Router();
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: '/specimen',
     route: SpecimenRoutes.router,
+  },
+  {
+    path: '/test-tube',
+    route: VacuumRoutes.router,
   },
 ];
 
