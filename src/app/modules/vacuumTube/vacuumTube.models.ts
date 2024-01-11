@@ -12,7 +12,7 @@ const VacuumTubeSchema = new Schema<IVacuumTube, VacuumTubeModel>({
     required: true,
   },
   price: {
-    type: String,
+    type: Number,
     required: true,
   },
   description: {

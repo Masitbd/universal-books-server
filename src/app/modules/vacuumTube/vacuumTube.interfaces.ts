@@ -3,7 +3,7 @@ import { Model } from "mongoose"
 export type IVacuumTube = {
     value: string,
     label: string,
-    price: string,
+    price: number,
     description: string,
 }
 
