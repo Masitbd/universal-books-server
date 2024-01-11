@@ -3,24 +3,24 @@ import { SpecimenController } from './specimen.controllers';
 import validateRequest from '../../middlewares/validateRequest';
 import { SpecimenValidation } from './specimen.validators';
 
-const router = express.Router();
+const routes = express.Router();
 
-router.get('/', SpecimenController.getAllSpecimen);
+routes.get('/', SpecimenController.getAllSpecimen);
 
-router.post(
+routes.post(
   '/',
   validateRequest(SpecimenValidation.SpecimenValidator),
   SpecimenController.createSpecimen
 );
 
-router.get('/:id', SpecimenController.getSingleSpecimen);
+routes.get('/:id', SpecimenController.getSingleSpecimen);
 
-router.patch(
+routes.patch(
   '/:id',
   validateRequest(SpecimenValidation.SpecimenValidatorForUpdate),
   SpecimenController.updateSpecimen
 );
 
-router.delete('/:id', SpecimenController.deleteSpecimen);
+routes.delete('/:id', SpecimenController.deleteSpecimen);
 
-export const SpecimenRoutes = { router };
+export const SpecimenRoutes = { routes };
