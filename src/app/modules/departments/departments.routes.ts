@@ -5,7 +5,7 @@ import { departmentValidation } from './departments.validations';
 const router = express.Router();
 
 router.post(
-  '/create-department',
+  '/',
   validateRequest(departmentValidation.createDepartmentZodSchema),
   DepartmentController.createDepartment
 );
