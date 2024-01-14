@@ -1,10 +1,11 @@
 import { Model } from 'mongoose';
 
 export type IDepartment = {
-  departmentName: string;
-  doctorCommisionPer: number;
-  doctorCommisionFixed: number;
-  isActive: boolean;
+  label: string;
+  value: string;
+  commissionParcentage: number;
+  fixedCommission: number;
+  isCommissionFiexed: boolean;
   description?: string;
 };
 
