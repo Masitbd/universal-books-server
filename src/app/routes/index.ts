@@ -4,7 +4,7 @@ import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
-
+import { TestRoutes } from '../modules/test/test.routes';
 
 const router = express.Router();
 const moduleRoutes = [
@@ -27,6 +27,10 @@ const moduleRoutes = [
   {
     path: '/specimen',
     route: SpecimenRoutes.router,
+  },
+  {
+    path: '/test',
+    route: TestRoutes.routes,
   },
 ];
 

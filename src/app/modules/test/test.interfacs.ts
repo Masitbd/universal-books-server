@@ -1,0 +1,35 @@
+import { Model, Types } from 'mongoose';
+
+type IResultFields = {
+  title: string;
+  test: string;
+  unit: string;
+  normalValue: string;
+  defaultValue: Types.ObjectId[];
+  resultDescripton: string;
+  sensitivityOptions: Types.ObjectId[];
+  condition: Types.ObjectId[];
+  bacteria: Types.ObjectId[];
+};
+
+export type ITest = {
+  value: string;
+  label: string;
+  description?: string;
+  department: Types.ObjectId;
+  testCode: string;
+  specimen: Types.ObjectId;
+  type: string;
+  hasTestTube: boolean;
+  testTube: Types.ObjectId;
+  reportGroup: string;
+  hospitalGroup: Types.ObjectId;
+  price: number;
+  isGroupTest: boolean;
+  groupTests: Types.ObjectId[];
+  vatRate: number;
+  processTime: number;
+  resultFields: IResultFields[];
+};
+
+export type TestModel = Model<ITest, Record<string, unknown>>;
