@@ -10,7 +10,7 @@ import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 const router = express.Router();
 const moduleRoutes = [
   {
-    path: '/depertments',
+    path: '/departments',
     route: DepartmentRoutes.routes,
   },
   {

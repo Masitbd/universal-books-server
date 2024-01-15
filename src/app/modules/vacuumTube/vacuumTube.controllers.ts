@@ -10,7 +10,7 @@ const getAllVacuumTube = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Vacuum Tube fetched successfully',
+      message: 'Vacuum Tube all fetched successfully',
       data: result,
     });
   }
@@ -32,7 +32,7 @@ const createVacuumTube = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Create a Vacuum Tube successfully',
+      message: 'Vacuum Tube was created successfully',
       data: result,
     });
   }
@@ -46,7 +46,7 @@ const updateVacuumTube = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: ' Vacuum Tube Edited successfully',
+      message: 'Vacuum Tube was edited successfully',
       data: result,
     });
   }
@@ -57,7 +57,7 @@ const deleteVacuumTube = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Vacuum Tube deleting successfully',
+      message: 'Vacuum Tube was deleted successfully',
       data: result,
     });
   }

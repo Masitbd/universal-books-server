@@ -11,7 +11,7 @@ const getAllSpecimen = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen fetched successfully',
+      message: 'Specimen all fetched successfully',
       data: result,
     });
   }
@@ -38,7 +38,7 @@ const createSpecimen = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen fetched successfully',
+      message: 'Specimen was created successfully',
       data: result,
     });
   }
@@ -51,7 +51,7 @@ const updateSpecimen = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen fetched successfully',
+      message: 'Specimen was edited successfully',
       data: result,
     });
   }
@@ -64,7 +64,7 @@ const deleteSpecimen = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen fetched successfully',
+      message: 'Specimen was deleted successfully',
       data: result,
     });
   }

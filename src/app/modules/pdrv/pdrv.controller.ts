@@ -4,26 +4,26 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { pdrvService } from './pdrv.service';
 
-const fetchPdrv = catchAsync(
+const getAllPdrv = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await pdrvService.findAllPdrv();
+    const result = await pdrvService.getAllPdrv();
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv fetched successfully',
+      message: 'Pdrv all fetched  successfully',
       data: result,
     });
   }
 );
 
-const fetchSinglePdrv = catchAsync(
+const getSinglePdrv = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const result = await pdrvService.getSinglePdrv(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv Featched successfully',
+      message: 'Pdrv fetched was successfully',
       data: result,
     });
   }
@@ -31,7 +31,7 @@ const fetchSinglePdrv = catchAsync(
 
 const createPdrv = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await pdrvService.postPdrv(req.body);
+    const result = await pdrvService.createPdrv(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -41,11 +41,11 @@ const createPdrv = catchAsync(
   }
 );
 
-const editPdrv = catchAsync(
+const updatePdrv = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const payload = req.body;
-    const result = await pdrvService.patchPdrv(payload, id);
+    const result = await pdrvService.updatePdrv(payload, id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -55,7 +55,7 @@ const editPdrv = catchAsync(
   }
 );
 
-const removePdrv = catchAsync(
+const deletePdrv = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
 
@@ -63,7 +63,7 @@ const removePdrv = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv deleted successfully',
+      message: 'Pdrv was deleted successfully',
       data: result,
     });
   }
@@ -71,8 +71,8 @@ const removePdrv = catchAsync(
 
 export const PdrvController = {
   createPdrv,
-  editPdrv,
-  removePdrv,
-  fetchPdrv,
-  fetchSinglePdrv,
+  updatePdrv,
+  deletePdrv,
+  getAllPdrv,
+  getSinglePdrv,
 };

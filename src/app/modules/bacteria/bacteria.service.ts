@@ -3,12 +3,14 @@ import ApiError from '../../../errors/ApiError';
 import { IBacteria } from './bacteria.interface';
 import { Bacteria } from './bacteria.model';
 
-const postBacteria = async (payload: IBacteria): Promise<void | IBacteria> => {
+const createBacteria = async (
+  payload: IBacteria
+): Promise<void | IBacteria> => {
   const result = await Bacteria.create(payload);
   return result;
 };
 
-const patchBacteria = async (
+const updateBacteria = async (
   payload: Partial<IBacteria>,
   id: string
 ): Promise<IBacteria | null> => {
@@ -33,14 +35,14 @@ const getSingleBacteria = async (id: string): Promise<null | IBacteria> => {
   return result;
 };
 
-const findAllBacteria = async (): Promise<null | IBacteria[]> => {
+const getAllBacteria = async (): Promise<null | IBacteria[]> => {
   const result = await Bacteria.find();
   return result;
 };
 export const BacteriaService = {
-  postBacteria,
-  patchBacteria,
+  createBacteria,
+  updateBacteria,
   deleteBacteria,
-  findAllBacteria,
+  getAllBacteria,
   getSingleBacteria,
 };
