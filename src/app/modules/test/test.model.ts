@@ -17,7 +17,7 @@ const testSchema = new Schema<ITest, TestModel>({
   department: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'departments',
+    ref: 'Departments',
   },
   testCode: {
     type: String,
@@ -27,7 +27,7 @@ const testSchema = new Schema<ITest, TestModel>({
   specimen: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'specimen',
+    ref: 'Specimens',
   },
   type: {
     type: String,

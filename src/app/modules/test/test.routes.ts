@@ -9,7 +9,7 @@ routes.post(
   validateRequest(TestValidtion.testValidator),
   TestController.createNewTest
 );
-
+routes.get('/', TestController.getAllTest);
 routes.get('/:id', TestController.getSingleTest);
 routes.patch(
   '/:id',

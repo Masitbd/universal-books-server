@@ -32,4 +32,14 @@ export type ITest = {
   resultFields: IResultFields[];
 };
 
+export type ItestFiltarableFields =
+  | 'searchTerm'
+  | 'label'
+  | 'department'
+  | 'testCode'
+  | 'specimen'
+  | 'type'
+  | 'hospitalGroup'
+  | 'price'
+  | 'isGroupTest';
 export type TestModel = Model<ITest, Record<string, unknown>>;

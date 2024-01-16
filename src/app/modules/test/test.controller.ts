@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { ITest } from './test.interfacs';
+import { testFiltarableFields } from './test.constant';
+import { ITest, ItestFiltarableFields } from './test.interfacs';
 import { TestServices } from './test.services';
 
 const createNewTest = catchAsync(async (req: Request, res: Response) => {
@@ -51,9 +53,25 @@ const getSingleTest = catchAsync(async (req: Request, res: Response) => {
     success: true,
   });
 });
+
+const getAllTest = catchAsync(async (req: Request, res: Response) => {
+  const filters: ItestFiltarableFields[] = pick(
+    req.query,
+    testFiltarableFields
+  );
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const result = await TestServices.fetchAllTest(filters, options);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: 'Test successfully Featched',
+    data: result,
+    success: true,
+  });
+});
 export const TestController = {
   createNewTest,
   updateTest,
   removeTest,
   getSingleTest,
+  getAllTest,
 };
