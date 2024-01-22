@@ -1,4 +1,5 @@
 import express from 'express';
+import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
@@ -36,6 +37,10 @@ const moduleRoutes = [
   {
     path: '/test-tube',
     route: VacuumRoutes.routes,
+  },
+  {
+    path: '/bacteria',
+    route: BacteriaRoutes.routes,
   },
 ];
 
