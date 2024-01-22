@@ -2,33 +2,67 @@ import { z } from 'zod';
 
 const createDepartmentZodSchema = z.object({
   body: z.object({
-    departmentName: z.string({
+    label: z.string({
       required_error: 'department name is required',
     }),
-    doctorCommisionPer: z.number({
+    value: z.string({
+      required_error: 'department name is required',
+    }),
+    commissionParcentage: z.number({
       required_error: 'doctor commision percentage is required',
       invalid_type_error: 'doctor commision percentage must be a number',
     }),
-    doctorCommisionFixed: z.number({
+    isCommissionFiexed: z.boolean({
+      required_error: 'doctor commision percentage is required',
+      invalid_type_error: 'doctor commision percentage must be Boolean',
+    }),
+    fixedCommission: z.number({
       required_error: 'doctor commision fixed is required',
       invalid_type_error: 'doctor commision fixed must be a number',
     }),
+    description: z
+      .string({
+        required_error: 'Department description is required',
+      })
+      .optional(),
   }),
 });
 
 const updateDepartmentZodSchema = z.object({
   body: z.object({
-    departmentName: z.string({
-      required_error: 'Department name is required',
-    }),
-    doctorCommisionPer: z.number({
-      required_error: 'Doctor commision percentage is required',
-      invalid_type_error: 'Doctor commision percentage must be a number',
-    }),
-    doctorCommisionFixed: z.number({
-      required_error: 'Doctor commision fixed is required',
-      invalid_type_error: 'Doctor commision fixed must be a number',
-    }),
+    label: z
+      .string({
+        required_error: 'department name is required',
+      })
+      .optional(),
+    value: z
+      .string({
+        required_error: 'department name is required',
+      })
+      .optional(),
+    commissionParcentage: z
+      .number({
+        required_error: 'doctor commision percentage is required',
+        invalid_type_error: 'doctor commision percentage must be a number',
+      })
+      .optional(),
+    isCommissionFiexed: z
+      .boolean({
+        required_error: 'doctor commision percentage is required',
+        invalid_type_error: 'doctor commision percentage must be Boolean',
+      })
+      .optional(),
+    fixedCommission: z
+      .number({
+        required_error: 'doctor commision fixed is required',
+        invalid_type_error: 'doctor commision fixed must be a number',
+      })
+      .optional(),
+    description: z
+      .string({
+        required_error: 'Department description is required',
+      })
+      .optional(),
   }),
 });
 
