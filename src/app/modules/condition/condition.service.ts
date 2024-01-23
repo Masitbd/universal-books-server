@@ -3,14 +3,14 @@ import ApiError from '../../../errors/ApiError';
 import { ICondition } from './condition.interface';
 import { Condition } from './condition.model';
 
-const postCondition = async (
+const createCondition = async (
   payload: ICondition
 ): Promise<null | ICondition> => {
   const result = await Condition.create(payload);
   return result;
 };
 
-const getCondition = async () => {
+const getAllCondition = async () => {
   const result = await Condition.find();
   return result;
 };
@@ -23,7 +23,7 @@ const getSingleCondition = async (id: string) => {
   return result;
 };
 
-const patchCondition = async (payload: Partial<ICondition>, id: string) => {
+const updateCondition = async (payload: Partial<ICondition>, id: string) => {
   const result = await Condition.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
@@ -35,9 +35,9 @@ const deleteCondition = async (id: string) => {
   return result;
 };
 export const ConditionService = {
-  postCondition,
-  getCondition,
+  createCondition,
+  getAllCondition,
   getSingleCondition,
-  patchCondition,
+  updateCondition,
   deleteCondition,
 };

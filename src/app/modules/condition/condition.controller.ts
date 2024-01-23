@@ -5,61 +5,61 @@ import sendResponse from '../../../shared/sendResponse';
 import { ConditionService } from './condition.service';
 
 const createCondition = catchAsync(async (req: Request, res: Response) => {
-  const result = await ConditionService.postCondition(req.body);
+  const result = await ConditionService.createCondition(req.body);
   sendResponse(res, {
     data: result,
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Condition created successfully',
+    message: 'Condition was created successfully',
   });
 });
 
-const fetchCondition = catchAsync(async (req: Request, res: Response) => {
-  const result = await ConditionService.getCondition();
+const getAllCondition = catchAsync(async (req: Request, res: Response) => {
+  const result = await ConditionService.getAllCondition();
   sendResponse(res, {
     data: result,
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Condition featched successfully',
+    message: 'Condition all fetched was successfully',
   });
 });
 
-const fetchCingleCondition = catchAsync(async (req: Request, res: Response) => {
+const getSingleCondition = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await ConditionService.getSingleCondition(id);
   sendResponse(res, {
     data: result,
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Condition featched successfully',
+    message: 'Single fetched was condition successfully',
   });
 });
 
 const updateCondition = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const result = await ConditionService.patchCondition(req.body, id);
+  const result = await ConditionService.updateCondition(req.body, id);
   sendResponse(res, {
     data: result,
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Condition updated successfully',
+    message: 'Condition was updated successfully',
   });
 });
 
-const removeCondition = catchAsync(async (req: Request, res: Response) => {
+const deleteCondition = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await ConditionService.deleteCondition(id);
   sendResponse(res, {
     data: result,
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Condition deleted successfully',
+    message: 'Condition was deleted successfully',
   });
 });
 export const ConditionController = {
   createCondition,
-  fetchCondition,
-  fetchCingleCondition,
+  getAllCondition,
+  getSingleCondition,
   updateCondition,
-  removeCondition,
+  deleteCondition,
 };

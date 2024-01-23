@@ -10,7 +10,7 @@ const createDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IDepartment>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Department Created Successfully',
+    message: 'Department was created Successfully',
     data: result,
   });
 });
@@ -23,7 +23,7 @@ const getSingleDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'One Department Find Successfully',
+    message: 'Single fetched was Department Successfully',
     data: result,
   });
 });
@@ -34,7 +34,7 @@ const getAllDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Delpartments Found Successfully',
+    message: 'Departments all fetched was Successfully',
     data: result,
   });
 });
@@ -48,7 +48,7 @@ const updateDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'One record update successfully',
+    message: 'Department was updated successfully',
     data: result,
   });
 });
@@ -60,7 +60,7 @@ const deleteDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'One Department delete successfully',
+    message: 'Department was deleted successfully',
     data: result,
   });
 });

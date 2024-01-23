@@ -4,26 +4,26 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { BacteriaService } from './bacteria.service';
 
-const fetchBacteria = catchAsync(
+const getAllBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await BacteriaService.findAllBacteria();
+    const result = await BacteriaService.getAllBacteria();
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Bacteria fetched successfully',
+      message: 'Bacteria all fetched was successfully',
       data: result,
     });
   }
 );
 
-const fetchSingleBacteria = catchAsync(
+const getSingleBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const result = await BacteriaService.getSingleBacteria(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Bacteria Featched successfully',
+      message: 'Single fetched was Bacteria successfully',
       data: result,
     });
   }
@@ -31,7 +31,7 @@ const fetchSingleBacteria = catchAsync(
 
 const createBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await BacteriaService.postBacteria(req.body);
+    const result = await BacteriaService.createBacteria(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -41,21 +41,21 @@ const createBacteria = catchAsync(
   }
 );
 
-const editBacteria = catchAsync(
+const updateBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const payload = req.body;
-    const result = await BacteriaService.patchBacteria(payload, id);
+    const result = await BacteriaService.updateBacteria(payload, id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Bacteria Edited successfully',
+      message: 'Bacteria was edited successfully',
       data: result,
     });
   }
 );
 
-const removeBacteria = catchAsync(
+const deleteBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
 
@@ -63,7 +63,7 @@ const removeBacteria = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Bacteria deleted successfully',
+      message: 'Bacteria was deleted successfully',
       data: result,
     });
   }
@@ -71,8 +71,8 @@ const removeBacteria = catchAsync(
 
 export const BacteriaController = {
   createBacteria,
-  editBacteria,
-  removeBacteria,
-  fetchBacteria,
-  fetchSingleBacteria,
+  updateBacteria,
+  deleteBacteria,
+  getAllBacteria,
+  getSingleBacteria,
 };

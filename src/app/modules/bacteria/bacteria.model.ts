@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { BacteriaModel, IBacteria } from './bacteria.interface';
 
-const bacteriaSchema = new Schema<IBacteria>({
+const BacteriaSchema = new Schema<IBacteria>({
   label: {
     type: String,
     required: true,
@@ -19,5 +19,5 @@ const bacteriaSchema = new Schema<IBacteria>({
 
 export const Bacteria = model<IBacteria, BacteriaModel>(
   'Bacteria',
-  bacteriaSchema
+  BacteriaSchema
 );
