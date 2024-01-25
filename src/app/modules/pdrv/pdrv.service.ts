@@ -3,12 +3,12 @@ import ApiError from '../../../errors/ApiError';
 import { IPdrv } from './pdrv.interface';
 import { Pdrv } from './pdrv.model';
 
-const postPdrv = async (payload: IPdrv): Promise<void | IPdrv> => {
+const createPdrv = async (payload: IPdrv): Promise<void | IPdrv> => {
   const result = await Pdrv.create(payload);
   return result;
 };
 
-const patchPdrv = async (
+const updatePdrv = async (
   payload: Partial<IPdrv>,
   id: string
 ): Promise<IPdrv | null> => {
@@ -33,14 +33,14 @@ const getSinglePdrv = async (id: string): Promise<null | IPdrv> => {
   return result;
 };
 
-const findAllPdrv = async (): Promise<null | IPdrv[]> => {
+const getAllPdrv = async (): Promise<null | IPdrv[]> => {
   const result = await Pdrv.find();
   return result;
 };
 export const pdrvService = {
-  postPdrv,
-  patchPdrv,
+  createPdrv,
+  updatePdrv,
   deletePdrv,
-  findAllPdrv,
+  getAllPdrv,
   getSinglePdrv,
 };

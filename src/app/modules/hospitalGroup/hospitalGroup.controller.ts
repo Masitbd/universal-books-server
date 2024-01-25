@@ -10,7 +10,7 @@ const createHospitalGroup = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IHospitalGroup>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Hospital Group Created Successfully',
+    message: 'Hospital Group was created Successfully',
     data: result,
   });
 });
@@ -18,13 +18,11 @@ const createHospitalGroup = catchAsync(async (req: Request, res: Response) => {
 const getSingleHospitalGroup = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-
     const result = await HospitalService.getSingleHospitalGroup(id);
-
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'One Hospital Group Find Successfully',
+      message: 'Single fetched was Hospital Group Successfully',
       data: result,
     });
   }
@@ -36,7 +34,7 @@ const getAllHospitalGroup = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Hospital Group Found Successfully',
+    message: 'Hospital Group all fetched was Successfully',
     data: result,
   });
 });
@@ -50,7 +48,7 @@ const updateHospitalGroup = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'One record update successfully',
+    message: 'Hospital Group was updated successfully',
     data: result,
   });
 });
@@ -61,7 +59,7 @@ const deleteHospitalGroup = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'One Department delete successfully',
+    message: 'Hospital Group was deleted successfully',
     data: result,
   });
 });

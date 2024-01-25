@@ -1,7 +1,7 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { ConditionController } from './condition.controller';
-import { ConditionValidation } from './conditon.validation';
+import { ConditionValidation } from './condition.validation';
 const routes = express.Router();
 
 routes.post(
@@ -9,9 +9,9 @@ routes.post(
   validateRequest(ConditionValidation.conditionValidator),
   ConditionController.createCondition
 );
-routes.get('/', ConditionController.fetchCondition);
+routes.get('/', ConditionController.getAllCondition);
 
-routes.get('/:id', ConditionController.fetchCingleCondition);
+routes.get('/:id', ConditionController.getSingleCondition);
 
 routes.patch(
   '/:id',
@@ -19,6 +19,6 @@ routes.patch(
   ConditionController.updateCondition
 );
 
-routes.delete('/:id', ConditionController.removeCondition);
+routes.delete('/:id', ConditionController.deleteCondition);
 
 export const ConditionRoutes = { routes };

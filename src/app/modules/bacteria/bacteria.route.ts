@@ -5,7 +5,7 @@ import { BacteriaValidation } from './bacteria.validation';
 
 const routes = express.Router();
 
-routes.get('/', BacteriaController.fetchBacteria);
+routes.get('/', BacteriaController.getAllBacteria);
 
 routes.post(
   '/',
@@ -13,14 +13,14 @@ routes.post(
   BacteriaController.createBacteria
 );
 
-routes.get('/:id', BacteriaController.fetchSingleBacteria);
+routes.get('/:id', BacteriaController.getSingleBacteria);
 
 routes.patch(
   '/:id',
   validateRequest(BacteriaValidation.bacteriaValidatorForPatch),
-  BacteriaController.editBacteria
+  BacteriaController.updateBacteria
 );
 
-routes.delete('/:id', BacteriaController.removeBacteria);
+routes.delete('/:id', BacteriaController.deleteBacteria);
 
 export const BacteriaRoutes = { routes };
