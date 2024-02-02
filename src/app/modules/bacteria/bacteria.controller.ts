@@ -2,77 +2,77 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { pdrvService } from './pdrv.service';
+import { BacteriaService } from './bacteria.service';
 
-const getAllPdrv = catchAsync(
+const getAllBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await pdrvService.getAllPdrv();
+    const result = await BacteriaService.getAllBacteria();
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv all fetched  successfully',
+      message: 'Bacteria all fetched was successfully',
       data: result,
     });
   }
 );
 
-const getSinglePdrv = catchAsync(
+const getSingleBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
-    const result = await pdrvService.getSinglePdrv(id);
+    const result = await BacteriaService.getSingleBacteria(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv fetched was successfully',
+      message: 'Single fetched was Bacteria successfully',
       data: result,
     });
   }
 );
 
-const createPdrv = catchAsync(
+const createBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await pdrvService.createPdrv(req.body);
+    const result = await BacteriaService.createBacteria(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv was created successfully',
+      message: 'Bacteria was created successfully',
       data: result,
     });
   }
 );
 
-const updatePdrv = catchAsync(
+const updateBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const payload = req.body;
-    const result = await pdrvService.updatePdrv(payload, id);
+    const result = await BacteriaService.updateBacteria(payload, id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv Edited successfully',
+      message: 'Bacteria was edited successfully',
       data: result,
     });
   }
 );
 
-const deletePdrv = catchAsync(
+const deleteBacteria = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
 
-    const result = await pdrvService.deletePdrv(id);
+    const result = await BacteriaService.deleteBacteria(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Pdrv was deleted successfully',
+      message: 'Bacteria was deleted successfully',
       data: result,
     });
   }
 );
 
-export const PdrvController = {
-  createPdrv,
-  updatePdrv,
-  deletePdrv,
-  getAllPdrv,
-  getSinglePdrv,
+export const BacteriaController = {
+  createBacteria,
+  updateBacteria,
+  deleteBacteria,
+  getAllBacteria,
+  getSingleBacteria,
 };

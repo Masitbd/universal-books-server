@@ -6,12 +6,13 @@ const SpecimenSchema = new Schema<ISpecimen, SpecimenModel>(
     value: {
       type: String,
       required: true,
+      unique: true,
     },
-    description: {
+    label: {
       type: String,
       required: true,
     },
-    label: {
+    description: {
       type: String,
       required: true,
     },

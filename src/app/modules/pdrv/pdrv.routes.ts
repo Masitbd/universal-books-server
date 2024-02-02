@@ -4,7 +4,7 @@ import { PdrvController } from './pdrv.controller';
 import { PdrvValidation } from './pdrv.validatotion';
 const routes = express.Router();
 
-routes.get('/', PdrvController.fetchPdrv);
+routes.get('/', PdrvController.getAllPdrv);
 
 routes.post(
   '/',
@@ -12,14 +12,14 @@ routes.post(
   PdrvController.createPdrv
 );
 
-routes.get('/:id', PdrvController.fetchSinglePdrv);
+routes.get('/:id', PdrvController.getSinglePdrv);
 
 routes.patch(
   '/:id',
   validateRequest(PdrvValidation.pdrvValidatorForPatch),
-  PdrvController.editPdrv
+  PdrvController.updatePdrv
 );
 
-routes.delete('/:id', PdrvController.removePdrv);
+routes.delete('/:id', PdrvController.deletePdrv);
 
 export const PdrvRoutes = { routes };
