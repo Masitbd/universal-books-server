@@ -20,9 +20,11 @@ const testValidator = z.object({
     hasTestTube: z.boolean({
       required_error: 'TestTube is required',
     }),
-    testTube: z.string({
-      required_error: 'Test tube is required',
-    }),
+    testTube: z.array(
+      z.string({
+        required_error: 'TestTube is required',
+      })
+    ),
     reportGroup: z.string({
       required_error: 'Report group is required',
     }),
@@ -44,10 +46,12 @@ const testValidator = z.object({
     }),
     resultFields: z.array(
       z.object({
-        title: z.string({ required_error: 'Title is required' }),
-        test: z.string({
-          required_error: 'Test is required',
-        }),
+        title: z.string({ required_error: 'Title is required' }).optional(),
+        test: z
+          .string({
+            required_error: 'Test is required',
+          })
+          .optional(),
         unit: z.string().optional(),
         normalValue: z.string().optional(),
         defaultValue: z.array(z.string().optional()).optional(),

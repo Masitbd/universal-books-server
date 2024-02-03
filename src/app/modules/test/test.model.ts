@@ -37,10 +37,12 @@ const testSchema = new Schema<ITest, TestModel>({
     type: Boolean,
     required: true,
   },
-  testTube: {
-    type: Schema.Types.ObjectId,
-    ref: 'VacuumTube',
-  },
+  testTube: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'VacuumTube',
+    },
+  ],
   reportGroup: {
     type: String,
   },
@@ -76,7 +78,6 @@ const testSchema = new Schema<ITest, TestModel>({
     {
       title: {
         type: String,
-        required: true,
       },
       test: {
         type: String,

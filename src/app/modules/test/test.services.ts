@@ -43,7 +43,6 @@ const fetchAllTest = async (filterOption: ItestFiltarableFields[], options) => {
       }),
     });
   }
-  console.log(andConditions);
 
   if (Object.keys(filterOptions).length > 0) {
     const filterConditions = Object.keys(filterOptions).map(field => {
