@@ -1,12 +1,16 @@
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { testSearchableFields } from './test.constant';
-import { ITest, ItestFiltarableFields } from './test.interfacs';
+import { ITest } from './test.interfacs';
 import { Test } from './test.model';
 
 const postTest = async (payload: ITest) => {
-  const testId = await Test.countDocuments();
-  const paddedCount = String(testId).padStart(4, '0');
-  const uniqueId = paddedCount.slice(0, 3) + (Number(paddedCount[3]) + 1);
+  const lastTest = await Test.find().sort({ testCode: -1 }).limit(1);
+
+  const testId = lastTest[0].testCode ? Number(lastTest[0].testCode) : 0;
+  const newTestId = testId + 1;
+
+  const uniqueId = String(newTestId).padStart(4, '0');
+  // const uniqueId = paddedCount.slice(0, 3) + (Number(paddedCount[3]) + 1);
   payload.testCode = uniqueId;
   const result = await Test.create(payload);
   return result;
@@ -27,8 +31,7 @@ const fetchSingleTest = async (id: string) => {
   return result;
 };
 
-const fetchAllTest = async (filterOption: ItestFiltarableFields[], options) => {
-  console.log(filterOption);
+const fetchAllTest = async (filterOption: any, options: any) => {
   const { searchTerm, ...filterOptions } = filterOption;
   const andConditions = [];
   if (searchTerm) {
@@ -45,9 +48,9 @@ const fetchAllTest = async (filterOption: ItestFiltarableFields[], options) => {
   }
 
   if (Object.keys(filterOptions).length > 0) {
-    const filterConditions = Object.keys(filterOptions).map(field => {
+    const filterConditions = Object.keys(filterOptions).map((field: any) => {
       return {
-        [field]: filterOptions[field as string],
+        [field]: filterOptions[field],
       };
     });
 
@@ -60,7 +63,11 @@ const fetchAllTest = async (filterOption: ItestFiltarableFields[], options) => {
     .limit(limit)
     .skip(skip)
     .populate({ path: 'department' })
-    .populate('specimen');
+    .populate('specimen')
+    .populate('groupTests')
+    .populate('testTube')
+    .populate('hospitalGroup')
+    .populate('groupTests');
 
   return {
     meta: {

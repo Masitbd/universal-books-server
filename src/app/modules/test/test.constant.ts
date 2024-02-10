@@ -12,4 +12,10 @@ export const testFiltarableFields: ItestFiltarableFields[] = [
   'isGroupTest',
 ];
 
-export const testSearchableFields = ['label,', 'value', 'description', 'type'];
+export const testSearchableFields = [
+  'label,',
+  'value',
+  'description',
+  'type',
+  'testCode',
+];

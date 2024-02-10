@@ -4,11 +4,12 @@ import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { testFiltarableFields } from './test.constant';
-import { ITest, ItestFiltarableFields } from './test.interfacs';
+import { ITest } from './test.interfacs';
 import { TestServices } from './test.services';
 
 const createNewTest = catchAsync(async (req: Request, res: Response) => {
   const testData = req.body;
+
   const result = await TestServices.postTest(testData as unknown as ITest);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -55,10 +56,7 @@ const getSingleTest = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllTest = catchAsync(async (req: Request, res: Response) => {
-  const filters: ItestFiltarableFields[] = pick(
-    req.query,
-    testFiltarableFields
-  );
+  const filters = pick(req.query, testFiltarableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
   const result = await TestServices.fetchAllTest(filters, options);
   sendResponse(res, {

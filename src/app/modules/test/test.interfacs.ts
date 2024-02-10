@@ -7,6 +7,7 @@ type IResultFields = {
   normalValue: string;
   defaultValue: Types.ObjectId[];
   resultDescripton: string;
+  hasPdrv?: boolean;
   sensitivityOptions: Types.ObjectId[];
   condition: Types.ObjectId[];
   bacteria: Types.ObjectId[];
@@ -16,8 +17,9 @@ export type ITest = {
   value: string;
   label: string;
   description?: string;
+  testResultType: string;
   department: Types.ObjectId;
-  testCode: string;
+  testCode?: string;
   specimen: Types.ObjectId;
   type: string;
   hasTestTube: boolean;
