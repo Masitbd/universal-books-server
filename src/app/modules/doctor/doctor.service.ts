@@ -4,7 +4,8 @@ import { IDoctor } from './doctor.interface';
 import { Doctor } from './doctor.model';
 
 const createDoctor = async (payload: IDoctor): Promise<IDoctor> => {
-  payload.defaultImage = '';
+  payload.defaultImage =
+    'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg';
   const result = await Doctor.create(payload);
   return result;
 };
