@@ -1,4 +1,5 @@
 import express from 'express';
+import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
@@ -41,6 +42,10 @@ const moduleRoutes = [
   {
     path: '/doctor',
     route: DoctorRoutes.routes,
+  },
+  {
+    path: '/bacteria',
+    route: BacteriaRoutes.routes,
   },
 ];
 
