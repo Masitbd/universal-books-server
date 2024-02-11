@@ -1,7 +1,6 @@
 import express from 'express';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
-import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
@@ -37,10 +36,6 @@ const moduleRoutes = [
   {
     path: '/test-tube',
     route: VacuumRoutes.routes,
-  },
-  {
-    path: '/doctor',
-    route: DoctorRoutes.routes,
   },
 ];
 
