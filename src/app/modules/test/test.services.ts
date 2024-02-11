@@ -6,7 +6,7 @@ import { Test } from './test.model';
 const postTest = async (payload: ITest) => {
   const lastTest = await Test.find().sort({ testCode: -1 }).limit(1);
 
-  const testId = lastTest[0].testCode ? Number(lastTest[0].testCode) : 0;
+  const testId = lastTest.length > 0 ? Number(lastTest[0].testCode) : 0;
   const newTestId = testId + 1;
 
   const uniqueId = String(newTestId).padStart(4, '0');
