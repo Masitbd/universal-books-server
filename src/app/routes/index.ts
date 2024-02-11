@@ -1,12 +1,11 @@
 import express from 'express';
-import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
+import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
-import { TestRoutes } from '../modules/test/test.routes';
 import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 
 const router = express.Router();
@@ -40,12 +39,8 @@ const moduleRoutes = [
     route: VacuumRoutes.routes,
   },
   {
-    path: '/bacteria',
-    route: BacteriaRoutes.routes,
-  },
-  {
-    path: '/test',
-    route: TestRoutes.routes,
+    path: '/doctor',
+    route: DoctorRoutes.routes,
   },
 ];
 

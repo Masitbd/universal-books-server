@@ -24,6 +24,6 @@ routes.patch(
 
 routes.delete('/:id', DoctorControllers.deleteDoctor);
 
-export const VacuumRoutes = {
+export const DoctorRoutes = {
   routes,
 };
