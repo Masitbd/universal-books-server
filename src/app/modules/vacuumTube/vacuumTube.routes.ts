@@ -1,6 +1,6 @@
 import express from 'express';
-import { VacuumTubeControllers } from './vacuumTube.controllers';
 import validateRequest from '../../middlewares/validateRequest';
+import { VacuumTubeControllers } from './vacuumTube.controllers';
 import { VacuumTubeValidation } from './vacuumTube.validatorst';
 const routes = express.Router();
 
@@ -17,7 +17,7 @@ routes.post(
 routes.patch(
   '/:id',
   validateRequest(VacuumTubeValidation.VacuumTubeValidatorForUpdate),
-  VacuumTubeControllers.createVacuumTube
+  VacuumTubeControllers.updateVacuumTube
 );
 
 routes.delete('/:id', VacuumTubeControllers.deleteVacuumTube);
