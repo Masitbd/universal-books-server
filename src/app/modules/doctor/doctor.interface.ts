@@ -3,6 +3,6 @@ export type IDoctor = {
   fatherName: string;
   designation: string;
   phone: string;
-  image: string;
+  image?: string;
   defaultImage?: string;
 };
