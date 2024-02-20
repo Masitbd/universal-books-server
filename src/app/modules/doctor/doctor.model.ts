@@ -10,6 +10,10 @@ const doctorSchema = new Schema<IDoctor>({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   designation: {
     type: String,
     required: true,
@@ -21,11 +25,6 @@ const doctorSchema = new Schema<IDoctor>({
   },
   image: {
     type: String,
-    required: true,
-  },
-  defaultImage: {
-    type: String,
-    required: true,
   },
 });
 
