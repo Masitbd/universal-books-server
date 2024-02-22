@@ -6,3 +6,10 @@ export type IDoctor = {
   phone: string;
   image?: string;
 };
+
+export type IDoctorFilters = {
+  searchTerm?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
+};

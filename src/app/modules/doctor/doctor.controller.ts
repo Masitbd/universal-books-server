@@ -10,15 +10,20 @@ import { DoctorServices } from './doctor.service';
 
 const getDoctor = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    console.log(req.query);
     const filters = pick(req.query, doctorFilterableFields);
     const paginationOptions = pick(req.query, paginationFields);
-    const result = await DoctorServices.getAllDoctor();
+    const result = await DoctorServices.getAllDoctor(
+      filters,
+      paginationOptions
+    );
+
     sendResponse<IDoctor[]>(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Doctor all fetched successfully',
-      // meta: result.meta,
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   }
 );
