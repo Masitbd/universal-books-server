@@ -40,6 +40,7 @@ const getSingleDoctor = catchAsync(
 );
 const createDoctor = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    console.log(req.body);
     const result = await DoctorServices.createDoctor(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
