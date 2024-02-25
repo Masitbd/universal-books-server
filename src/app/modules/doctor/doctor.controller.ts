@@ -1,17 +1,29 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { paginationFields } from './../../../constants/pagination';
+import { doctorFilterableFields } from './doctor.constant';
+import { IDoctor } from './doctor.interface';
 import { DoctorServices } from './doctor.service';
 
 const getDoctor = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await DoctorServices.getAllDoctor();
-    sendResponse(res, {
+    console.log(req.query);
+    const filters = pick(req.query, doctorFilterableFields);
+    const paginationOptions = pick(req.query, paginationFields);
+    const result = await DoctorServices.getAllDoctor(
+      filters,
+      paginationOptions
+    );
+
+    sendResponse<IDoctor[]>(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Doctor all fetched successfully',
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   }
 );
@@ -28,6 +40,7 @@ const getSingleDoctor = catchAsync(
 );
 const createDoctor = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    console.log(req.body);
     const result = await DoctorServices.createDoctor(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
