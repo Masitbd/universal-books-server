@@ -8,6 +8,7 @@ import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 import { TestRoutes } from '../modules/test/test.routes';
+import { TransactionRoute } from '../modules/transaction/transaction.route';
 import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 
 const router = express.Router();
@@ -51,6 +52,10 @@ const moduleRoutes = [
   {
     path: '/test',
     route: TestRoutes.routes,
+  },
+  {
+    path: '/transaction',
+    route: TransactionRoute.routes,
   },
 ];
 

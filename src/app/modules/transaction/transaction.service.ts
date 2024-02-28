@@ -11,6 +11,17 @@ const postTransaction = async (data: ITransaction) => {
   };
 };
 
+const fetchSingleTransaction = async (data: string) => {
+  const result = await Transation.findOne({ _id: data });
+  return result;
+};
+
+const fetchSIngleByUuid = async (data: string) => {
+  const result = await Transation.findOne({ uuid: data });
+  return result;
+};
 export const TransactionService = {
   postTransaction,
+  fetchSingleTransaction,
+  fetchSIngleByUuid,
 };
