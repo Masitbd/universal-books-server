@@ -12,7 +12,7 @@ const AccountSchema = new Schema<IAccount>(
     },
     balanceType: {
       type: String,
-      enum: ['dr', 'cr'],
+      enum: ['debit', 'credit'],
       required: true,
     },
   },

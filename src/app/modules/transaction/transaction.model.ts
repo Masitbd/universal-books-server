@@ -14,7 +14,7 @@ const transactionSchema = new Schema<ITransaction>(
     transactionType: {
       type: String,
       required: true,
-      enum: ['dr', 'cr'],
+      enum: ['debit', 'credit'],
     },
     ref: {
       type: Schema.Types.ObjectId,
