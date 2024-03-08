@@ -4,7 +4,7 @@ import ApiError from '../../../errors/ApiError';
 import { ITransaction } from '../transaction/transaction.interface';
 import { IAccount } from './account.interface';
 import { Account } from './account.model';
-const postNewAccount = async (data: IAccount) => {
+const postAccount = async (data: IAccount) => {
   const result = await Account.create(data);
   return result;
 };
@@ -53,4 +53,4 @@ const fetchSingle = async (params: string) => {
   const result = await Account.findOne({ user: params });
   return result;
 };
-export const AccountService = { postNewAccount, patchAccount, fetchSingle };
+export const AccountService = { postAccount, patchAccount, fetchSingle };
