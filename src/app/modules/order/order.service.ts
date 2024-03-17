@@ -5,4 +5,8 @@ const postOrder = async (params: IOrder) => {
   const result = await Order.create(params);
   return result;
 };
-export const OrderService = { postOrder };
+const fetchAll = async () => {
+  const result = await Order.find().populate('refBy');
+  return result;
+};
+export const OrderService = { postOrder, fetchAll };

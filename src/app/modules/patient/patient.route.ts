@@ -8,4 +8,11 @@ routes.post(
   validateRequest(PatientValidation.PatientValidator),
   PatientController.createNewPatient
 );
+routes.patch(
+  '/',
+  validateRequest(PatientValidation.PatientValidatorForPatch),
+  PatientController.updatePatient
+);
+routes.get('/:id', PatientController.getSingle);
+routes.get('/', PatientController.getAll);
 export const PatientRoute = { routes };

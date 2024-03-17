@@ -19,4 +19,46 @@ const createNewPatient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const PatientController = { createNewPatient };
+const updatePatient = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await PatientService.patchPatient(req.body);
+
+    sendResponse<IPatient>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order created successfully',
+      data: result,
+    });
+  }
+);
+const getSingle = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await PatientService.fetchSingel(req.params.id);
+
+    sendResponse<IPatient>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order created successfully',
+      data: result,
+    });
+  }
+);
+
+const getAll = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await PatientService.fetchAll();
+
+    sendResponse<IPatient[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order created successfully',
+      data: result,
+    });
+  }
+);
+export const PatientController = {
+  createNewPatient,
+  updatePatient,
+  getSingle,
+  getAll,
+};

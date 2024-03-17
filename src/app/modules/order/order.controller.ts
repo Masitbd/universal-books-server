@@ -17,4 +17,18 @@ const createNewOrder = catchAsync(
     });
   }
 );
-export const OrderController = { createNewOrder };
+
+const getAllOrder = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await OrderService.fetchAll();
+
+    sendResponse<IOrder[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order featched successfully',
+      data: result,
+    });
+  }
+);
+
+export const OrderController = { createNewOrder, getAllOrder };
