@@ -3,9 +3,9 @@ import { Doctor } from '../app/modules/doctor/doctor.model';
 export const findLastDoctorAmountNumber = async (): Promise<
   string | undefined
 > => {
-  const lastDoctor = await Doctor.findOne({ account_number: 1 })
+  const lastDoctor = await Doctor.findOne()
     .sort({
-      createdAt: -1,
+      account_number: -1,
     })
     .lean();
 
@@ -22,6 +22,6 @@ export const generateDoctorAmountNumber = async (): Promise<string> => {
     .padStart(5, '0');
 
   inCreasedAmountNumber = `D-${inCreasedAmountNumber}`;
-
+  console.log(inCreasedAmountNumber, 'finalData');
   return inCreasedAmountNumber;
 };

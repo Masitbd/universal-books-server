@@ -11,9 +11,8 @@ import { doctorSearchableFields } from './doctor.constant';
 import { IDoctor, IDoctorFilters } from './doctor.interface';
 import { Doctor } from './doctor.model';
 
-const createDoctor = async (payload: IDoctor): Promise<IDoctor |null> => {
-  
-  let newDoctorData = null;
+const createDoctor = async (payload: IDoctor): Promise<IDoctor | null> => {
+  let newDoctorData;
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -25,8 +24,8 @@ const createDoctor = async (payload: IDoctor): Promise<IDoctor |null> => {
       balanceType: 'credit',
     } as IAccount;
 
-    payload.account_number = amountNumber;
     accountData.uuid = amountNumber;
+    payload.account_number = amountNumber;
 
     const newAccount = await Account.create([accountData], { session });
     if (!newAccount.length) {
@@ -67,8 +66,34 @@ const updateDoctor = async (
 };
 
 const deleteDoctor = async (id: string) => {
-  const result = await Doctor.findOneAndDelete({ _id: id });
-  return result;
+  const isExist = await Doctor.findOne({ _id: id });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not FOund!');
+  }
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    //delete doctor student first
+    const doctor = await Doctor.findOneAndDelete({ _id: id }, { session });
+    // const doctor = await Doctor.deleteMany();
+    if (!doctor) {
+      throw new ApiError(404, 'Failed to delete doctor!');
+    }
+
+    //delete account
+
+    await Account.deleteOne({ uuid: isExist.account_number });
+    await Account.deleteMany();
+    session.commitTransaction();
+    session.endSession();
+
+    return doctor;
+  } catch (error) {
+    session.abortTransaction();
+    throw error;
+  }
 };
 
 const getAllDoctor = async (
@@ -115,7 +140,7 @@ const getSingleDoctor = async (id: string): Promise<IDoctor | null> => {
   const result = await Doctor.findOne({ _id: id }).populate('account_id');
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
-  };
+  }
 
   return result;
 };
