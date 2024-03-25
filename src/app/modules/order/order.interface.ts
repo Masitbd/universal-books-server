@@ -12,4 +12,20 @@ export type IOrder = {
   status: string;
   dueAmount: number;
   refBy?: Types.ObjectId;
+  patientType: string;
+  paid: number;
 };
+
+export type IorderFilterableFields = [
+  | 'searchTerm'
+  | 'oid'
+  | 'dedeliveryTime'
+  | 'name'
+  | 'phoneNumber'
+  | 'email'
+  | 'patientType'
+  | 'minDueAmount'
+  | 'maxDueAmount'
+  | 'minTotalPrice'
+  | 'maxTotalPrice'
+];

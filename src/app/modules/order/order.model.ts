@@ -7,7 +7,6 @@ import { IOrder } from './order.interface';
 
 const orderSchema = new Schema<IOrder>(
   {
-    uuid: { type: String },
     tests: [
       {
         test: { type: Types.ObjectId, ref: 'Test' },
@@ -27,17 +26,33 @@ const orderSchema = new Schema<IOrder>(
     deliveryTime: { type: String, required: true },
     status: { type: String, required: true },
     dueAmount: { type: Number, required: true },
+    paid: { type: Number, required: true },
     refBy: {
       type: Schema.Types.ObjectId,
       ref: 'doctor',
     },
     oid: { type: String, unique: true },
+    patientType: { type: String, required: true },
   },
   {
     timestamps: true,
   }
 );
 
+const orderSchemaForUnregistered = new Schema({
+  patient: {
+    name: { type: String, required: true },
+    age: { type: String, required: true },
+    gender: { type: String, required: true },
+    address: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
+    consultant: { type: Schema.Types.ObjectId, ref: 'doctor' },
+  },
+});
+const orderSchemaForRegistered = new Schema({
+  uuid: { type: String },
+});
 orderSchema.pre('save', async function (next) {
   const order: IOrder = this as IOrder;
   const lastOrder = await Order.find().sort({ oid: -1 }).limit(1);
@@ -129,3 +144,11 @@ orderSchema.post('save', async function (document: IOrder) {
 });
 
 export const Order = model('order', orderSchema);
+export const OrderForRegistered = Order.discriminator(
+  'ForRegistered',
+  orderSchemaForRegistered
+);
+export const OrderForUnregistered = Order.discriminator(
+  'ForUnregistered',
+  orderSchemaForUnregistered
+);
