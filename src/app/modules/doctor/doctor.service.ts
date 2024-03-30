@@ -85,13 +85,14 @@ const deleteDoctor = async (id: string) => {
     //delete account
 
     await Account.deleteOne({ uuid: isExist.account_number });
-    await Account.deleteMany();
-    session.commitTransaction();
-    session.endSession();
+    // await Account.deleteMany();
+    await session.commitTransaction();
+    await session.endSession();
 
     return doctor;
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
+    await session.endSession();
     throw error;
   }
 };
@@ -101,7 +102,7 @@ const getAllDoctor = async (
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IDoctor[]>> => {
   const { searchTerm } = filters;
-  console.log(searchTerm);
+  // console.log(searchTerm);
   const andConditions = [];
 
   if (searchTerm) {
@@ -137,6 +138,7 @@ const getAllDoctor = async (
 };
 
 const getSingleDoctor = async (id: string): Promise<IDoctor | null> => {
+  console.log(id, 'singleD');
   const result = await Doctor.findOne({ _id: id }).populate('account_id');
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');

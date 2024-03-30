@@ -1,4 +1,5 @@
 import express from 'express';
+import { AccountRoute } from '../modules/account/account.route';
 import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
@@ -56,6 +57,10 @@ const moduleRoutes = [
   {
     path: '/transaction',
     route: TransactionRoute.routes,
+  },
+  {
+    path: '/account',
+    route: AccountRoute.routes,
   },
 ];
 
