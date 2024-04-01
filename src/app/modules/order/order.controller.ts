@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { paginationFields } from '../../../constants/pagination';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { IOrder } from './order.interface';
+import { orderFilterableFields } from './order.constant';
+import { IOrder, IorderFilterableFields } from './order.interface';
 import { OrderService } from './order.service';
 
 const createNewOrder = catchAsync(
@@ -13,23 +16,35 @@ const createNewOrder = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: 'Order created successfully',
-      data: result,
+      data: result as unknown as IOrder,
     });
   }
 );
 
 const getAllOrder = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    // const filterFields = pick(req.params, orderFilterableFields);
-    console.log(req.query);
+    const filterableField = pick<Request['query'], IorderFilterableFields>(
+      req.query,
+      orderFilterableFields
+    );
 
-    const result = await OrderService.fetchAll();
+    const paginationOption = pick(req.query, paginationFields);
+
+    const result = await OrderService.fetchAll({
+      filterableField,
+      paginationOption,
+    });
 
     sendResponse<IOrder[]>(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Order featched successfully',
-      data: result,
+      data: result.data,
+      meta: {
+        limit: result.limit,
+        page: result.page,
+        total: result.totalData,
+      },
     });
   }
 );

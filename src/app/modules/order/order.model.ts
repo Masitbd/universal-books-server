@@ -27,6 +27,7 @@ const orderSchema = new Schema<IOrder>(
     status: { type: String, required: true },
     dueAmount: { type: Number, required: true },
     paid: { type: Number, required: true },
+    vat: { type: Number },
     refBy: {
       type: Schema.Types.ObjectId,
       ref: 'doctor',
@@ -58,13 +59,13 @@ orderSchema.pre('save', async function (next) {
   const lastOrder = await Order.find().sort({ oid: -1 }).limit(1);
   const oid =
     lastOrder.length > 0 ? Number(lastOrder[0].oid?.split('-')[1]) : 0;
-  console.log(lastOrder);
+
   const newOid = 'HMS-' + String(Number(oid) + 1).padStart(7, '0');
   order.oid = newOid;
   next();
 });
 
-orderSchema.post('save', async function (document: IOrder) {
+orderSchema.post('findOneAndUpdate', async function (document: IOrder) {
   const order = document;
   const testIds = order.tests;
 
@@ -132,7 +133,7 @@ orderSchema.post('save', async function (document: IOrder) {
     _id: order.refBy,
   });
 
-  if (referedDoctor?.uuid) {
+  if (referedDoctor?.uuid && order.dueAmount === 0) {
     TransactionService.postTransaction({
       uuid: referedDoctor.uuid,
       amount: Math.ceil(result[0].totalCommission),

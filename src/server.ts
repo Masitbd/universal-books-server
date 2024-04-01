@@ -6,7 +6,6 @@ import { errorlogger, logger } from './shared/logger';
 let server: Server;
 async function bootstrap() {
   try {
-    console.log(config.database_url);
     await mongoose.connect(config.database_url as string);
     logger.info(`Database is connected successfully`);
 

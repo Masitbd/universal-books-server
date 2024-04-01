@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import { Types } from 'mongoose';
 
 export type IOrder = {
@@ -14,18 +15,45 @@ export type IOrder = {
   refBy?: Types.ObjectId;
   patientType: string;
   paid: number;
+  vat?: number;
 };
 
-export type IorderFilterableFields = [
+export type IorderFilterableFields =
   | 'searchTerm'
-  | 'oid'
-  | 'dedeliveryTime'
-  | 'name'
-  | 'phoneNumber'
-  | 'email'
+  | 'deliveryTime'
   | 'patientType'
   | 'minDueAmount'
   | 'maxDueAmount'
   | 'minTotalPrice'
-  | 'maxTotalPrice'
-];
+  | 'maxTotalPrice';
+
+export type OrderFilterableFields = {
+  searchTerm: string;
+  oid: string;
+  deliveryTime: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  patientType: string;
+  minDueAmount: number;
+  maxDueAmount: number;
+  minTotalPrice: number;
+  maxTotalPrice: number;
+};
+export type FilterableFieldsSubset = {
+  [K in IorderFilterableFields]?: Request['query'][K];
+};
+
+// export type IorderFilterableFields = (
+//   'searchTerm',
+//   'oid',
+//   'dedeliveryTime',
+//   'name',
+//   'phoneNumber',
+//   'email',
+//   'patientType',
+//   'minDueAmount',
+//   'maxDueAmount',
+//   'minTotalPrice',
+//   'maxTotalPrice'
+// )[];
