@@ -5,6 +5,8 @@ import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
+import { OrderRoutes } from '../modules/order/order.routes';
+import { PatientRoute } from '../modules/patient/patient.route';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
@@ -59,8 +61,17 @@ const moduleRoutes = [
     route: TransactionRoute.routes,
   },
   {
+
     path: '/account',
     route: AccountRoute.routes,
+  },{
+    path: '/patient',
+    route: PatientRoute.routes,
+  },
+  {
+    path: '/order',
+    route: OrderRoutes.routes,
+
   },
 ];
 
