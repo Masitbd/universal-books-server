@@ -18,6 +18,8 @@ const orderSchema = new Schema<IOrder>(
         discount: {
           type: Number,
         },
+        deliveryTime: Date,
+        remark: String,
       },
     ],
     totalPrice: { type: Number, required: true },
@@ -65,6 +67,17 @@ orderSchema.pre('save', async function (next) {
   next();
 });
 
+orderSchema.post('save', async function (doc: IOrder) {
+  const order = doc;
+  if (order.paid > 0) {
+    TransactionService.postTransaction({
+      amount: order.paid,
+      description: 'Payment for order',
+      transactionType: 'debit',
+      ref: order._id,
+    });
+  }
+});
 orderSchema.post('findOneAndUpdate', async function (document: IOrder) {
   const order = document;
   const testIds = order.tests;

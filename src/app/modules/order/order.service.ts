@@ -29,7 +29,7 @@ const fetchAll = async ({
     ? Number(paginationOption.sortOrder)
     : -1;
 
-  const sortOption = { [sortBy]: sortOrder };
+  const sortOption = { [sortBy]: sortOrder as number };
 
   const { limit, page, skip } = paginationHelpers.calculatePagination({
     page: paginationOption.page,
@@ -168,6 +168,8 @@ const fetchAll = async ({
             test: '$testData',
             status: '$tests.status',
             discount: '$tests.discount',
+            remark: '$tests.remark',
+            deliveryTime: '$tests.deliveryTime',
           },
         },
         createdAt: { $first: '$createdAt' },
@@ -177,7 +179,7 @@ const fetchAll = async ({
       $match: isCondition,
     },
     {
-      $sort: { [sortBy]: sortOrder },
+      $sort: sortOption,
     },
     {
       $skip: skip,

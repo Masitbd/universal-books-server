@@ -7,14 +7,15 @@ const postTransaction = async (data: ITransaction) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const accountResult = await AccountService.patchAccount(data);
+    if (data.uuid) {
+      const accountResult = await AccountService.patchAccount(data);
+    }
     const result = await Transation.create(data);
-    console.log(accountResult, 'accountResult');
+
     await session.commitTransaction();
     await session.endSession();
     return {
       result,
-      accountResult,
     };
   } catch (error) {
     await session.abortTransaction();
