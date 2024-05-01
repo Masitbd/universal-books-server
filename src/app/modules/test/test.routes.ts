@@ -17,4 +17,5 @@ routes.patch(
   TestController.updateTest
 );
 routes.delete('/:id', TestController.removeTest);
+
 export const TestRoutes = { routes };

@@ -7,6 +7,7 @@ export type IOrder = {
   uuid: string;
   tests: [
     {
+      SL: number;
       test: Types.ObjectId[];
       status: string;
       discount: number;
