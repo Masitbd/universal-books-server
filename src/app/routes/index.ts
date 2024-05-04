@@ -11,6 +11,7 @@ import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 import { TestRoutes } from '../modules/test/test.routes';
+import { TestReportRoutes } from '../modules/testReport/testReport.routes';
 import { TransactionRoute } from '../modules/transaction/transaction.route';
 import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 
@@ -61,17 +62,24 @@ const moduleRoutes = [
     route: TransactionRoute.routes,
   },
   {
-
     path: '/account',
     route: AccountRoute.routes,
-  },{
+  },
+  {
     path: '/patient',
     route: PatientRoute.routes,
   },
   {
     path: '/order',
     route: OrderRoutes.routes,
-
+  },
+  {
+    path: '/order',
+    route: OrderRoutes.routes,
+  },
+  {
+    path: '/testReport',
+    route: TestReportRoutes.routes,
   },
 ];
 
