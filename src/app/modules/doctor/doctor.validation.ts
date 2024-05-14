@@ -6,13 +6,13 @@ const DoctorValidator = z.object({
       required_error: 'Name is required',
     }),
     fatherName: z.string({
-      required_error: 'Father Name is required',
+      required_error: 'Father name is required',
     }),
     designation: z.string({
       required_error: 'Designation is required',
     }),
     phone: z.number({
-      required_error: 'Phone Number is required',
+      required_error: 'Phone number is required',
     }),
     image: z.string().optional(),
     defaultImage: z.string().optional(),
@@ -27,7 +27,7 @@ const DoctorValidatorForUpdate = z.object({
       .optional(),
     fatherName: z
       .string({
-        required_error: 'Father Name is required',
+        required_error: 'Father name is required',
       })
       .optional(),
     designation: z
@@ -37,7 +37,7 @@ const DoctorValidatorForUpdate = z.object({
       .optional(),
     phone: z
       .number({
-        required_error: 'Phone Number is required',
+        required_error: 'Phone number is required',
       })
       .optional(),
     image: z.string().optional(),
