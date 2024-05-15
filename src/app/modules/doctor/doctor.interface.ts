@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { IAccount } from '../account/account.interface';
 
 export type IDoctor = {
+  title: string;
   name: string;
   fatherName: string;
   email: string;

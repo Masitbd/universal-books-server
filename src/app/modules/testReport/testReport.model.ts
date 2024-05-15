@@ -6,12 +6,12 @@ const TestReportSchema = new Schema<ITestReport, TestReportModel>(
     orderId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'orders',
+      ref: 'order',
     },
     testId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Tests',
+      ref: 'Test',
     },
     defaultValue: [
       {
@@ -69,27 +69,27 @@ const TestReportSchema = new Schema<ITestReport, TestReportModel>(
         conditions: [
           {
             type: Schema.Types.ObjectId,
-            ref: 'conditions',
+            ref: 'Conditions',
           },
         ],
         growth: {
           type: Boolean,
         },
         colonyCount: {
-          type: String,
+          thenType: {
+            type: String,
+          },
+          powerType: {
+            type: String,
+          },
         },
         bacterias: [
           {
             type: Schema.Types.ObjectId,
-            ref: 'bacterias',
+            ref: 'Bacteria',
           },
         ],
-        sensitivityOptions: [
-          {
-            type: Schema.Types.ObjectId,
-            ref: 'sensitivities',
-          },
-        ],
+        sensitivityOptions: [],
       },
     ],
   },

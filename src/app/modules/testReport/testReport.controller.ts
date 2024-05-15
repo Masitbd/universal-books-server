@@ -4,20 +4,20 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { TestReportService } from './testReport.services';
 
-// //Controller function for getting all the specimen
+// //Controller function for getting all the Test Report
 const getAllTestReport = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = await TestReportService.getAllTestReport();
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen all fetched successfully',
+      message: 'Test Report all fetched successfully',
       data: result,
     });
   }
 );
 
-// Controller function for getting a specific specimen
+// Controller function for getting a specific Test Report
 const getSingleTestReport = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
@@ -25,46 +25,46 @@ const getSingleTestReport = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen fetched successfully',
+      message: 'Test Report fetched successfully',
       data: result,
     });
   }
 );
 
-// For creating new specimen
+const getSingleTestReportPrint = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    const result = await TestReportService.getSingleTestReportPrint(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Test Report fetched successfully',
+      data: result,
+    });
+  }
+);
+
+// For creating new Test Report
 const createTestReport = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = TestReportService.createTestReport(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen was created successfully',
-      data: 'yes',
-    });
-  }
-);
-
-// Controller function for editing existing specimen
-const updateTestReport = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
-    const result = TestReportService.updateTestReport(req.body, req.params.id);
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Specimen was edited successfully',
+      message: 'Test Report was created successfully',
       data: result,
     });
   }
 );
 
-// Controller function for remove specimen
+// Controller function for remove Test Report
 const deleteTestReport = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = TestReportService.deleteTestReport(req.params.id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Specimen was deleted successfully',
+      message: 'Test Report was deleted successfully',
       data: result,
     });
   }
@@ -72,7 +72,7 @@ const deleteTestReport = catchAsync(
 
 export const TestReportController = {
   createTestReport,
-  updateTestReport,
+  getSingleTestReportPrint,
   getSingleTestReport,
   getAllTestReport,
   deleteTestReport,

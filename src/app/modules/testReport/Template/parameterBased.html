@@ -8,7 +8,7 @@
     line-height: 20px;
     font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
     color: black;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   table,
@@ -55,7 +55,11 @@
   }
   .right,
   ul {
-    margin-right: 20px;
+    margin-right: 10px;
+  }
+  .left,
+  ul {
+    margin-left: -20px;
   }
   .report {
     width: 500px;
@@ -73,19 +77,19 @@
     text-transform: uppercase;
   }
 
-  /* @media only screen and (max-width: 600px) {
-    .info-box table tr.top table td {
+  @media only screen and (max-width: 600px) {
+    .info-box table tr table td {
       width: 100%;
       display: block;
       text-align: center;
     }
 
-    .info-box table tr.information table td {
+    .info-box table tr table td {
       width: 100%;
       display: block;
       text-align: center;
     }
-  } */
+  }
 
   /** RTL **/
   .rtl {
@@ -117,36 +121,43 @@
     <div class="left">
       <ul style="list-style-type: none">
         <li>ID NO: <strong>{{id}}</strong></li>
-        <li>Pataient's Name: <strong>{{pataientName}}</strong></li>
-        <li>Ref's By: <strong>{{doctorsName}}</strong></li>
+        <li>Pataient's Name: <strong>{{patientName}}</strong></li>
+        <li>Ref's By: <strong>{{referredBy}}</strong></li>
         <li>Specimen: <strong>{{specimen}}</strong></li>
       </ul>
     </div>
     <div class="right">
       <ul style="list-style-type: none">
-        <li>Receiving Date: <strong>{{todayDate}}</strong></li>
-        <li>Printed Date: <strong>{{todayDate}}</strong></li>
+        <li>Receiving Date: <strong>{{receivingDate}}</strong></li>
+        <li>Printed Date: <strong>{{receivingDate}}</strong></li>
         <li>Age: <strong>{{age}}</strong></li>
         <li>Sex: <strong>{{sex}}</strong></li>
       </ul>
     </div>
   </div>
   <div class="report">
-    <h2>{{department}} Report</h2>
+    <h2>{{department}}</h2>
   </div>
   <div class="table-box">
     <table style="width: 100%">
       <tr>
         <th>Test</th>
         <th>Result</th>
-        {{#if department ''}}
+        {{#if normalValue}}
         <th>Normal Range</th>
+        {{else}}
+        <th>Normal Range</th>
+        {{/if}}
       </tr>
+      {{#each parameterBased}}
       <tr>
         <td>{{test}}</td>
         <td>{{result}}</td>
-        <td>{{normalRange}}</td>
+        {{#if normalValue}}
+        <td>{{normalValue}}</td>
+        {{/if}}
       </tr>
+      {{/each}}
     </table>
   </div>
 </div>

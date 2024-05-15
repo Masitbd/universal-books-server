@@ -1,5 +1,9 @@
+import fs from 'fs';
+import path from 'path';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import GeneratePdf from '../../../utils/PdfGenerator';
+import { ITest } from '../test/test.interfacs';
 import { orderSearchAbleFields } from './order.constant';
 import { FilterableFieldsSubset, IOrder } from './order.interface';
 import { Order, OrderForRegistered, OrderForUnregistered } from './order.model';
@@ -165,6 +169,7 @@ const fetchAll = async ({
         patientType: { $first: '$patientType' },
         tests: {
           $push: {
+            SL: '$tests.SL',
             test: '$testData',
             status: '$tests.status',
             discount: '$tests.discount',
@@ -204,4 +209,132 @@ const orderPatch = async (param: { id: string; data: Partial<IOrder> }) => {
   });
   return result;
 };
-export const OrderService = { postOrder, fetchAll, orderPatch };
+
+const fetchIvoice = async (params: string) => {
+  const order = await Order.aggregate([
+    {
+      $match: {
+        oid: params,
+      },
+    },
+    {
+      $lookup: {
+        from: 'patients',
+        localField: 'uuid',
+        foreignField: 'uuid',
+        as: 'patientDataFromUUID',
+      },
+    },
+    {
+      $addFields: {
+        patientData: {
+          $cond: {
+            if: { $eq: ['$patientType', 'registered'] },
+            then: { $arrayElemAt: ['$patientDataFromUUID', 0] },
+            else: '$patient',
+          },
+        },
+      },
+    },
+    {
+      $unset: ['patientDataFromUUID', 'patient'],
+    },
+    {
+      $lookup: {
+        from: 'doctors',
+        localField: 'refBy',
+        foreignField: '_id',
+        as: 'refBy',
+      },
+    },
+    {
+      $unwind: {
+        path: '$refBy',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    { $unwind: '$tests' },
+    {
+      $lookup: {
+        from: 'tests',
+        localField: 'tests.test',
+        foreignField: '_id',
+        as: 'testData',
+      },
+    },
+    {
+      $unwind: {
+        path: '$testData',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+
+    {
+      $group: {
+        _id: '$_id',
+        uuid: { $first: '$uuid' },
+        patient: { $first: '$patientData' },
+        totalPrice: { $first: '$totalPrice' },
+        cashDiscount: { $first: '$cashDiscount' },
+        parcentDiscount: { $first: '$parcentDiscount' },
+        deliveryTime: { $first: '$deliveryTime' },
+        status: { $first: '$status' },
+        dueAmount: { $first: '$dueAmount' },
+        paid: { $first: '$paid' },
+        vat: { $first: '$vat' },
+        refBy: { $first: '$refBy' },
+        oid: { $first: '$oid' },
+        patientType: { $first: '$patientType' },
+        tests: {
+          $push: {
+            test: '$testData',
+            status: '$tests.status',
+            discount: '$tests.discount',
+            remark: '$tests.remark',
+            deliveryTime: '$tests.deliveryTime',
+          },
+        },
+        createdAt: { $first: '$createdAt' },
+      },
+    },
+  ]);
+
+  const dataBinding = await {
+    items: order[0].tests.map((test: { test: ITest }) => {
+      return {
+        name: test.test.label,
+        price: test.test.price,
+      };
+    }),
+
+    isWatermark: order[0].dueAmount > 0,
+    oid: params,
+    name: order[0].patient.name,
+    phone: order[0].patient.phone,
+    total: order[0].totalPrice,
+    createdAt: new Date(order[0].createdAt).toLocaleDateString(),
+    paid: order[0].paid,
+  };
+
+  const templateHtml = fs.readFileSync(
+    path.resolve(__dirname, './template.html'),
+    'utf8'
+  );
+
+  const bufferResult = await GeneratePdf({
+    data: dataBinding,
+    templateHtml: templateHtml,
+    options: {
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        left: '0px',
+        top: '0px',
+        right: '0px',
+        bottom: '0px',
+      },
+    },
+  });
+  return bufferResult;
+};
+export const OrderService = { postOrder, fetchAll, orderPatch, fetchIvoice };

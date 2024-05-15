@@ -44,7 +44,7 @@ const createDoctor = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Doctor was created successfully',
+      message: `Doctor getting ${result?.account_number} successfully`,
       data: result,
     });
   }

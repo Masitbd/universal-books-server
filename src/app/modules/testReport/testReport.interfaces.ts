@@ -15,9 +15,12 @@ export type IMicrobiologyBacteria = {
   temperatures: string;
   conditions: Types.ObjectId[];
   growth: boolean;
-  colonyCount?: string;
+  colonyCount?: {
+    thenType: string;
+    powerType: string;
+  };
   bacterias?: Types.ObjectId[];
-  sensitivityOptions?: Types.ObjectId[];
+  sensitivityOptions?: [];
 };
 
 export type IDescriptive = {

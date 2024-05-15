@@ -8,6 +8,7 @@ import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.rout
 import { OrderRoutes } from '../modules/order/order.routes';
 import { PatientRoute } from '../modules/patient/patient.route';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
+import { ReportGroupRoutes } from '../modules/reportGroup/reportGroup.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 import { TestRoutes } from '../modules/test/test.routes';
@@ -73,13 +74,14 @@ const moduleRoutes = [
     path: '/order',
     route: OrderRoutes.routes,
   },
-  {
-    path: '/order',
-    route: OrderRoutes.routes,
-  },
+
   {
     path: '/testReport',
     route: TestReportRoutes.routes,
+  },
+  {
+    path: '/reportGroup',
+    route: ReportGroupRoutes.routes,
   },
 ];
 

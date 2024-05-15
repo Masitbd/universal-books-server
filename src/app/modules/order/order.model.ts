@@ -9,6 +9,7 @@ const orderSchema = new Schema<IOrder>(
   {
     tests: [
       {
+        SL: Number,
         test: { type: Types.ObjectId, ref: 'Test' },
         status: {
           type: String,
