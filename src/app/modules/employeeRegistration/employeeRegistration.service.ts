@@ -5,7 +5,7 @@ import { employeeSearchableFields } from './employeeRegistration.conatant';
 
 import { IEmployeeRegistration } from './employeeRegistration.interface';
 import { EmployeeRegistration } from './employeeRegistration.model';
-
+// this is employee post
 const postEmployeeRegistration = async (
   payload: IEmployeeRegistration
 ): Promise<IEmployeeRegistration> => {
