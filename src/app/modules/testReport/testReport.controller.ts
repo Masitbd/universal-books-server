@@ -33,8 +33,13 @@ const getSingleTestReport = catchAsync(
 
 const getSingleTestReportPrint = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    const dataHTML = req.body.docx;
+    console.log(dataHTML);
     const id = req.params.id;
-    const result = await TestReportService.getSingleTestReportPrint(id);
+    const result = await TestReportService.getSingleTestReportPrint(
+      id,
+      dataHTML
+    );
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,

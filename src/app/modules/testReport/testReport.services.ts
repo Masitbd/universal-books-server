@@ -231,7 +231,7 @@ const getSingleTestReport = async (id: string) => {
   }
   return result;
 };
-const getSingleTestReportPrint = async (id: string) => {
+const getSingleTestReportPrint = async (id: string, dataHTML: string) => {
   const result = await TestReport.findOne({ testId: id });
   const condition = await Condition.findOne({
     _id: result?.microbiology?.[0]?.conditions[0],
@@ -270,9 +270,8 @@ const getSingleTestReportPrint = async (id: string) => {
       normalValue: item.normalValue !== '0' ? item.normalValue : false,
     })),
   };
-  console.log('order', order);
+  // console.log('order', order);
   console.log('test', test?.testResultType);
-  console.log(result);
 
   const microbiologyData = {
     id: order?.uuid,
@@ -299,11 +298,25 @@ const getSingleTestReportPrint = async (id: string) => {
     condition: condition?.value,
     bacterias: bacteria?.value,
   };
-  console.log(microbiologyData);
+  const descriptiveData = {
+    id: order?.uuid,
+    receivingDate: Date.now(),
+    patientName: patient?.name,
+    age: patient?.age,
+    sex: patient?.gender,
+    referredBy: (order?.refBy as unknown as IDoctor)?.name,
+    specimen: (test?.specimen as unknown as ISpecimen[])[0]?.label,
+    department: (test?.department as unknown as IDepartment)?.label,
+    newHTML: dataHTML,
+  };
+  console.log(dataHTML);
+  console.log(descriptiveData);
 
   const template =
     test?.testResultType === 'parameter'
       ? './Template/parameterBased.html'
+      : test?.testResultType === 'descriptive'
+      ? './Template/descriptive.html'
       : './Template/Bacterial.html';
   const templateHtml = fs.readFileSync(
     path.resolve(__dirname, template),
@@ -312,7 +325,12 @@ const getSingleTestReportPrint = async (id: string) => {
   console.log(templateHtml);
 
   const bufferResult = await GeneratePdf({
-    data: test?.testResultType === 'parameter' ? data : microbiologyData,
+    data:
+      test?.testResultType === 'parameter'
+        ? data
+        : test?.testResultType === 'descriptive'
+        ? descriptiveData
+        : microbiologyData,
     templateHtml: templateHtml,
     options: {
       format: 'A4',
