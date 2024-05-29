@@ -17,7 +17,6 @@ const DepartmentSchema = new Schema<IDepartment>(
       required: true,
       unique: true,
     },
-
     commissionParcentage: {
       type: Number,
       default: 0,

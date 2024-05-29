@@ -18,6 +18,7 @@ import { ISpecimen } from '../specimen/specimen.interfaces';
 import { Test } from '../test/test.model';
 import {
   IDescriptive,
+  IDescriptiveDataDocs,
   IMicrobiologyBacteria,
   IParameterBased,
   ITestReport,
@@ -32,7 +33,7 @@ type IResultFields = {
   defaultValue: Types.ObjectId[];
   resultDescripton: string;
   hasPdrv?: boolean;
-  sensitivityOptions: Types.ObjectId[];
+  sensitivityOptions: [];
   conditions: Types.ObjectId[];
   bacteria: Types.ObjectId[];
   duration: string;
@@ -52,46 +53,51 @@ type finalDataForSendBakcend = {
   comment?: string;
   resultDescripton?: string;
   type: string;
-  data: IResultFields;
+  docsData?: string;
+  data?: IResultFields;
 };
 
 // // For posting new specimen information
 const createTestReport = async (
   payload: finalDataForSendBakcend
 ): Promise<void | ITestReport> => {
-  // console.log(payload);
   const parameterBasedObject: Partial<IParameterBased> = {
-    _id: payload.data._id,
-    title: payload.data.title,
-    test: payload.data.test,
-    hasPdrv: payload.data.hasPdrv,
-    unit: payload.data.unit,
-    normalValue: payload.data.normalValue,
+    _id: payload.data?._id,
+    title: payload.data?.title,
+    test: payload.data?.test,
+    hasPdrv: payload.data?.hasPdrv,
+    unit: payload.data?.unit,
+    normalValue: payload.data?.normalValue,
     result: payload.result || '',
     comment: payload.comment || '',
   };
 
-  const descriptiveObject: Partial<IDescriptive> = {
-    _id: payload.data._id,
-    title: payload.data.title,
+  const descriptive: Partial<IDescriptive> = {
+    _id: payload.data?._id,
+    title: payload.data?.title,
     resultDescripton: payload.resultDescripton,
   };
+  const descriptiveObject: Partial<IDescriptiveDataDocs> = {
+    docsContent: payload.docsData || '',
+    descriptive: [descriptive] as IDescriptive[],
+  };
+  console.log('docs', descriptiveObject);
   const microbiologybacterialObject: Partial<IMicrobiologyBacteria> = {
-    _id: payload.data._id,
-    bacterias: payload.data.bacteria,
-    conditions: payload.data.conditions,
-    sensitivityOptions: payload.data.sensitivityOptions,
-    colonyCount: payload.data.colonyCount,
-    duration: payload.data.duration,
-    growth: payload.data.growth,
-    temperatures: payload.data.temperatures,
+    _id: payload.data?._id,
+    bacterias: payload.data?.bacteria,
+    conditions: payload.data?.conditions,
+    sensitivityOptions: payload?.data?.sensitivityOptions,
+    colonyCount: payload.data?.colonyCount,
+    duration: payload.data?.duration,
+    growth: payload.data?.growth,
+    temperatures: payload.data?.temperatures,
   };
 
   const data = {
     testId: payload.testId,
     orderId: payload.orderId,
     parameterBased: payload.type === 'parameter' ? [parameterBasedObject] : [],
-    descriptive: payload.type === 'descriptive' ? [descriptiveObject] : [],
+    descriptive: payload.type === 'descriptive' ? descriptiveObject : {},
     microbiology:
       payload.type === 'bacterial' ? [microbiologybacterialObject] : [],
   };
@@ -103,10 +109,10 @@ const createTestReport = async (
     // console.log('p', data);
     const isExist = await TestReport.findOne({ testId: data.testId });
     if (!isExist) {
-      console.log(data);
+      // console.log(data);
       const newTestReport = new TestReport(data);
       await newTestReport.save();
-      console.log('finaldatatosend', newTestReport);
+      // console.log('finaldatatosend', newTestReport);
     }
 
     const isExistForValue = await TestReport.findOne({
@@ -117,9 +123,9 @@ const createTestReport = async (
         { testId: data.testId },
         { $push: { parameterBased: parameterBasedObject } }
       );
-      console.log('80');
+      // console.log('80');
     } else {
-      console.log(isExistForValue, '81');
+      // console.log(isExistForValue, '81');
       const updateFields: { [key: string]: string | undefined } = {};
 
       if (parameterBasedObject.result) {
@@ -139,50 +145,74 @@ const createTestReport = async (
       );
     }
   } else if (payload.type === 'descriptive') {
-    console.log(data);
+    console.log('payload', payload);
     const isExist = await TestReport.findOne({ testId: data.testId });
     if (!isExist) {
       const newTestReport = new TestReport(data);
       await newTestReport.save();
-      console.log('finaldatatosend', newTestReport);
+      // console.log('finaldatatosend', newTestReport);
     }
-
-    const isExistForValue = await TestReport.findOne({
-      descriptive: { $elemMatch: { _id: descriptiveObject._id } },
-    });
-    if (!isExistForValue) {
-      await TestReport.updateOne(
-        { testId: data.testId },
-        { $push: { descriptive: descriptiveObject } }
-      );
-    } else {
-      console.log(isExistForValue, '81');
-      const updateFields: { [key: string]: string } = {};
-
-      if (descriptiveObject.resultDescripton) {
-        updateFields['descriptive.$.resultDescripton'] =
-          descriptiveObject.resultDescripton;
+    if (payload.docsData) {
+      if (isExist?.descriptiveDataDocs?.docsContent === '') {
         await TestReport.updateOne(
+          { testId: data.testId },
           {
-            testId: data.testId,
-            'descriptive._id': descriptiveObject._id,
-          },
-          {
-            $set: updateFields,
+            $set: {
+              'descriptiveDataDocs.docsContent': descriptiveObject.docsContent,
+            },
           }
         );
+      } else {
+        await TestReport.updateOne(
+          { testId: data.testId },
+          {
+            $set: {
+              'descriptiveDataDocs.docsContent': descriptiveObject.docsContent,
+            },
+          }
+        );
+      }
+    } else {
+      console.log('liver');
+      const isExistForValue = await TestReport.findOne({
+        'descriptiveDataDocs.descriptive': {
+          $elemMatch: { _id: descriptive._id },
+        },
+      });
+      console.log('182', isExistForValue);
+      if (!isExistForValue) {
+        await TestReport.updateOne(
+          { testId: data.testId },
+          { $push: { 'descriptiveDataDocs.descriptive': descriptive } }
+        );
+      } else {
+        console.log(isExistForValue, '81');
+        const updateFields: { [key: string]: string } = {};
+        if (descriptive.resultDescripton) {
+          updateFields['descriptiveDataDocs.descriptive.$.resultDescripton'] =
+            descriptive.resultDescripton;
+          await TestReport.updateOne(
+            {
+              testId: data.testId,
+              'descriptiveDataDocs.descriptive._id': descriptive._id,
+            },
+            {
+              $set: updateFields,
+            }
+          );
+        }
       }
     }
   } else {
     const microbiologybacterialObject: Partial<IMicrobiologyBacteria> = {
-      _id: payload.data._id,
-      conditions: payload.data.conditions,
-      duration: payload.data.duration,
-      temperatures: payload.data.temperatures,
-      growth: payload.data.growth,
-      colonyCount: payload.data.colonyCount,
-      bacterias: payload.data.bacteria,
-      sensitivityOptions: payload.data.sensitivityOptions,
+      _id: payload.data?._id,
+      conditions: payload.data?.conditions,
+      duration: payload.data?.duration,
+      temperatures: payload.data?.temperatures,
+      growth: payload.data?.growth,
+      colonyCount: payload.data?.colonyCount,
+      bacterias: payload.data?.bacteria,
+      sensitivityOptions: payload?.data?.sensitivityOptions,
     };
     const isExist = await TestReport.findOne({ testId: data.testId });
     if (!isExist) {
@@ -190,7 +220,7 @@ const createTestReport = async (
       await newTestReport.save();
       // console.log('finaldatatosend', newTestReport);
     }
-    const ifDone = await TestReport.updateOne(
+    await TestReport.updateOne(
       {
         testId: data.testId,
         'microbiology._id': microbiologybacterialObject._id,
@@ -201,14 +231,14 @@ const createTestReport = async (
         },
       }
     );
-    const ifDonethis = await TestReport.findOne({
-      testId: data.testId,
-      'microbiology._id': microbiologybacterialObject._id,
-    });
-    console.log('test', ifDonethis);
+    // const ifDonethis = await TestReport.findOne({
+    //   testId: data.testId,
+    //   'microbiology._id': microbiologybacterialObject._id,
+    // });
+    // console.log('test', ifDonethis);
 
-    console.log('ifDOne', ifDone);
-    console.log('idf', microbiologybacterialObject);
+    // console.log('ifDOne', ifDone);
+    // console.log('idf', microbiologybacterialObject);
   }
 
   //status change
@@ -231,7 +261,7 @@ const getSingleTestReport = async (id: string) => {
   }
   return result;
 };
-const getSingleTestReportPrint = async (id: string, dataHTML: string) => {
+const getSingleTestReportPrint = async (id: string) => {
   const result = await TestReport.findOne({ testId: id });
   const condition = await Condition.findOne({
     _id: result?.microbiology?.[0]?.conditions[0],
@@ -263,7 +293,7 @@ const getSingleTestReportPrint = async (id: string, dataHTML: string) => {
     sex: patient?.gender,
     referredBy: (order?.refBy as unknown as IDoctor)?.name,
     specimen: (test?.specimen as unknown as ISpecimen[])[0]?.label,
-    department: (test?.department as unknown as IDepartment)?.label,
+    department: (test?.department as unknown as IDepartment)?.reportGroupName,
     parameterBased: result?.parameterBased?.map(item => ({
       test: item.test,
       result: item.result,
@@ -281,7 +311,7 @@ const getSingleTestReportPrint = async (id: string, dataHTML: string) => {
     sex: patient?.gender,
     referredBy: (order?.refBy as unknown as IDoctor)?.name,
     specimen: (test?.specimen as unknown as ISpecimen[])[0]?.label,
-    department: (test?.department as unknown as IDepartment)?.label,
+    department: (test?.department as unknown as IDepartment)?.reportGroupName,
     colonyCountP: result?.microbiology?.[0]?.colonyCount?.powerType,
     colonyCountT: result?.microbiology?.[0]?.colonyCount?.thenType,
     growth: result?.microbiology?.[0]?.growth,
@@ -298,6 +328,7 @@ const getSingleTestReportPrint = async (id: string, dataHTML: string) => {
     condition: condition?.value,
     bacterias: bacteria?.value,
   };
+
   const descriptiveData = {
     id: order?.uuid,
     receivingDate: Date.now(),
@@ -306,10 +337,10 @@ const getSingleTestReportPrint = async (id: string, dataHTML: string) => {
     sex: patient?.gender,
     referredBy: (order?.refBy as unknown as IDoctor)?.name,
     specimen: (test?.specimen as unknown as ISpecimen[])[0]?.label,
-    department: (test?.department as unknown as IDepartment)?.label,
-    newHTML: dataHTML,
+    department: (test?.department as unknown as IDepartment)?.reportGroupName,
+    newHTML: result?.descriptiveDataDocs?.docsContent,
   };
-  console.log(dataHTML);
+
   console.log(descriptiveData);
 
   const template =
@@ -368,6 +399,3 @@ export const TestReportService = {
   deleteTestReport,
   getSingleTestReportPrint,
 };
-function item(value: never, index: number, array: never[]): unknown {
-  throw new Error('Function not implemented.');
-}

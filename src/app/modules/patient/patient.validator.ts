@@ -11,7 +11,7 @@ const PatientValidator = z.object({
     gender: z.string({
       required_error: 'Name is required',
     }),
-    address: z.string({
+    presentAddress: z.string({
       required_error: 'Name is required',
     }),
     ref_by: z

@@ -5,7 +5,7 @@ export type ITestReport = {
   testId: Types.ObjectId;
   defaultValue: Types.ObjectId[];
   microbiology?: IMicrobiologyBacteria[];
-  descriptive?: IDescriptive[];
+  descriptiveDataDocs?: IDescriptiveDataDocs;
   parameterBased?: IParameterBased[];
 };
 
@@ -27,6 +27,10 @@ export type IDescriptive = {
   _id: string;
   title: string;
   resultDescripton: string;
+};
+export type IDescriptiveDataDocs = {
+  docsContent: string;
+  descriptive: IDescriptive[];
 };
 export type IParameterBased = {
   _id: string;

@@ -21,7 +21,6 @@ const doctorSchema = new Schema<IDoctor>({
   },
   phone: {
     type: String,
-
     unique: true,
   },
   image: {

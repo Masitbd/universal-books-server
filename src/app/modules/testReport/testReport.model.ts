@@ -20,17 +20,22 @@ const TestReportSchema = new Schema<ITestReport, TestReportModel>(
       },
     ],
 
-    descriptive: [
-      {
-        title: {
-          type: String,
-          required: true,
-        },
-        resultDescripton: {
-          type: String,
-        },
+    descriptiveDataDocs: {
+      docsContent: {
+        type: String,
       },
-    ],
+      descriptive: [
+        {
+          title: {
+            type: String,
+            required: true,
+          },
+          resultDescripton: {
+            type: String,
+          },
+        },
+      ],
+    },
     parameterBased: [
       {
         title: {
