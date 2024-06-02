@@ -45,6 +45,7 @@ const removeTest = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleTest = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
+  console.log(id);
 
   const result = await TestServices.fetchSingleTest(id);
   sendResponse(res, {

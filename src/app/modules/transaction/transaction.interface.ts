@@ -5,5 +5,5 @@ export type ITransaction = {
   ref?: Types.ObjectId | null;
   description: string;
   transactionType: string;
-  uuid: string;
+  uuid?: string;
 };

@@ -1,0 +1,163 @@
+<style>
+  .info-box {
+    max-width: 1000px;
+    margin: auto;
+    padding: 5px;
+    border: 2px dashed grey;
+    font-size: 16px;
+    line-height: 20px;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: black;
+    font-weight: 500;
+  }
+
+  table,
+  th,
+  td {
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 20px;
+    padding: 0px;
+    border: 3px solid rgb(114, 110, 110);
+    border-collapse: collapse;
+    font-size: 18px;
+    line-height: 20px;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: black;
+    font-weight: 500;
+  }
+
+  .info-box,
+  ul,
+  li {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .table-box,
+  table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+  }
+
+  th {
+    background-color: rgb(182, 177, 177);
+    margin: 10px;
+    padding: 10px;
+    font-weight: 600;
+  }
+  td {
+    margin: 10px;
+    padding: 10px;
+    font-weight: normal;
+    font-size: 16px;
+  }
+  .right,
+  ul {
+    margin-right: 10px;
+  }
+  .left,
+  ul {
+    margin-left: -20px;
+  }
+  .report {
+    width: 500px;
+    margin: auto;
+    border: 1px solid;
+    box-shadow: 5px 10px #888888;
+    text-align: center;
+    border-radius: 2px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  h2 {
+    line-height: 10px;
+    font-size: 32px;
+    text-transform: uppercase;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .info-box table tr table td {
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+
+    .info-box table tr table td {
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+  }
+
+  /** RTL **/
+  .rtl {
+    direction: rtl;
+    font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial,
+      sans-serif;
+  }
+
+  .rtl table {
+    text-align: right;
+  }
+
+  .rtl table tr td:nth-child(2) {
+    text-align: left;
+  }
+
+  .left {
+    float: left;
+  }
+  .right {
+    float: right;
+  }
+  .clearfix {
+    overflow: auto;
+  }
+</style>
+<div style="margin-top: 50px">
+  <div class="info-Box clearfix">
+    <div class="left">
+      <ul style="list-style-type: none">
+        <li>ID NO: <strong>{{id}}</strong></li>
+        <li>Pataient's Name: <strong>{{patientName}}</strong></li>
+        <li>Ref's By: <strong>{{referredBy}}</strong></li>
+        <li>Specimen: <strong>{{specimen}}</strong></li>
+      </ul>
+    </div>
+    <div class="right">
+      <ul style="list-style-type: none">
+        <li>Receiving Date: <strong>{{receivingDate}}</strong></li>
+        <li>Printed Date: <strong>{{receivingDate}}</strong></li>
+        <li>Age: <strong>{{age}}</strong></li>
+        <li>Sex: <strong>{{sex}}</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="report">
+    <h2>{{department}}</h2>
+  </div>
+  <div class="table-box">
+    <table style="width: 100%">
+      <tr>
+        <th>Test</th>
+        <th>Result</th>
+        {{#if normalValue}}
+        <th>Normal Range</th>
+        {{else}}
+        <th>Normal Range</th>
+        {{/if}}
+      </tr>
+      {{#each parameterBased}}
+      <tr>
+        <td>{{test}}</td>
+        <td>{{result}}</td>
+        {{#if normalValue}}
+        <td>{{normalValue}}</td>
+        {{/if}}
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+</div>

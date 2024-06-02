@@ -40,12 +40,11 @@ const getSingleDoctor = catchAsync(
 );
 const createDoctor = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    console.log(req.body);
     const result = await DoctorServices.createDoctor(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Doctor was created successfully',
+      message: `Doctor getting ${result?.account_number} successfully`,
       data: result,
     });
   }

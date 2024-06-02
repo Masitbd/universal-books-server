@@ -1,13 +1,18 @@
 import express from 'express';
+import { AccountRoute } from '../modules/account/account.route';
 import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
+import { OrderRoutes } from '../modules/order/order.routes';
+import { PatientRoute } from '../modules/patient/patient.route';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
+import { ReportGroupRoutes } from '../modules/reportGroup/reportGroup.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 import { TestRoutes } from '../modules/test/test.routes';
+import { TestReportRoutes } from '../modules/testReport/testReport.routes';
 import { TransactionRoute } from '../modules/transaction/transaction.route';
 import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 
@@ -56,6 +61,27 @@ const moduleRoutes = [
   {
     path: '/transaction',
     route: TransactionRoute.routes,
+  },
+  {
+    path: '/account',
+    route: AccountRoute.routes,
+  },
+  {
+    path: '/patient',
+    route: PatientRoute.routes,
+  },
+  {
+    path: '/order',
+    route: OrderRoutes.routes,
+  },
+
+  {
+    path: '/testReport',
+    route: TestReportRoutes.routes,
+  },
+  {
+    path: '/reportGroup',
+    route: ReportGroupRoutes.routes,
   },
 ];
 

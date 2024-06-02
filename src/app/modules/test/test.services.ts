@@ -27,6 +27,7 @@ const deleteTest = async (id: string) => {
 };
 
 const fetchSingleTest = async (id: string) => {
+  console.log(id, 'id');
   const result = await Test.findOne({ _id: id });
   return result;
 };

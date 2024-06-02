@@ -20,10 +20,10 @@ const getSingelAccount = catchAsync(async (req: Request, res: Response) => {
     data: result,
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Condition was deleted successfully',
+    message: ' successfully',
   });
 });
-export const AcocuntController = {
+export const AccountController = {
   createNewAccount,
   editAccount,
   getSingelAccount,
