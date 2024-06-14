@@ -5,9 +5,11 @@ const testValidator = z.object({
     value: z.string({
       required_error: 'Value is required',
     }),
-    description: z.string({
-      required_error: 'Description is required',
-    }),
+    description: z
+      .string({
+        required_error: 'Description is required',
+      })
+      .optional(),
     label: z.string({
       required_error: 'Label is required',
     }),
