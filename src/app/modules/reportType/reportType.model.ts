@@ -1,65 +1,48 @@
 import { Schema, model } from 'mongoose';
 import {
   IReportType,
-  ITestForDescriptive,
-  ITestForMicrobiology,
+  IReportTypeForDescriptive,
+  IReportTypeForMicrobiology,
+  IReportTypeForParameter,
 } from './reporttype.interface';
 
 const reportTypeSchema = new Schema<IReportType>(
   {
-    group: {
-      type: String,
-      required: true,
-    },
-    reportGroup: {
+    reportTypeGroup: {
       type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'ReportGroup',
-    },
-    department: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'Departments',
-    },
-    resultType: {
-      type: String,
+      ref: 'reportTypeGroups',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const parameterBasedSchema = new Schema<IReportType>({
-  testInfo: {
-    test: {
-      type: String,
-      required: true,
-    },
-    investigation: {
-      type: String,
-      required: true,
-    },
-    normalValue: {
-      type: String,
-    },
-    unit: {
-      type: String,
-    },
-    hasPdrv: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    pdrvValues: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'pdrvs',
-      },
-    ],
+const parameterBasedSchema = new Schema<IReportTypeForParameter>({
+  test: {
+    type: String,
   },
+  investigation: {
+    type: String,
+  },
+  normalValue: {
+    type: String,
+  },
+  unit: {
+    type: String,
+  },
+  hasPdrv: {
+    type: Boolean,
+    default: false,
+  },
+  pdrvValues: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'pdrvs',
+    },
+  ],
 });
 
-const DescriptiveBasedSchema = new Schema<ITestForDescriptive>({
+const DescriptiveBasedSchema = new Schema<IReportTypeForDescriptive>({
   label: {
     type: String,
     required: true,
@@ -69,7 +52,7 @@ const DescriptiveBasedSchema = new Schema<ITestForDescriptive>({
   },
 });
 
-const microbiologyBasedSchema = new Schema<ITestForMicrobiology>({
+const microbiologyBasedSchema = new Schema<IReportTypeForMicrobiology>({
   sensitivityOpeions: [
     {
       type: Schema.Types.ObjectId,

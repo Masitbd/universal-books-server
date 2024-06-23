@@ -10,6 +10,7 @@ import { PatientRoute } from '../modules/patient/patient.route';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
 import { ReportGroupRoutes } from '../modules/reportGroup/reportGroup.routes';
 import { reportTypeRoutes } from '../modules/reportType/reportType.routes';
+import { ReportTypeGroupRoutes } from '../modules/reportTypeGroup/reportTypeGroup.routes';
 import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 import { TestRoutes } from '../modules/test/test.routes';
@@ -87,6 +88,10 @@ const moduleRoutes = [
   {
     path: '/reportType',
     route: reportTypeRoutes.routes,
+  },
+  {
+    path: '/reportTypeGroup',
+    route: ReportTypeGroupRoutes.routes,
   },
 ];
 

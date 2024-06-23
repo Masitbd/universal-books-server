@@ -21,24 +21,19 @@ export type ITestForMicrobiology = {
 };
 
 export type IReportType = {
-  group: string;
-  resultType: string;
-  reportGroup: Types.ObjectId;
-  department: Types.ObjectId;
-  testInfo:
-    | ITestForParameter
-    | ITestForDescriptive
-    | ITestForMicrobiology
-    | null;
+  reportTypeGroup: Types.ObjectId;
 };
+export type IReportTypeForParameter = IReportType & ITestForParameter;
+export type IReportTypeForDescriptive = IReportType & ITestForDescriptive;
+export type IReportTypeForMicrobiology = IReportType & ITestForMicrobiology;
 export type fetchAllreportTypeProps = {
-  group: string;
+  reportTypeGroup: string;
   resultType: string;
   reportGroup: Types.ObjectId;
 };
 
 export const reportTypeFlterableField: (keyof fetchAllreportTypeProps)[] = [
-  'group',
+  'reportTypeGroup',
   'resultType',
   'reportGroup',
 ];

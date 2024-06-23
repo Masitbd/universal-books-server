@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import { FilterQuery, Types } from 'mongoose';
 import { ENUM_RESULT_TYPE } from '../../../enums/resultTypeEnum';
 import ApiError from '../../../errors/ApiError';
+import { ReportTypeGroup } from '../reportTypeGroup/reportType.model';
 import {
   DescriptiveBasedReportType,
   MicrobiologyBasedReportType,
@@ -16,7 +17,11 @@ import {
 } from './reporttype.interface';
 
 const postReportType = async (params: IReportType) => {
-  switch (params.resultType) {
+  const group = await ReportTypeGroup.findOne({ _id: params.reportTypeGroup });
+  if (!group)
+    throw new ApiError(httpStatus.NOT_FOUND, 'ReportTypeGroup not found');
+
+  switch (group?.resultType) {
     case ENUM_RESULT_TYPE.PARAMETER_BASED:
       return await ParameterBasedReportType.create(params);
 
@@ -36,11 +41,36 @@ const postReportType = async (params: IReportType) => {
 
 const patchReportType = async (params: patchReportTypeProps) => {
   const { data, id } = params;
-  const doesExist = await ReportType.findOne({ _id: id });
-  if (!doesExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'ReportType not found');
-  }
-  switch (doesExist.resultType) {
+  const reportType = await ReportType.aggregate([
+    {
+      $match: {
+        _id: new Types.ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: 'reporttypegroups',
+        localField: 'reportTypeGroup',
+        foreignField: '_id',
+        as: 'reportTypeGroup',
+      },
+    },
+    {
+      $unwind: '$reportTypeGroup',
+    },
+    {
+      $addFields: {
+        resultType: '$reportTypeGroup.resultType',
+      },
+    },
+    {
+      $project: {
+        resultType: 1,
+      },
+    },
+  ]);
+
+  switch (reportType[0].resultType) {
     case ENUM_RESULT_TYPE.PARAMETER_BASED:
       return await ParameterBasedReportType.findByIdAndUpdate(id, data, {
         new: true,
