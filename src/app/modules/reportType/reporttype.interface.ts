@@ -5,8 +5,7 @@ export type ITestForParameter = {
   investigation: string;
   normalValue: string;
   unit: string;
-  hasPdrv: boolean;
-  pdrvValues?: Types.ObjectId[];
+  defaultValue: string[];
 };
 
 export type ITestForDescriptive = {

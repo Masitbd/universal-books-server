@@ -45,23 +45,25 @@ const testValidator = z.object({
     processTime: z.number({
       required_error: 'Process time is required',
     }),
-    resultFields: z.array(
-      z.object({
-        title: z.string({ required_error: 'Title is required' }).optional(),
-        test: z
-          .string({
-            required_error: 'Test is required',
-          })
-          .optional(),
-        unit: z.string().optional(),
-        normalValue: z.string().optional(),
-        defaultValue: z.array(z.string().optional()).optional(),
-        resultDescripton: z.string().optional(),
-        sensitivityOptions: z.array(z.string().optional()).optional(),
-        condition: z.array(z.string().optional()).optional(),
-        bacteria: z.array(z.string().optional()).optional(),
-      })
-    ),
+    resultFields: z
+      .array(
+        z.object({
+          title: z.string({ required_error: 'Title is required' }).optional(),
+          test: z
+            .string({
+              required_error: 'Test is required',
+            })
+            .optional(),
+          unit: z.string().optional(),
+          normalValue: z.string().optional(),
+          defaultValue: z.array(z.string().optional()).optional(),
+          resultDescripton: z.string().optional(),
+          sensitivityOptions: z.array(z.string().optional()).optional(),
+          condition: z.array(z.string().optional()).optional(),
+          bacteria: z.array(z.string().optional()).optional(),
+        })
+      )
+      .optional(),
   }),
 });
 

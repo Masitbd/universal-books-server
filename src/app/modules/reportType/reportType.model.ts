@@ -30,16 +30,13 @@ const parameterBasedSchema = new Schema<IReportTypeForParameter>({
   unit: {
     type: String,
   },
-  hasPdrv: {
-    type: Boolean,
-    default: false,
+  defaultValue: {
+    type: [
+      {
+        type: String,
+      },
+    ],
   },
-  pdrvValues: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'pdrvs',
-    },
-  ],
 });
 
 const DescriptiveBasedSchema = new Schema<IReportTypeForDescriptive>({
