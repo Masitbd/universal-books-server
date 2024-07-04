@@ -5,18 +5,29 @@ const DoctorValidator = z.object({
     name: z.string({
       required_error: 'Name is required',
     }),
-    fatherName: z.string({
-      required_error: 'Father Name is required',
-    }),
-    email: z.string({
-      required_error: 'Email is required',
-    }),
+    fatherName: z
+      .string({
+        required_error: 'Father Name is required',
+      })
+      .optional(),
+    email: z
+      .string({
+        required_error: 'Email is required',
+      })
+      .optional(),
     designation: z.string({
       required_error: 'Designation is required',
     }),
-    phone: z.string({
-      required_error: 'Phone Number is required',
-    }),
+    phone: z
+      .string({
+        required_error: 'Phone Number is required',
+      })
+      .optional(),
+    code: z
+      .string({
+        required_error: 'Code  is required',
+      })
+      .optional(),
     image: z
       .string({
         required_error: 'image is required',

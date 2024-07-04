@@ -100,8 +100,7 @@ const testSchema = new Schema<ITest, TestModel>(
         },
         defaultValues: [
           {
-            type: Schema.Types.ObjectId,
-            ref: 'pdrvs',
+            type: String,
           },
         ],
         resultDescripton: {
