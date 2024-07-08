@@ -78,85 +78,92 @@ orderSchema.post('save', async function (doc: IOrder) {
       ref: order._id,
     });
   }
-});
-orderSchema.post('findOneAndUpdate', async function (document: IOrder) {
-  const order = document;
-  const testIds = order.tests;
 
-  const result = await Test.aggregate([
-    {
-      $match: {
-        _id: {
-          $in: testIds.map(data => data.test),
-        },
-      },
-    },
-    {
-      $lookup: {
-        from: 'departments',
-        localField: 'department',
-        foreignField: '_id',
-        as: 'departmentInfo',
-      },
-    },
-    {
-      $unwind: '$departmentInfo',
-    },
-    {
-      $project: {
-        price: 1,
-        commissionType: '$departmentInfo.isCommissionFiexed',
-        fixedCommission: '$departmentInfo.fixedCommission',
-        percentageCommission: '$departmentInfo.commissionParcentage',
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        totalFixedCommission: {
-          $sum: {
-            $cond: [{ $eq: ['$commissionType', true] }, '$fixedCommission', 0],
-          },
-        },
-        totalPercentageCommission: {
-          $sum: {
-            $cond: [
-              { $eq: ['$commissionType', false] },
-              {
-                $multiply: [
-                  '$price',
-                  { $divide: ['$percentageCommission', 100] },
-                ],
-              },
-              0,
-            ],
+  if (order.dueAmount == 0) {
+    const testIds = order.tests;
+
+    const result = await Test.aggregate([
+      {
+        $match: {
+          _id: {
+            $in: testIds.map(data => data.test),
           },
         },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        totalCommission: {
-          $add: ['$totalFixedCommission', '$totalPercentageCommission'],
+      {
+        $lookup: {
+          from: 'departments',
+          localField: 'department',
+          foreignField: '_id',
+          as: 'departmentInfo',
         },
       },
-    },
-  ]);
-  const referedDoctor: IDoctor | null = await Doctor.findOne({
-    _id: order.refBy,
-  });
-
-  if (referedDoctor?.uuid && order.dueAmount === 0) {
-    TransactionService.postTransaction({
-      uuid: referedDoctor.uuid,
-      amount: Math.ceil(result[0].totalCommission),
-      description: 'Account credited for patient commission',
-      transactionType: 'credit',
-      ref: order._id,
+      {
+        $unwind: '$departmentInfo',
+      },
+      {
+        $project: {
+          price: 1,
+          commissionType: '$departmentInfo.isCommissionFiexed',
+          fixedCommission: '$departmentInfo.fixedCommission',
+          percentageCommission: '$departmentInfo.commissionParcentage',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalFixedCommission: {
+            $sum: {
+              $cond: [
+                { $eq: ['$commissionType', true] },
+                '$fixedCommission',
+                0,
+              ],
+            },
+          },
+          totalPercentageCommission: {
+            $sum: {
+              $cond: [
+                { $eq: ['$commissionType', false] },
+                {
+                  $multiply: [
+                    '$price',
+                    { $divide: ['$percentageCommission', 100] },
+                  ],
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalCommission: {
+            $add: ['$totalFixedCommission', '$totalPercentageCommission'],
+          },
+        },
+      },
+    ]);
+    const referedDoctor: IDoctor | null = await Doctor.findOne({
+      _id: order.refBy,
     });
+
+    if (referedDoctor?.account_id && order.dueAmount === 0) {
+      TransactionService.postTransaction({
+        uuid: referedDoctor.account_number,
+        amount: Math.ceil(result[0].totalCommission),
+        description: 'Account credited for patient commission',
+        transactionType: 'credit',
+        ref: order._id,
+      });
+    }
   }
 });
+// orderSchema.post('findOneAndUpdate', async function (document: IOrder) {
+//
+// });
 
 export const Order = model('order', orderSchema);
 export const OrderForRegistered = Order.discriminator(

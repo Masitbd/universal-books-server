@@ -77,9 +77,23 @@ const getInvoice = catchAsync(
     });
   }
 );
+
+const dueCollection = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await OrderService.dueCollection(req.body, req.params.oid);
+    // res.send(result);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order featched successfully',
+      data: result,
+    });
+  }
+);
 export const OrderController = {
   createNewOrder,
   getAllOrder,
   updateOrder,
   getInvoice,
+  dueCollection,
 };
