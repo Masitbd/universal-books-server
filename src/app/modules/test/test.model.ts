@@ -83,6 +83,9 @@ const testSchema = new Schema<ITest, TestModel>(
     },
     resultFields: [
       {
+        investigation: {
+          type: String,
+        },
         title: {
           type: String,
         },
