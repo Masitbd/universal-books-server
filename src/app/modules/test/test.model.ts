@@ -101,7 +101,7 @@ const testSchema = new Schema<ITest, TestModel>(
         hasPdrv: {
           type: Boolean,
         },
-        defaultValues: [
+        defaultValue: [
           {
             type: String,
           },

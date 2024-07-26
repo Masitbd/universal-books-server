@@ -57,16 +57,6 @@ const orderSchemaForUnregistered = new Schema({
 const orderSchemaForRegistered = new Schema({
   uuid: { type: String },
 });
-orderSchema.pre('save', async function (next) {
-  const order: IOrder = this as IOrder;
-  const lastOrder = await Order.find().sort({ oid: -1 }).limit(1);
-  const oid =
-    lastOrder.length > 0 ? Number(lastOrder[0].oid?.split('-')[1]) : 0;
-
-  const newOid = 'HMS-' + String(Number(oid) + 1).padStart(7, '0');
-  order.oid = newOid;
-  next();
-});
 
 orderSchema.post('save', async function (doc: IOrder) {
   const order = doc;

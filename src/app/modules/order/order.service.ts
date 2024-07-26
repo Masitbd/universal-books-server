@@ -16,11 +16,18 @@ import { FilterableFieldsSubset, IOrder } from './order.interface';
 import { Order, OrderForRegistered, OrderForUnregistered } from './order.model';
 
 const postOrder = async (params: IOrder) => {
+  const order: IOrder = params;
+  const lastOrder = await Order.find().sort({ oid: -1 }).limit(1);
+  const oid =
+    lastOrder.length > 0 ? Number(lastOrder[0].oid?.split('-')[1]) : 0;
+
+  const newOid = 'HMS-' + String(Number(oid) + 1).padStart(7, '0');
+  order.oid = newOid;
   if (params.patientType === 'registered') {
-    const result = await OrderForRegistered.create(params);
+    const result = await OrderForRegistered.create(order);
     return result;
   } else {
-    const result = await OrderForUnregistered.create(params);
+    const result = await OrderForUnregistered.create(order);
     return result;
   }
 };

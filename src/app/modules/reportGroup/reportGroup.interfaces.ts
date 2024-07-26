@@ -5,6 +5,7 @@ export type IReportGroup = {
   description: string;
   label: string;
   department: Schema.Types.ObjectId;
+  testResultType: string;
 };
 
 export type ReportGroupModel = Model<IReportGroup, Record<string, unknown>>;

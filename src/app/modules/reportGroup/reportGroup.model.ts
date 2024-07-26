@@ -11,6 +11,11 @@ const ReportGroupSchema = new Schema<IReportGroup, ReportGroupModel>(
     label: {
       type: String,
     },
+    testResultType: {
+      type: String,
+      required: true,
+      ref: 'reportGroup',
+    },
     description: {
       type: String,
     },
