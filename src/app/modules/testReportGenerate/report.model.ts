@@ -30,6 +30,10 @@ const reportSchema = new Schema<IReport>(
       value: String,
       testResultType: String,
     },
+    analyzerMachine: {
+      type: String,
+      set: (a: string) => (a === '' ? undefined : a),
+    },
   },
   {
     timestamps: true,
@@ -52,15 +56,15 @@ const parameterBasedSchema = new Schema<IReportForParameter>(
           set: (a: string) => (a === '' ? undefined : a),
           required: true,
         },
-        normalValue: {
-          type: String,
-          set: (a: string) => (a === '' ? undefined : a),
-        },
         result: {
           type: String,
           set: (a: string) => (a === '' ? undefined : a),
         },
         unit: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+        normalValue: {
           type: String,
           set: (a: string) => (a === '' ? undefined : a),
         },

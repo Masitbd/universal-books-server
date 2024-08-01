@@ -4,6 +4,7 @@ import { ITest } from '../test/test.interfacs';
 
 export type IReport = {
   oid: string;
+  analyzerMachine?: string;
   comment?: string;
   doctorsSeal?: string;
   specimen?: string[];
