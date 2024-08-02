@@ -14,6 +14,7 @@ type IResultFields = {
 };
 
 export type ITest = {
+  _id?: Types.ObjectId;
   value: string;
   label: string;
   description?: string;

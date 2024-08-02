@@ -1,19 +1,33 @@
 import fs from 'fs';
+import httpStatus from 'http-status';
 import path from 'path';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { PDFGeneratorV2 } from '../../../utils/PdfGenerator.v2';
+import { Account } from '../account/account.model';
+import { IDoctor } from '../doctor/doctor.interface';
+import { Doctor } from '../doctor/doctor.model';
 import { ITest } from '../test/test.interfacs';
+import { Test } from '../test/test.model';
+import { TransactionService } from '../transaction/transaction.service';
 import { orderSearchAbleFields } from './order.constant';
 import { FilterableFieldsSubset, IOrder } from './order.interface';
 import { Order, OrderForRegistered, OrderForUnregistered } from './order.model';
 
 const postOrder = async (params: IOrder) => {
+  const order: IOrder = params;
+  const lastOrder = await Order.find().sort({ oid: -1 }).limit(1);
+  const oid =
+    lastOrder.length > 0 ? Number(lastOrder[0].oid?.split('-')[1]) : 0;
+
+  const newOid = 'HMS-' + String(Number(oid) + 1).padStart(7, '0');
+  order.oid = newOid;
   if (params.patientType === 'registered') {
-    const result = await OrderForRegistered.create(params);
+    const result = await OrderForRegistered.create(order);
     return result;
   } else {
-    const result = await OrderForUnregistered.create(params);
+    const result = await OrderForUnregistered.create(order);
     return result;
   }
 };
@@ -97,6 +111,7 @@ const fetchAll = async ({
     });
   }
   const isCondition = condition.length > 0 ? { $and: condition } : {};
+  console.log(JSON.stringify(condition));
 
   const result = await Order.aggregate([
     {
@@ -351,4 +366,143 @@ const fetchIvoice = async (params: string) => {
   });
   return bufferResult;
 };
-export const OrderService = { postOrder, fetchAll, orderPatch, fetchIvoice };
+
+const dueCollection = async (params: { amount: number }, oid: string) => {
+  const doesExists = await Order.findOne({ oid: oid });
+  const doesAccountExists = await Account.find({ title: 'Order' });
+
+  const lastAccount = await Account.find().sort({ uuid: -1 }).limit(1);
+  const uuidLast =
+    lastAccount.length > 0 ? Number(lastAccount[0].uuid?.split('-')[1]) : 0;
+  const newUUid = 'D-' + String(Number(uuidLast) + 1).padStart(5, '0');
+  let uuid = null;
+
+  if (!doesAccountExists.length) {
+    const result = await Account.create({
+      balance: 0,
+      balanceType: 'debit',
+      title: 'Order',
+      uuid: newUUid,
+    });
+    if (result.uuid) {
+      uuid = result.uuid;
+    } else {
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        'Failed to create account'
+      );
+    }
+  }
+  if (!doesExists) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  }
+
+  const dueAmount = doesExists.dueAmount - params.amount;
+  const paid = doesExists.paid + params.amount;
+
+  if (dueAmount === 0) {
+    const testIds = doesExists.tests;
+    const commissionAmount = await Test.aggregate([
+      {
+        $match: {
+          _id: {
+            $in: testIds.map(data => data.test),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'departments',
+          localField: 'department',
+          foreignField: '_id',
+          as: 'departmentInfo',
+        },
+      },
+      {
+        $unwind: '$departmentInfo',
+      },
+      {
+        $project: {
+          price: 1,
+          commissionType: '$departmentInfo.isCommissionFiexed',
+          fixedCommission: '$departmentInfo.fixedCommission',
+          percentageCommission: '$departmentInfo.commissionParcentage',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalFixedCommission: {
+            $sum: {
+              $cond: [
+                { $eq: ['$commissionType', true] },
+                '$fixedCommission',
+                0,
+              ],
+            },
+          },
+          totalPercentageCommission: {
+            $sum: {
+              $cond: [
+                { $eq: ['$commissionType', false] },
+                {
+                  $multiply: [
+                    '$price',
+                    { $divide: ['$percentageCommission', 100] },
+                  ],
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalCommission: {
+            $add: ['$totalFixedCommission', '$totalPercentageCommission'],
+          },
+        },
+      },
+    ]);
+
+    const referedDoctor: IDoctor | null = await Doctor.findOne({
+      _id: doesExists.refBy,
+    });
+    if (referedDoctor?.account_id) {
+      await TransactionService.postTransaction({
+        uuid: referedDoctor.account_number,
+        amount: Math.ceil(commissionAmount[0].totalCommission),
+        description: 'Account credited for patient commission',
+        transactionType: 'credit',
+        ref: doesExists._id,
+      });
+    }
+  }
+
+  if (uuid ?? doesAccountExists.length > 0) {
+    await TransactionService.postTransaction({
+      amount: params.amount,
+      description: 'Collected due amount',
+      transactionType: 'debit',
+      uuid: uuid ?? doesAccountExists[0].uuid,
+      ref: doesExists._id,
+    });
+  }
+
+  const result = Order.findOneAndUpdate(
+    { oid: oid },
+    { dueAmount: dueAmount, paid: paid },
+    { new: true }
+  );
+  return result;
+};
+
+export const OrderService = {
+  postOrder,
+  fetchAll,
+  orderPatch,
+  fetchIvoice,
+  dueCollection,
+};

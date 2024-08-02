@@ -1,1 +1,1 @@
-export const filterableFields = ['department', 'reportGroup'];
+export const filterableFields = ['reportGroup'];

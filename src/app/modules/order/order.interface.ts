@@ -34,7 +34,8 @@ export type IorderFilterableFields =
   | 'minDueAmount'
   | 'maxDueAmount'
   | 'minTotalPrice'
-  | 'maxTotalPrice';
+  | 'maxTotalPrice'
+  | 'oid';
 
 export type OrderFilterableFields = {
   searchTerm: string;

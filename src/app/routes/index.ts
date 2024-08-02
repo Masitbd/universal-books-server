@@ -1,6 +1,7 @@
 import express from 'express';
 import { AccountRoute } from '../modules/account/account.route';
 import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
+import { CommentRoutes } from '../modules/comment/comment.routes';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
@@ -15,6 +16,7 @@ import { SensitivityRoutes } from '../modules/sensitivity/sensitivity.routes';
 import { SpecimenRoutes } from '../modules/specimen/specimen.routes';
 import { TestRoutes } from '../modules/test/test.routes';
 import { TestReportRoutes } from '../modules/testReport/testReport.routes';
+import { ReportRoutes } from '../modules/testReportGenerate/report.routes';
 import { TransactionRoute } from '../modules/transaction/transaction.route';
 import { VacuumRoutes } from '../modules/vacuumTube/vacuumTube.routes';
 
@@ -92,6 +94,14 @@ const moduleRoutes = [
   {
     path: '/reportTypeGroup',
     route: ReportTypeGroupRoutes.routes,
+  },
+  {
+    path: '/report/test',
+    route: ReportRoutes.routes,
+  },
+  {
+    path: '/comment',
+    route: CommentRoutes.routes,
   },
 ];
 

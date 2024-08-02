@@ -8,6 +8,7 @@ export const orderFilterableFields: IorderFilterableFields[] = [
   'maxDueAmount',
   'minTotalPrice',
   'maxTotalPrice',
+  'oid',
 ];
 
 export const orderSearchAbleFields = [
