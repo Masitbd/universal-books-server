@@ -65,7 +65,7 @@ const deleteDoctorSeal = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'DoctorSeal was deleted successfully',
+      message: 'Doctor Seal was deleted successfully',
       data: result,
     });
   }

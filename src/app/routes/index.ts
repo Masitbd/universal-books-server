@@ -5,6 +5,7 @@ import { CommentRoutes } from '../modules/comment/comment.routes';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
+import { DoctorSealRoutes } from '../modules/doctorSeal/seal.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
 import { OrderRoutes } from '../modules/order/order.routes';
 import { PatientRoute } from '../modules/patient/patient.route';
@@ -102,6 +103,10 @@ const moduleRoutes = [
   {
     path: '/comment',
     route: CommentRoutes.routes,
+  },
+  {
+    path: '/seal',
+    route: DoctorSealRoutes.routes,
   },
 ];
 
