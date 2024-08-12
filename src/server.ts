@@ -10,7 +10,7 @@ async function bootstrap() {
     logger.info(`Database is connected successfully`);
 
     server = app.listen(config.port, () => {
-      logger.info(`Server running on port ${config.port}`);
+      logger.info(`Server running on the port ${config.port}`);
     });
   } catch (err) {
     errorlogger.error('Failed to connect database', err);
