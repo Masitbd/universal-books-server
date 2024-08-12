@@ -16,6 +16,7 @@ export type IOrder = {
     }
   ];
   totalPrice: number;
+  consultant?: Types.ObjectId;
   cashDiscount: number;
   parcentDiscount: number;
   deliveryTime: string;
@@ -34,7 +35,8 @@ export type IorderFilterableFields =
   | 'minDueAmount'
   | 'maxDueAmount'
   | 'minTotalPrice'
-  | 'maxTotalPrice';
+  | 'maxTotalPrice'
+  | 'oid';
 
 export type OrderFilterableFields = {
   searchTerm: string;

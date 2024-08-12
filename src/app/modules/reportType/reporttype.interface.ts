@@ -11,6 +11,7 @@ export type ITestForParameter = {
 export type ITestForDescriptive = {
   label: string;
   description: string;
+  investigation: string;
 };
 
 export type ITestForMicrobiology = {

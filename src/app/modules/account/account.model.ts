@@ -15,6 +15,9 @@ const AccountSchema = new Schema<IAccount>(
       enum: ['debit', 'credit'],
       required: true,
     },
+    title: {
+      type: String,
+    },
   },
   {
     timestamps: true,

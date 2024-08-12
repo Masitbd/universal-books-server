@@ -47,6 +47,9 @@ const DescriptiveBasedSchema = new Schema<IReportTypeForDescriptive>({
   description: {
     type: String,
   },
+  investigation: {
+    type: String,
+  },
 });
 
 const microbiologyBasedSchema = new Schema<IReportTypeForMicrobiology>({

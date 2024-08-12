@@ -16,11 +16,6 @@ const schema = new Schema<IReportTypeGroup>(
       required: true,
       ref: 'ReportGroup',
     },
-    department: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'Departments',
-    },
   },
   { timestamps: true }
 );

@@ -26,9 +26,8 @@ const fetchAll = async (params: Partial<IFilterableOptions>) => {
     });
 
   const iFcondition = condition.length > 0 ? { $and: condition } : {};
-  return await ReportTypeGroup.find(iFcondition)
-    .populate('reportGroup')
-    .populate('department');
+
+  return await ReportTypeGroup.find(iFcondition).populate('reportGroup');
 };
 
 export const ReportTypeGroupService = { post, patch, fetchSingle, fetchAll };

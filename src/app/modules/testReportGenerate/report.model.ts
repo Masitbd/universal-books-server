@@ -1,0 +1,124 @@
+import { model, Schema } from 'mongoose';
+import {
+  IReport,
+  IReportForDescriptive,
+  IReportForParameter,
+} from './report.interface';
+
+const reportSchema = new Schema<IReport>(
+  {
+    oid: {
+      type: String,
+      required: true,
+    },
+    comment: {
+      type: String,
+      set: (a: string) => (a === '' ? undefined : a),
+    },
+    seal: {
+      type: String,
+      set: (a: string) => (a === '' ? undefined : a),
+    },
+    specimen: [
+      {
+        type: String,
+        set: (a: string[]) => (a.length > 0 ? undefined : a),
+      },
+    ],
+    conductedBy: {
+      type: String,
+      required: true,
+    },
+    reportGroup: {
+      label: String,
+      value: String,
+      testResultType: String,
+    },
+    analyzerMachine: {
+      type: String,
+      set: (a: string) => (a === '' ? undefined : a),
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const Report = model<IReport>('Reports', reportSchema);
+
+// for parameterBased
+const parameterBasedSchema = new Schema<IReportForParameter>(
+  {
+    testResult: [
+      {
+        test: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+        investigation: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+          required: true,
+        },
+        result: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+        unit: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+        normalValue: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+        defaultValue: [
+          {
+            type: String,
+            set: (a: string[]) => (a.length < 0 ? undefined : a),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// for parameterBased
+const descriptiveBasedSchema = new Schema<IReportForDescriptive>(
+  {
+    testResult: [
+      {
+        investigation: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+          required: true,
+        },
+        label: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+          required: true,
+        },
+        result: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const ParameterBasedReport = Report.discriminator(
+  'ParameterBased',
+  parameterBasedSchema
+);
+
+export const DescriptionBasedReport = Report.discriminator(
+  'DescriptionBased',
+  descriptiveBasedSchema
+);
