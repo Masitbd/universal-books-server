@@ -180,6 +180,7 @@ const fetchAll = async ({
         paid: { $first: '$paid' },
         vat: { $first: '$vat' },
         refBy: { $first: '$refBy' },
+        consultant: { $first: '$consultant' },
         oid: { $first: '$oid' },
         patientType: { $first: '$patientType' },
         tests: {
@@ -298,6 +299,8 @@ const fetchIvoice = async (params: string) => {
         paid: { $first: '$paid' },
         vat: { $first: '$vat' },
         refBy: { $first: '$refBy' },
+        consultant: { $first: '$consultant' },
+
         oid: { $first: '$oid' },
         patientType: { $first: '$patientType' },
         tests: {

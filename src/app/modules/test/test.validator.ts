@@ -49,6 +49,10 @@ const testValidator = z.object({
       .array(
         z.object({
           title: z.string({ required_error: 'Title is required' }).optional(),
+          label: z.string({ required_error: 'Title is required' }).optional(),
+          description: z
+            .string({ required_error: 'Title is required' })
+            .optional(),
           test: z
             .string({
               required_error: 'Test is required',
@@ -134,6 +138,10 @@ const testValidatorForPatch = z.object({
     resultFields: z.array(
       z.object({
         title: z.string({ required_error: 'Title is required' }).optional(),
+        label: z.string({ required_error: 'Title is required' }).optional(),
+        description: z
+          .string({ required_error: 'Title is required' })
+          .optional(),
         investigation: z
           .string({ required_error: 'Title is required' })
           .optional(),

@@ -5,7 +5,7 @@ import { ReportGroup } from '../reportGroup/reportGroup.model';
 import { ITest } from '../test/test.interfacs';
 import { TestReport } from '../testReport/testReport.model';
 import { IReportForParameter } from './report.interface';
-import { ParameterBasedReport } from './report.model';
+import { DescriptionBasedReport, ParameterBasedReport } from './report.model';
 
 const post = async (params: IReportForParameter) => {
   try {
@@ -33,10 +33,15 @@ const post = async (params: IReportForParameter) => {
         order.save();
       }
     };
+
     switch (params.reportGroup.testResultType) {
       case 'parameter':
         orderStatusChanger();
         return await ParameterBasedReport.create(params);
+
+      case 'descriptive':
+        orderStatusChanger();
+        return await DescriptionBasedReport.create(params);
 
       default:
         throw new Error('Invalid report group');
@@ -57,6 +62,12 @@ const patch = async (params: IReportForParameter) => {
     case 'parameter':
       return await ParameterBasedReport.updateOne({ oid: params.oid }, params);
 
+    case 'descriptive':
+      return await DescriptionBasedReport.updateOne(
+        { oid: params.oid },
+        params
+      );
+
     default:
       throw new Error('Invalid report group');
   }
@@ -74,6 +85,12 @@ const fetchSingle = async (
   switch (resultType) {
     case 'parameter':
       return await ParameterBasedReport.find({
+        oid: oid,
+        'reportGroup.label': reportGroup,
+      });
+
+    case 'descriptive':
+      return await DescriptionBasedReport.find({
         oid: oid,
         'reportGroup.label': reportGroup,
       });

@@ -1,5 +1,9 @@
 import { model, Schema } from 'mongoose';
-import { IReport, IReportForParameter } from './report.interface';
+import {
+  IReport,
+  IReportForDescriptive,
+  IReportForParameter,
+} from './report.interface';
 
 const reportSchema = new Schema<IReport>(
   {
@@ -11,7 +15,7 @@ const reportSchema = new Schema<IReport>(
       type: String,
       set: (a: string) => (a === '' ? undefined : a),
     },
-    doctorsSeal: {
+    seal: {
       type: String,
       set: (a: string) => (a === '' ? undefined : a),
     },
@@ -81,7 +85,40 @@ const parameterBasedSchema = new Schema<IReportForParameter>(
     timestamps: true,
   }
 );
+
+// for parameterBased
+const descriptiveBasedSchema = new Schema<IReportForDescriptive>(
+  {
+    testResult: [
+      {
+        investigation: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+          required: true,
+        },
+        label: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+          required: true,
+        },
+        result: {
+          type: String,
+          set: (a: string) => (a === '' ? undefined : a),
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const ParameterBasedReport = Report.discriminator(
   'ParameterBased',
   parameterBasedSchema
+);
+
+export const DescriptionBasedReport = Report.discriminator(
+  'DescriptionBased',
+  descriptiveBasedSchema
 );

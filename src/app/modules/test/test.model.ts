@@ -86,6 +86,12 @@ const testSchema = new Schema<ITest, TestModel>(
         investigation: {
           type: String,
         },
+        label: {
+          type: String,
+        },
+        description: {
+          type: String,
+        },
         title: {
           type: String,
         },

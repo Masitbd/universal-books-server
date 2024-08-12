@@ -11,6 +11,8 @@ type IResultFields = {
   sensitivityOptions: Types.ObjectId[];
   condition: Types.ObjectId[];
   bacteria: Types.ObjectId[];
+  label?: string;
+  description?: string;
 };
 
 export type ITest = {
@@ -21,7 +23,7 @@ export type ITest = {
   testResultType: string;
   department: Types.ObjectId;
   testCode?: string;
-  specimen: Types.ObjectId;
+  specimen?: Types.ObjectId;
   type: string;
   hasTestTube: boolean;
   testTube: Types.ObjectId[];

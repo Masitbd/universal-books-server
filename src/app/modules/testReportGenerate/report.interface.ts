@@ -1,12 +1,15 @@
 import { IReportGroup } from '../reportGroup/reportGroup.interfaces';
-import { ITestForParameter } from '../reportType/reporttype.interface';
+import {
+  ITestForDescriptive,
+  ITestForParameter,
+} from '../reportType/reporttype.interface';
 import { ITest } from '../test/test.interfacs';
 
 export type IReport = {
   oid: string;
   analyzerMachine?: string;
   comment?: string;
-  doctorsSeal?: string;
+  seal?: string;
   specimen?: string[];
   conductedBy: string;
   reportGroup: IReportGroup;
@@ -14,6 +17,10 @@ export type IReport = {
 
 export type IReportForParameter = {
   testResult?: ITestForParameter[];
+} & IReport;
+
+export type IReportForDescriptive = {
+  testResult?: ITestForDescriptive[];
 } & IReport;
 
 export type ITestsFromOrder = {

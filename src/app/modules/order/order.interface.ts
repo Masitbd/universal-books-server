@@ -16,6 +16,7 @@ export type IOrder = {
     }
   ];
   totalPrice: number;
+  consultant?: Types.ObjectId;
   cashDiscount: number;
   parcentDiscount: number;
   deliveryTime: string;
