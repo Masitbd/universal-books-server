@@ -7,6 +7,7 @@ import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { DoctorSealRoutes } from '../modules/doctorSeal/seal.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
+import { MiscellaneousRoutes } from '../modules/miscellaneous/miscellaneous.routes';
 import { OrderRoutes } from '../modules/order/order.routes';
 import { PatientRoute } from '../modules/patient/patient.route';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
@@ -107,6 +108,10 @@ const moduleRoutes = [
   {
     path: '/seal',
     route: DoctorSealRoutes.routes,
+  },
+  {
+    path: '/miscellaneous',
+    route: MiscellaneousRoutes.routes,
   },
 ];
 

@@ -5,7 +5,11 @@ import { ReportGroup } from '../reportGroup/reportGroup.model';
 import { ITest } from '../test/test.interfacs';
 import { TestReport } from '../testReport/testReport.model';
 import { IReportForParameter } from './report.interface';
-import { DescriptionBasedReport, ParameterBasedReport } from './report.model';
+import {
+  DescriptionBasedReport,
+  MicrobiologyReport,
+  ParameterBasedReport,
+} from './report.model';
 
 const post = async (params: IReportForParameter) => {
   try {
@@ -43,6 +47,9 @@ const post = async (params: IReportForParameter) => {
         orderStatusChanger();
         return await DescriptionBasedReport.create(params);
 
+      case 'bacterial':
+        orderStatusChanger();
+        return await MicrobiologyReport.create(params);
       default:
         throw new Error('Invalid report group');
     }
@@ -68,6 +75,9 @@ const patch = async (params: IReportForParameter) => {
         params
       );
 
+    case 'bacterial':
+      return await MicrobiologyReport.updateOne({ oid: params.oid }, params);
+
     default:
       throw new Error('Invalid report group');
   }
@@ -91,6 +101,12 @@ const fetchSingle = async (
 
     case 'descriptive':
       return await DescriptionBasedReport.find({
+        oid: oid,
+        'reportGroup.label': reportGroup,
+      });
+
+    case 'bacterial':
+      return await MicrobiologyReport.find({
         oid: oid,
         'reportGroup.label': reportGroup,
       });
