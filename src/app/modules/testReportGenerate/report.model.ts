@@ -3,6 +3,7 @@ import {
   IReport,
   IReportForDescriptive,
   IReportForParameter,
+  ITestReportForMicrobiology,
 } from './report.interface';
 
 const reportSchema = new Schema<IReport>(
@@ -113,6 +114,33 @@ const descriptiveBasedSchema = new Schema<IReportForDescriptive>(
   }
 );
 
+const microbiologySchema = new Schema<ITestReportForMicrobiology>(
+  {
+    bacteria: {
+      type: String,
+    },
+    colonyCount: {
+      base: String,
+      power: String,
+    },
+    condition: String,
+    duration: String,
+    growth: Boolean,
+    temperature: String,
+    specimen: String,
+    sensivityOptions: [
+      {
+        id: String,
+        value: String,
+        breakPoint: String,
+        interpretation: String,
+        mic: String,
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
 export const ParameterBasedReport = Report.discriminator(
   'ParameterBased',
   parameterBasedSchema
@@ -121,4 +149,9 @@ export const ParameterBasedReport = Report.discriminator(
 export const DescriptionBasedReport = Report.discriminator(
   'DescriptionBased',
   descriptiveBasedSchema
+);
+
+export const MicrobiologyReport = Report.discriminator(
+  'MicrobiologyReport',
+  microbiologySchema
 );

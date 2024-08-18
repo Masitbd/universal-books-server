@@ -6,26 +6,10 @@ const SensitivitySchema = new Schema<ISensitivity>(
     value: {
       type: String,
       required: true,
+      unique: true,
     },
-    label: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-    },
-    resultOption: [
-      {
-        value: {
-          type: String,
-          required: true,
-        },
-        label: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    breakPoint: String,
+    mic: String,
   },
   {
     timestamps: true,

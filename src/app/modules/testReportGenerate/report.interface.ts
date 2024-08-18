@@ -23,6 +23,28 @@ export type IReportForDescriptive = {
   testResult?: ITestForDescriptive[];
 } & IReport;
 
+export type Isensitivity = {
+  id: string;
+  value?: string;
+  interpretation?: string;
+  mic?: string;
+  breakPoint?: string;
+};
+export type ITestReportForMicrobiology = {
+  specimen?: string;
+  duration?: string;
+  temperature?: string;
+  condition?: string;
+  growth?: boolean;
+
+  colonyCount?: {
+    base: string;
+    power: string;
+  };
+  bacteria?: string;
+  sensivityOptions?: Isensitivity[];
+};
+
 export type ITestsFromOrder = {
   SL: number;
   test: ITest;
@@ -30,3 +52,5 @@ export type ITestsFromOrder = {
   discount: number;
   ramark: string;
 };
+
+export type IReportForMicrobiology = IReport & ITestReportForMicrobiology;
