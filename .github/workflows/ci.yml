@@ -23,8 +23,8 @@ jobs:
       - name: install dependencies
         run: npm install
 
-      #- name: run test
-      #run: npm test
+      - name: run test
+        run: npm test
 
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v2
