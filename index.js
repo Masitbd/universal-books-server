@@ -9,7 +9,9 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
-const url = `mongodb+srv://admin:CRsGgOdpkOw3UsGy@cluster0.cpgqu2r.mongodb.net/?retryWrites=true&w=majority`;
+//const url = `mongodb+srv://admin:CRsGgOdpkOw3UsGy@cluster0.cpgqu2r.mongodb.net/?retryWrites=true&w=majority`;
+const url = `mongodb+srv://wareHouseManagement:STd17iIFGcLgGMEa@cluster0.x3xvq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
 const client = new MongoClient(url);
 
 const run = async () => {
