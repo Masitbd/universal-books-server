@@ -17,14 +17,17 @@ afterAll(async () => {
     await client.close();
     console.log('Disconnected from server');
 
-    // Close the server to ensure Jest exits cleanly
+    // Use a Promise to wait for the server to close
     if (server) {
-        server.close(() => {
-            console.log('Server closed');
+        await new Promise((resolve, reject) => {
+            server.close((err) => {
+                if (err) return reject(err);
+                console.log('Server closed');
+                resolve();
+            });
         });
     }
 });
-  
 
 describe('API Tests', () => {
     test('GET /books - should return a list of books', async () => {
@@ -38,7 +41,7 @@ describe('API Tests', () => {
         // Use a valid book ID here. You can insert a book first and use its ID.
         const bookId = '66cff8dc281132fd5118ab01'; // Replace with a valid ID
         const response = await request(app).get(`/book/${bookId}`);
-        
+        console.log(response,"first")
         if (response.statusCode === 200) {
             expect(response.body.status).toBe(true);
             expect(response.body.data).toHaveProperty('_id', bookId);
