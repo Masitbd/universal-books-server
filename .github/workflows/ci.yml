@@ -9,7 +9,7 @@ on:
       - main
 jobs:
   build:
-    runes-on: ununtu-branches
+    runes-on: ununtu-latest
 
     steps:
       - name: checkout code
