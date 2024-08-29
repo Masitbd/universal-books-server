@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { MongoClient } = require('mongodb');
-const app = require('../index'); // Ensure your app is exported correctly
+const {app, server} = require('../index'); // Ensure your app is exported correctly
 
 let client;
 
@@ -16,7 +16,15 @@ afterAll(async () => {
     // Close the MongoDB connection after running all tests
     await client.close();
     console.log('Disconnected from server');
+
+    // Close the server to ensure Jest exits cleanly
+    if (server) {
+        server.close(() => {
+            console.log('Server closed');
+        });
+    }
 });
+  
 
 describe('API Tests', () => {
     test('GET /books - should return a list of books', async () => {

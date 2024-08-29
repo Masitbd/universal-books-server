@@ -17,7 +17,7 @@ const client = new MongoClient(url);
 const run = async () => {
  try{
   await client.connect();
-  console.log('Connected successfully to server');
+ // console.log('Connected successfully to server');
   const db = client.db('universal-books');
   const bookCollection = db.collection('books');
   const wishlistCollection = db.collection('wishlists');
@@ -227,7 +227,7 @@ app.patch('/book/:id', async (req, res) => {
   });
 
  }finally{
-
+//client.close()
  }
 }
 
@@ -237,8 +237,8 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-/* app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-}) */
+}) 
 
-module.exports = app
+module.exports = {app, server}
