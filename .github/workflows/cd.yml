@@ -1,0 +1,19 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull Docker image
+        run: sudo docker pull sarker24/universal-books-server:latest
+      - name: Delete Old docker container
+        run: sudo docker rm -f universal-books-server-container || true
+      - name: Run Docker Container
+        run: sudo docker run -d -p 3000:3000 --name universal-books-server-container varsubham/cicd-pipeline

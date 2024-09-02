@@ -234,7 +234,7 @@ app.patch('/book/:id', async (req, res) => {
 run().catch((err) => console.log(err));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World From server!')
 })
 
 const server = app.listen(port, () => {
