@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  #pull_request:
+  #branches:
+  #- main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -53,5 +53,5 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/universal-books-server:latest
 
-      - name: Post build cleanup
-        run: docker system prune -f
+      #- name: Post build cleanup
+      #run: docker system prune -f
