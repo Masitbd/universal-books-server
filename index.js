@@ -237,7 +237,7 @@ app.get('/', (req, res) => {
   res.send('Hello World From server!')
 })
 
-const server = app.listen(port, () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Example app listening on port ${port}`)
 }) 
 
