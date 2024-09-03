@@ -25,4 +25,4 @@ jobs:
         run: sudo docker rm -f universal-books-server || true
 
       - name: Run Docker Container
-        run: sudo docker run -d -p 3000:3000 --name universal-books-server sarker24/universal-books-server
+        run: sudo docker run -d -p 4002:4002 --name universal-books-server sarker24/universal-books-server
