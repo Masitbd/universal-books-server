@@ -4,6 +4,7 @@ services:
   app:
     build: .
     ports:
+      #- 4002:${PORT}
       - 4002:${PORT}
     depends_on:
       - mongo
