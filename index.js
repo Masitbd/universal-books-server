@@ -234,7 +234,7 @@ app.patch('/book/:id', async (req, res) => {
 run().catch((err) => console.log(err));
 
 app.get('/', (req, res) => {
-  res.send('Hello World run from diferent ip')
+  res.send('Hello World run from private view')
 })
 
 const server = app.listen(port, '0.0.0.0', () => {
