@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { MongoClient } = require('mongodb');
-const {app, server} = require('../index'); // Ensure your app is exported correctly
+const {app, server} = require('../index').default; // Ensure your app is exported correctly
 
 let client;
 
