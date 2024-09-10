@@ -175,7 +175,7 @@ const run = async () => {
 run().catch((err) => console.log(err));
 
 app.get('/', (req, res) => {
-  res.send('Hello World, running container add universal-books-server');
+  res.send('Hello World, running container add universal-books-server stable version');
 });
 
 const server = app.listen(port, '0.0.0.0', () => {
