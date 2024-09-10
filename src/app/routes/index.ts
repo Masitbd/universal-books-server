@@ -6,11 +6,13 @@ import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { DoctorSealRoutes } from '../modules/doctorSeal/seal.routes';
+import { FinancialReportRoutes } from '../modules/financialReport/financialReport.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
 import { MiscellaneousRoutes } from '../modules/miscellaneous/miscellaneous.routes';
 import { OrderRoutes } from '../modules/order/order.routes';
 import { PatientRoute } from '../modules/patient/patient.route';
 import { PdrvRoutes } from '../modules/pdrv/pdrv.routes';
+import { RefundRoutes } from '../modules/refund/refund.routes';
 import { ReportGroupRoutes } from '../modules/reportGroup/reportGroup.routes';
 import { reportTypeRoutes } from '../modules/reportType/reportType.routes';
 import { ReportTypeGroupRoutes } from '../modules/reportTypeGroup/reportTypeGroup.routes';
@@ -112,6 +114,14 @@ const moduleRoutes = [
   {
     path: '/miscellaneous',
     route: MiscellaneousRoutes.routes,
+  },
+  {
+    path: '/refund',
+    route: RefundRoutes.routes,
+  },
+  {
+    path: '/financialReport',
+    route: FinancialReportRoutes.routes,
   },
 ];
 

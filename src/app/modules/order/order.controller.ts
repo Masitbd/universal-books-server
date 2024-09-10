@@ -10,6 +10,8 @@ import { OrderService } from './order.service';
 
 const createNewOrder = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    const data: IOrder = req.body;
+    data.postedBy = req?.user?.uuid;
     const result = await OrderService.postOrder(req.body);
 
     sendResponse<IOrder>(res, {
@@ -78,6 +80,19 @@ const getInvoice = catchAsync(
   }
 );
 
+const getSIngle = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await OrderService.fetchSingle(req.params.oid);
+    // res.send(result);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order featched successfully',
+      data: result,
+    });
+  }
+);
+
 const dueCollection = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const result = await OrderService.dueCollection(req.body, req.params.oid);
@@ -90,10 +105,30 @@ const dueCollection = catchAsync(
     });
   }
 );
+
+const statusChanger = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const result = await OrderService.singleOrderstatusChanger({
+      oid: req.params.oid,
+      reportGroup: req.body.reportGroup,
+      status: req.body.status,
+    });
+    // res.send(result);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Status changed successfully',
+      data: result,
+    });
+  }
+);
+
 export const OrderController = {
   createNewOrder,
   getAllOrder,
   updateOrder,
   getInvoice,
   dueCollection,
+  getSIngle,
+  statusChanger,
 };

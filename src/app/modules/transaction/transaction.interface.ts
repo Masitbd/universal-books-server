@@ -6,4 +6,5 @@ export type ITransaction = {
   description: string;
   transactionType: string;
   uuid?: string;
+  createdAt?: Date;
 };
