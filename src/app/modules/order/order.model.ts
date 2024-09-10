@@ -35,6 +35,10 @@ const orderSchema = new Schema<IOrder>(
     oid: { type: String, unique: true },
     patientType: { type: String, required: true },
     discountedBy: { type: String, default: 'system' },
+    postedBy: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

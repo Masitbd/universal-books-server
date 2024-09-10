@@ -27,6 +27,7 @@ export type IOrder = {
   paid: number;
   vat?: number;
   discountedBy: string;
+  postedBy: string;
 };
 
 export type IorderFilterableFields =

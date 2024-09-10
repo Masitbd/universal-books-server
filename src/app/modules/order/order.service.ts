@@ -59,6 +59,7 @@ const postOrder = async (params: IOrder) => {
         discountGivenByDoctor -
         order.cashDiscount -
         order.paid;
+
   let result;
   if (params.patientType === 'registered') {
     result = await OrderForRegistered.create(order);

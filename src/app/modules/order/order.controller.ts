@@ -10,6 +10,8 @@ import { OrderService } from './order.service';
 
 const createNewOrder = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    const data: IOrder = req.body;
+    data.postedBy = req?.user?.uuid;
     const result = await OrderService.postOrder(req.body);
 
     sendResponse<IOrder>(res, {
