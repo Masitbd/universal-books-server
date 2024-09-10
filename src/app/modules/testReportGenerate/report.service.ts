@@ -1,4 +1,5 @@
 import httpStatus from 'http-status';
+import { ENUM_TEST_STATUS } from '../../../enums/testStatusEnum';
 import ApiError from '../../../errors/ApiError';
 import { Order } from '../order/order.model';
 import { ReportGroup } from '../reportGroup/reportGroup.model';
@@ -26,7 +27,7 @@ const post = async (params: IReportForParameter) => {
         const tests = order.tests.map((test: any) => {
           const rTest =
             test.test?.reportGroup.toString() == reportGroupId.toString();
-          if (rTest) {
+          if (rTest && test.status !== ENUM_TEST_STATUS.REFUNDED) {
             test.status = 'completed';
           }
           test.test = test.test._id as unknown as ITest;

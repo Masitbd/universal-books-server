@@ -50,7 +50,8 @@ export type ITestsFromOrder = {
   test: ITest;
   status: string;
   discount: number;
-  ramark: string;
+  ramark?: string;
+  delivaryDate?: string;
 };
 
 export type IReportForMicrobiology = IReport & ITestReportForMicrobiology;

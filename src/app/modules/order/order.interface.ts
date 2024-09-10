@@ -1,20 +1,20 @@
 import { Request } from 'express';
 import { Types } from 'mongoose';
+import { ITest } from '../test/test.interfacs';
 
 export type IOrder = {
   _id?: Types.ObjectId;
   oid?: string;
   uuid: string;
-  tests: [
-    {
-      SL: number;
-      test: Types.ObjectId[];
-      status: string;
-      discount: number;
-      deliveryDate: Date;
-      remark?: string;
-    }
-  ];
+  tests: {
+    _id?: string;
+    SL: number;
+    test: Types.ObjectId | ITest;
+    status: string;
+    discount: number;
+    deliveryDate: Date;
+    remark?: string;
+  }[];
   totalPrice: number;
   consultant?: Types.ObjectId;
   cashDiscount: number;
@@ -26,6 +26,7 @@ export type IOrder = {
   patientType: string;
   paid: number;
   vat?: number;
+  discountedBy: string;
 };
 
 export type IorderFilterableFields =
@@ -68,3 +69,13 @@ export type FilterableFieldsSubset = {
 //   'minTotalPrice',
 //   'maxTotalPrice'
 // )[];
+
+export type ITestsFromOrder = {
+  _id?: string;
+  SL: number;
+  test: Types.ObjectId | ITest;
+  status: string;
+  discount: number;
+  deliveryDate: Date;
+  remark?: string;
+};
