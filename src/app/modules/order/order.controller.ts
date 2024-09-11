@@ -90,10 +90,22 @@ const dueCollection = catchAsync(
     });
   }
 );
+
+const getIncomeStatement = catchAsync(async (req: Request, res: Response) => {
+  const result = await OrderService.getIncomeStatementFromDB(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Income Statement retrived successfully',
+    data: result,
+  });
+});
+
 export const OrderController = {
   createNewOrder,
   getAllOrder,
   updateOrder,
   getInvoice,
   dueCollection,
+  getIncomeStatement,
 };

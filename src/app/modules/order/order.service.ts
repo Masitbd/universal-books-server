@@ -211,6 +211,8 @@ const fetchAll = async ({
   ]);
   const totalDoc = await Order.estimatedDocumentCount();
 
+  console.log('result', result);
+
   return {
     data: result,
     page: page,
@@ -219,6 +221,7 @@ const fetchAll = async ({
     totalData: totalDoc,
   };
 };
+
 const orderPatch = async (param: { id: string; data: Partial<IOrder> }) => {
   const result = await Order.findOneAndUpdate({ _id: param.id }, param.data, {
     new: true,
@@ -502,10 +505,105 @@ const dueCollection = async (params: { amount: number }, oid: string) => {
   return result;
 };
 
+/// investigation income
+
+const getIncomeStatementFromDB = async (payload: {
+  startDate: string;
+  endDate: string; 
+}) => {
+  // Convert and format dates
+  const startDate = new Date(payload.startDate);
+  const endDate = new Date(payload.endDate);
+
+  endDate.setHours(23, 59, 59, 999);
+
+  const query = [
+    {
+      $match: {
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'tests',
+        localField: 'tests.test',
+        foreignField: '_id',
+        as: 'testDetails',
+      },
+    },
+    {
+      $unwind: {
+        path: '$testDetails', // unwind to get each test
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $group: {
+        _id: {
+          oid: '$oid',
+          groupDate: {
+            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+          },
+        },
+        totalPrice: { $first: '$totalPrice' },
+        totalTestPrice: { $sum: '$testDetails.price' },
+        cashDiscount: { $first: '$cashDiscount' },
+        parcentDiscount: { $first: '$parcentDiscount' },
+        dueAmount: { $first: '$dueAmount' },
+        paid: { $first: '$paid' },
+        vat: { $first: '$vat' },
+        uuid: { $first: '$uuid' }, // Keep uuid if needed
+        records: {
+          $push: {
+            oid: '$oid',
+            uuid: '$uuid',
+            totalPrice: '$totalPrice',
+            totalTestPrice: { $sum: '$testDetails.price' },
+            cashDiscount: '$cashDiscount',
+            parcentDiscount: '$parcentDiscount',
+            dueAmount: '$dueAmount',
+            paid: '$paid',
+            vat: '$vat',
+          },
+        },
+      },
+    },
+    {
+      $sort: { oid: 1 }, // Sort by oid
+    },
+    {
+      $group: {
+        _id: '$_id.groupDate',
+
+        records: {
+          $push: {
+            $first: '$records',
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        groupDate: '$_id',
+
+        records: 1,
+      },
+    },
+  ];
+
+  const result = await Order.aggregate(query);
+  return result;
+};
+
 export const OrderService = {
   postOrder,
   fetchAll,
   orderPatch,
   fetchIvoice,
   dueCollection,
+  getIncomeStatementFromDB,
 };
