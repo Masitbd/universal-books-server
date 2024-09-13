@@ -1,5 +1,6 @@
 import fs from 'fs';
 import httpStatus from 'http-status';
+import { PipelineStage } from 'mongoose';
 import path from 'path';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
@@ -509,15 +510,17 @@ const dueCollection = async (params: { amount: number }, oid: string) => {
 
 const getIncomeStatementFromDB = async (payload: {
   startDate: string;
-  endDate: string; 
+  endDate: string;
 }) => {
   // Convert and format dates
   const startDate = new Date(payload.startDate);
   const endDate = new Date(payload.endDate);
 
+  startDate.setHours(0, 0, 0, 0);
+
   endDate.setHours(23, 59, 59, 999);
 
-  const query = [
+  const query: PipelineStage[] = [
     {
       $match: {
         createdAt: {
@@ -572,7 +575,7 @@ const getIncomeStatementFromDB = async (payload: {
       },
     },
     {
-      $sort: { oid: 1 }, // Sort by oid
+      $sort: { oid: -1 }, // Sort by oid
     },
     {
       $group: {
