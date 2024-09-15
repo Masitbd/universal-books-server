@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Types } from 'mongoose';
+import { IRefund } from '../refund/refund.inrerface';
 import { ITest } from '../test/test.interfacs';
 
 export type IOrder = {
@@ -28,6 +29,8 @@ export type IOrder = {
   vat?: number;
   discountedBy: string;
   postedBy: string;
+  refundData?: Partial<IRefund>;
+  tubePrice: number;
 };
 
 export type IorderFilterableFields =

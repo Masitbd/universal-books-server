@@ -1,6 +1,5 @@
 import httpStatus from 'http-status';
 import { Types } from 'mongoose';
-import { ENUM_TEST_STATUS } from '../../../enums/testStatusEnum';
 import ApiError from '../../../errors/ApiError';
 import { ITest } from '../test/test.interfacs';
 import { Test } from '../test/test.model';
@@ -42,33 +41,28 @@ export const discountCalculatorPipeline = (oid: string) => {
         'tests.discount': 1,
         'testDetails.price': 1,
         'tests.status': 1,
+        cashDiscount: 1,
         discountAmount: {
           $cond: {
-            if: { $ne: ['$tests.status', 'refunded'] },
+            if: { $gt: ['$tests.discount', 0] },
             then: {
+              $multiply: [
+                '$testDetails.price',
+                { $divide: ['$tests.discount', 100] },
+              ],
+            },
+            else: {
               $cond: {
-                if: { $gt: ['$tests.discount', 0] },
+                if: { $gt: ['$parcentDiscount', 0] },
                 then: {
                   $multiply: [
                     '$testDetails.price',
-                    { $divide: ['$tests.discount', 100] },
+                    { $divide: ['$parcentDiscount', 100] },
                   ],
                 },
-                else: {
-                  $cond: {
-                    if: { $gt: ['$parcentDiscount', 0] },
-                    then: {
-                      $multiply: [
-                        '$testDetails.price',
-                        { $divide: ['$parcentDiscount', 100] },
-                      ],
-                    },
-                    else: 0,
-                  },
-                },
+                else: 0,
               },
             },
-            else: 0,
           },
         },
       },
@@ -76,7 +70,8 @@ export const discountCalculatorPipeline = (oid: string) => {
     {
       $group: {
         _id: '$_id',
-        totalDiscountAmount: { $sum: '$discountAmount' }, // Sum up the discount amounts
+        totalDiscountAmount: { $sum: '$discountAmount' },
+        cashDiscount: { $first: '$cashDiscount' },
       },
     },
     {
@@ -326,7 +321,7 @@ export const totalPriceCalculator = async (order: IOrder) => {
         ltest._id?.equals(test.test as Types.ObjectId)
       );
 
-      if (mTest?._id && test.status !== ENUM_TEST_STATUS.REFUNDED) {
+      if (mTest?._id) {
         totalTestPrice += mTest.price;
         if (test.discount) {
           discountGivenByDoctor += Number(
@@ -354,9 +349,18 @@ export const totalPriceCalculator = async (order: IOrder) => {
       }
     }
   );
-
   if (order.vat) {
-    vat = Number((((totalTestPrice + tubePrice) * order.vat) / 100).toFixed(2));
+    vat = Number(
+      (
+        ((totalTestPrice +
+          tubePrice -
+          discountBasedOnParcent -
+          discountGivenByDoctor -
+          cashDiscount) *
+          order.vat) /
+        100
+      ).toFixed(2)
+    );
   }
 
   return {

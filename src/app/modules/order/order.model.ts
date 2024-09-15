@@ -39,6 +39,7 @@ const orderSchema = new Schema<IOrder>(
       type: String,
       required: true,
     },
+    tubePrice: { type: Number, required: true },
   },
   {
     timestamps: true,

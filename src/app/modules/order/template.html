@@ -191,7 +191,7 @@
             {{#each items}}
             <tr class="item">
                 <td>{{SL}}</td>
-                <td style="text-align: left !important;">{{#if status}}{{name}} (Refunded){{else}}{{name}}{{/if}}</td>
+                <td style="text-align: left !important;">{{#if status}}{{name}} <b>(Refunded)</b>{{else}}{{name}}{{/if}}</td>
                 <td>{{#if discount}} {{discount}} % {{/if}}</td>
                 <td>{{#if status}}({{price}}){{else}}{{price}}{{/if}}</td>
             </tr>
@@ -222,19 +222,42 @@
                 </td>
                 <td></td>
                 <td>Total: <br>
+                    {{#if grossRefundAmount}}
+                    Refunded <br>
+                {{/if}}
                 Discount ({{parcentDiscount}} %): <br>
+                Vat ({{vat}} %) : <br>
                 <hr>
                 Net Price: <br>
                 Paid :<br>
+                
+                {{# if refundApplied}}
+                Refunded : <br>
+                {{/if}}
+
+                {{# if remainingRefund}}
+                Cash Refund : <br>
+                {{/if}}
                 <hr>
                 Due: <br>
             </td>
                 <td>
                      {{total}} <br />
+                   
+                    
                      ({{discount}}) <br />
+                     {{vatAmount}} <br>
                      <hr>
                      {{netPrice}} <br>
-                    ({{paid}}) <br />
+                    ( {{paid}} ) <br />
+                    {{# if refundApplied}}
+                   {{refundApplied}} <br>
+                    {{/if}}
+
+                    {{# if remainingRefund}}
+                    {{remainingRefund}} <br>
+                    {{/if}}
+                   
                     <hr>
                     {{dueAmount}}
                 </td>
