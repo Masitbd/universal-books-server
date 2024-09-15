@@ -5,6 +5,9 @@ const routes = express.Router();
 
 routes.post('/', OrderController.createNewOrder);
 routes.get('/', OrderController.getAllOrder);
+
+// due detials
+routes.get('/due-details', OrderController.getDueDetails);
 // income
 routes.post('/income-statement', OrderController.getIncomeStatement);
 routes.patch('/:id', OrderController.updateOrder);

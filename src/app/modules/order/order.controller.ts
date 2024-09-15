@@ -91,6 +91,16 @@ const dueCollection = catchAsync(
   }
 );
 
+const getDueDetails = catchAsync(async (req: Request, res: Response) => {
+  const result = await OrderService.getDueBillsDetailFromDB(req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'due dettails featched successfully',
+    data: result,
+  });
+});
+
 const getIncomeStatement = catchAsync(async (req: Request, res: Response) => {
   const result = await OrderService.getIncomeStatementFromDB(req.body);
   sendResponse(res, {
@@ -108,4 +118,5 @@ export const OrderController = {
   getInvoice,
   dueCollection,
   getIncomeStatement,
+  getDueDetails,
 };

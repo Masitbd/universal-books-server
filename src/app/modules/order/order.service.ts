@@ -106,13 +106,14 @@ const fetchAll = async ({
         return;
       } else {
         condition.push({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [field]: (otherFilterOption as any)[field],
         });
       }
     });
   }
   const isCondition = condition.length > 0 ? { $and: condition } : {};
-  console.log(JSON.stringify(condition));
+  // console.log(JSON.stringify(condition));
 
   const result = await Order.aggregate([
     {
@@ -212,7 +213,7 @@ const fetchAll = async ({
   ]);
   const totalDoc = await Order.estimatedDocumentCount();
 
-  console.log('result', result);
+  // console.log('result', result);
 
   return {
     data: result,
@@ -506,6 +507,81 @@ const dueCollection = async (params: { amount: number }, oid: string) => {
   return result;
 };
 
+//  get due bills details
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getDueBillsDetailFromDB = async (query: Record<string, any>) => {
+  const { oid } = query;
+  const result = await Order.aggregate([
+    // Match the order based on the 'oid'
+    { $match: { oid } },
+
+    {
+      $lookup: {
+        from: 'doctors',
+        localField: 'refBy',
+        foreignField: '_id',
+        as: 'refBy',
+      },
+    },
+
+    { $unwind: { path: '$refBy', preserveNullAndEmptyArrays: true } },
+
+    // Lookup the 'tests.test' field to populate test details
+    {
+      $lookup: {
+        from: 'tests',
+        localField: 'tests.test',
+        foreignField: '_id',
+        as: 'testDetails',
+      },
+    },
+
+    // Lookup patient details if the uuid exists
+    {
+      $lookup: {
+        from: 'patients',
+        localField: 'uuid',
+        foreignField: 'uuid',
+        as: 'patientFromUUID',
+      },
+    },
+
+    {
+      $project: {
+        _id: 1,
+        oid: 1,
+        totalPrice: 1,
+        cashDiscount: 1,
+        parcentDiscount: 1,
+
+        status: 1,
+        dueAmount: 1,
+        paid: 1,
+        vat: 1,
+        refBy: { name: 1 },
+        patientData: {
+          name: {
+            $cond: {
+              if: {
+                $gt: [{ $size: { $ifNull: ['$patientFromUUID', []] } }, 0],
+              }, // Check if patient data by uuid
+              then: { $arrayElemAt: ['$patientFromUUID.name', 0] }, // Extract name from patientFromUUID
+              else: '$patient.name', // if no uuid set main patient object name here
+            },
+          },
+        },
+        testDetails: { label: 1, price: 1 }, // Include only 'label' and 'price' from test details
+
+        __t: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  return result;
+};
+
 /// investigation income
 
 const getIncomeStatementFromDB = async (payload: {
@@ -609,4 +685,5 @@ export const OrderService = {
   fetchIvoice,
   dueCollection,
   getIncomeStatementFromDB,
+  getDueBillsDetailFromDB,
 };
