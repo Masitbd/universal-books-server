@@ -505,13 +505,6 @@ export const testWiseIncomeStatementPipeline = (params: {
             else: 0,
           },
         },
-        va: {
-          $cond: {
-            if: { $gt: ['$vat', 0] },
-            then: { $divide: [{ $multiply: ['$td.price', '$vat'] }, 100] },
-            else: 0,
-          },
-        },
         pa: {
           $cond: {
             if: { $gt: ['paid', 0] },
@@ -521,6 +514,29 @@ export const testWiseIncomeStatementPipeline = (params: {
               },
             },
             else: 0,
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        va: {
+          $ceil: {
+            $cond: {
+              if: { $gt: ['$vat', 0] },
+              then: {
+                $divide: [
+                  {
+                    $multiply: [
+                      { $subtract: ['$td.price', { $add: ['$pd', '$cd'] }] },
+                      '$vat',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              else: 0,
+            },
           },
         },
       },
@@ -791,13 +807,7 @@ export const departmentWiseIncomeStatement = (params: {
             else: 0,
           },
         },
-        va: {
-          $cond: {
-            if: { $gt: ['$vat', 0] },
-            then: { $divide: [{ $multiply: ['$td.price', '$vat'] }, 100] },
-            else: 0,
-          },
-        },
+
         pa: {
           $cond: {
             if: { $gt: ['paid', 0] },
@@ -807,6 +817,29 @@ export const departmentWiseIncomeStatement = (params: {
               },
             },
             else: 0,
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        va: {
+          $ceil: {
+            $cond: {
+              if: { $gt: ['$vat', 0] },
+              then: {
+                $divide: [
+                  {
+                    $multiply: [
+                      { $subtract: ['$td.price', { $add: ['$pd', '$cd'] }] },
+                      '$vat',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              else: 0,
+            },
           },
         },
       },
