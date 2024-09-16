@@ -505,13 +505,6 @@ export const testWiseIncomeStatementPipeline = (params: {
             else: 0,
           },
         },
-        va: {
-          $cond: {
-            if: { $gt: ['$vat', 0] },
-            then: { $divide: [{ $multiply: ['$td.price', '$vat'] }, 100] },
-            else: 0,
-          },
-        },
         pa: {
           $cond: {
             if: { $gt: ['paid', 0] },
@@ -521,6 +514,29 @@ export const testWiseIncomeStatementPipeline = (params: {
               },
             },
             else: 0,
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        va: {
+          $ceil: {
+            $cond: {
+              if: { $gt: ['$vat', 0] },
+              then: {
+                $divide: [
+                  {
+                    $multiply: [
+                      { $subtract: ['$td.price', { $add: ['$pd', '$cd'] }] },
+                      '$vat',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              else: 0,
+            },
           },
         },
       },
@@ -665,6 +681,252 @@ export const testWiseIncomeStatementPipeline = (params: {
           },
         ],
       },
+    },
+  ];
+};
+
+export const departmentWiseIncomeStatement = (params: {
+  from: Date;
+  to: Date;
+}) => {
+  return [
+    {
+      $match: {
+        discountedBy: { $ne: 'free' },
+        createdAt: {
+          $lte: new Date(params.to),
+          $gte: new Date(params.from),
+        },
+      },
+    },
+    {
+      $unwind: {
+        path: '$tests',
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'tests',
+        localField: 'tests.test',
+        foreignField: '_id',
+        as: 'td',
+      },
+    },
+    {
+      $unwind: {
+        path: '$td',
+      },
+    },
+    {
+      $match: {
+        $and: [
+          {
+            'tests.status': { $ne: 'refunded' },
+          },
+          { 'tests.status': { $ne: 'free' } },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        rg: {
+          $cond: {
+            if: { $eq: [{ $type: '$td.reportGroup' }, 'string'] },
+            then: {
+              $cond: {
+                if: { $eq: [{ $strLenCP: '$td.reportGroup' }, 24] },
+                then: { $toObjectId: '$td.reportGroup' },
+                else: null,
+              },
+            },
+            else: '$td.reportGroup',
+          },
+        },
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'reportgroups',
+        localField: 'rg',
+        foreignField: '_id',
+        as: 'rgd',
+      },
+    },
+    {
+      $unwind: '$rgd',
+    },
+    {
+      $addFields: {
+        pd: {
+          $cond: {
+            if: {
+              $or: [
+                { $gt: ['$parcentDiscount', 0] },
+                { $gt: ['$tests.discount', 0] },
+              ],
+            },
+            then: {
+              $cond: {
+                if: { $gt: ['$tests.discount', 0] },
+                then: {
+                  $divide: [
+                    { $multiply: ['$td.price', '$tests.discount'] },
+                    100,
+                  ],
+                },
+                else: {
+                  $cond: {
+                    if: { $gt: ['$parcentDiscount', 0] },
+                    then: {
+                      $divide: [
+                        { $multiply: ['$td.price', '$parcentDiscount'] },
+                        100,
+                      ],
+                    },
+                    else: 0,
+                  },
+                },
+              },
+            },
+            else: 0,
+          },
+        },
+        cd: {
+          $cond: {
+            if: { $gt: ['$cashDiscount', 0] },
+            then: {
+              $floor: {
+                $multiply: [
+                  { $divide: ['$cashDiscount', '$totalPrice'] },
+                  '$td.price',
+                ],
+              },
+            },
+            else: 0,
+          },
+        },
+
+        pa: {
+          $cond: {
+            if: { $gt: ['paid', 0] },
+            then: {
+              $floor: {
+                $multiply: [{ $divide: ['$paid', '$totalPrice'] }, '$td.price'],
+              },
+            },
+            else: 0,
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        va: {
+          $ceil: {
+            $cond: {
+              if: { $gt: ['$vat', 0] },
+              then: {
+                $divide: [
+                  {
+                    $multiply: [
+                      { $subtract: ['$td.price', { $add: ['$pd', '$cd'] }] },
+                      '$vat',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              else: 0,
+            },
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'departments',
+        localField: 'td.department',
+        foreignField: '_id',
+        as: 'dd',
+      },
+    },
+    {
+      $unwind: '$dd',
+    },
+    {
+      $addFields: {
+        netDiscount: {
+          $switch: {
+            branches: [
+              { case: { $eq: ['$discountedBy', 'doctor'] }, then: 0 },
+              {
+                case: { $eq: ['$discountedBy', 'both'] },
+                then: { $divide: [{ $add: ['$cd', '$pd'] }, 2] },
+              },
+            ],
+            default: { $add: ['$cd', '$pd'] },
+          },
+        },
+      },
+    },
+
+    {
+      $facet: {
+        deptWiseDocs: [
+          {
+            $group: {
+              _id: '$dd.label',
+              sell: { $sum: '$td.price' },
+
+              discount: { $sum: '$netDiscount' },
+              vat: { $sum: '$va' },
+              pa: { $sum: '$pa' },
+              quantity: { $sum: 1 },
+            },
+          },
+          {
+            $sort: { price: -1 },
+          },
+        ],
+        total: [
+          {
+            $group: {
+              _id: null,
+              sell: { $sum: '$td.price' },
+
+              discount: { $sum: '$netDiscount' },
+              vat: { $sum: '$va' },
+              pa: { $sum: '$pa' },
+              quantity: { $sum: 1 },
+            },
+          },
+          {
+            $project: {
+              _id: 'Total',
+              sell: 1,
+              discount: 1,
+              vat: 1,
+              pa: 1,
+              quantity: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        combined: {
+          $concatArrays: ['$deptWiseDocs', '$total'],
+        },
+      },
+    },
+    {
+      $unwind: '$combined',
+    },
+    {
+      $replaceRoot: { newRoot: '$combined' },
     },
   ];
 };

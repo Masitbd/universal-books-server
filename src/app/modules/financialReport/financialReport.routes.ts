@@ -12,4 +12,8 @@ routes.get(
   FinancialReportController.getTestWiseIncomeStatement
 );
 
+routes.get(
+  '/incomeStatement/deptWise',
+  FinancialReportController.getDeptWiseIncomeStatement
+);
 export const FinancialReportRoutes = { routes };

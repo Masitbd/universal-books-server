@@ -50,15 +50,18 @@ const postOrder = async (params: IOrder) => {
     discountBasedOnParcent,
     discountGivenByDoctor,
   } = await totalPriceCalculator(params);
-  order.totalPrice = totalTestPrice + vat + tubePrice;
+  order.tubePrice = tubePrice;
+  order.totalPrice = totalTestPrice + tubePrice;
   order.dueAmount =
     order.discountedBy == 'free'
       ? 0
-      : order.totalPrice -
+      : totalTestPrice +
+        tubePrice -
         discountBasedOnParcent -
         discountGivenByDoctor -
         order.cashDiscount -
-        order.paid;
+        order.paid +
+        vat;
 
   let result;
   if (params.patientType === 'registered') {
@@ -378,6 +381,7 @@ const fetchIvoice = async (params: string) => {
   let totalTestTubePrice = 0;
   // eslint-disable-next-line no-unused-vars
   const discountOnTestTube = 0;
+  const refundTestAmount = 0;
   const totalDiscount = await Order.aggregate(
     discountCalculatorPipeline(params) as PipelineStage[]
   );
@@ -388,7 +392,7 @@ const fetchIvoice = async (params: string) => {
       SL: string;
       discount: number;
     }) => {
-      if (test.test.hasTestTube && test.status !== ENUM_TEST_STATUS.REFUNDED) {
+      if (test.test.hasTestTube) {
         test.test.testTubes.forEach((tube: IVacuumTube) => {
           if (testTubes.length) {
             const doesTubeExists = testTubes.find(
@@ -449,14 +453,33 @@ const fetchIvoice = async (params: string) => {
         discount: { $sum: '$discount' },
         grossAmount: { $sum: '$grossAmount' },
         netAmount: { $sum: '$netAmount' },
+        remainingRefund: { $sum: '$remainingRefund' },
+        refundApplied: { $sum: '$refundApplied' },
       },
     },
   ]);
   let netRefundAmount = 0;
+  let grossRefundAmount = 0;
+  let remainingRefund = 0;
+  let refundApplied = 0;
   if (refundData.length) {
     netRefundAmount = refundData[0].netAmount;
+    grossRefundAmount = refundData[0].grossAmount;
+    remainingRefund = refundData[0].remainingRefund;
+    refundApplied = refundData[0].refundApplied;
   }
 
+  // For Vat
+  let vatAmount = 0;
+  if (order[0].vat) {
+    vatAmount = Math.floor(
+      ((order[0].totalPrice -
+        order[0].cashDiscount -
+        (totalDiscount.length ? totalDiscount[0].totalDiscountAmount : 0)) *
+        order[0].vat) /
+        100
+    );
+  }
   // for barcode
 
   const barcodeDoc = createCanvas(20, 20);
@@ -489,26 +512,24 @@ const fetchIvoice = async (params: string) => {
     discount:
       order[0].discountedBy !== 'free'
         ? totalDiscount.length
-          ? totalDiscount[0].totalDiscountAmount
+          ? totalDiscount[0].totalDiscountAmount + totalDiscount[0].cashDiscount
           : 0
         : order[0].totalPrice,
     netPrice:
       order[0].discountedBy !== 'free'
         ? order[0].totalPrice -
           (totalDiscount.length ? totalDiscount[0].totalDiscountAmount : 0) -
-          order[0].cashDiscount
+          order[0].cashDiscount +
+          vatAmount
         : 0,
 
-    dueAmount:
-      order[0].discountedBy !== 'free'
-        ? order[0].totalPrice -
-          (totalDiscount.length ? totalDiscount[0].totalDiscountAmount : 0) -
-          order[0].paid -
-          order[0].cashDiscount +
-          netRefundAmount
-        : 0,
+    dueAmount: order[0].discountedBy !== 'free' ? order[0].dueAmount : 0,
     parcentDiscount: order[0].parcentDiscount || 0,
     img: barcodeUrl,
+    remainingRefund,
+    refundApplied,
+    vat: order[0].vat,
+    vatAmount: vatAmount,
   };
 
   const templateHtml = fs.readFileSync(
@@ -625,6 +646,29 @@ const fetchSingle = async (params: string) => {
       },
     },
   ]);
+
+  // featching the refund data for the order
+  const refundData = await Refund.aggregate([
+    {
+      $match: {
+        oid: params,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        grossAmount: { $sum: '$grossAmount' },
+        netAmount: { $sum: '$netAmount' },
+        refundApplied: { $sum: '$refundApplied' },
+        remainingRefund: { $sum: '$remainingRefund' },
+        vat: { $sum: '$refundAppvatlied' },
+      },
+    },
+  ]);
+
+  if (refundData.length) {
+    order[0] = Object.assign({}, order[0], { refundData: refundData[0] });
+  }
 
   if (!order.length) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
