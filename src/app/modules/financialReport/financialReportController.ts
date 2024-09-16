@@ -73,9 +73,69 @@ const getDeptWiseIncomeStatement = catchAsync(
     });
   }
 );
+
+const getDeptWIseCollectionSummery = catchAsync(
+  async (req: Request, res: Response) => {
+    const filteredField = pick(req.query, ['from', 'to']);
+
+    const result = await FinancialReportService.fetchDeptWiseCollectionSummery({
+      from: filteredField.from as unknown as Date,
+      to: filteredField.to as unknown as Date,
+    });
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Department wise collection statement featched successfully',
+      data: result,
+    });
+  }
+);
+
+const getDeptWiseDoctorPerformance = catchAsync(
+  async (req: Request, res: Response) => {
+    const filteredField = pick(req.query, ['from', 'to']);
+
+    const result = await FinancialReportService.fetchDeptWIseDoctorPerformance({
+      from: filteredField.from as unknown as Date,
+      to: filteredField.to as unknown as Date,
+      refBy: req.params.id,
+    });
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        'Department wise doctor Performance summery featched successfully',
+      data: result,
+    });
+  }
+);
+
+const getTestWiseDoctorPerformance = catchAsync(
+  async (req: Request, res: Response) => {
+    const filteredField = pick(req.query, ['from', 'to']);
+
+    const result = await FinancialReportService.fetchTestWIseDoctorPerformance({
+      from: filteredField.from as unknown as Date,
+      to: filteredField.to as unknown as Date,
+      refBy: req.params.id,
+    });
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Test wise doctor Performance summery featched successfully',
+      data: result,
+    });
+  }
+);
 export const FinancialReportController = {
   getOverAllComission,
   getDoctorPerformanceSUmmery,
   getTestWiseIncomeStatement,
   getDeptWiseIncomeStatement,
+  getDeptWIseCollectionSummery,
+  getDeptWiseDoctorPerformance,
+  getTestWiseDoctorPerformance,
 };

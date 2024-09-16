@@ -1,9 +1,12 @@
 import { PipelineStage } from 'mongoose';
 import { Order } from '../order/order.model';
 import {
+  departmentWiseCollectionSummeryPipeline,
   departmentWiseIncomeStatement,
   doctorOverAllSummeryByRefByPipeline,
+  doctorPerformanceSummeryDeptWisePipeline,
   doctorPerformanceSummeryPipeline,
+  doctorPerformanceSummeryTestWisePipeline,
   pipelineForOverAllDoctor,
   testWiseIncomeStatementPipeline,
 } from './financialReport.utils';
@@ -50,9 +53,40 @@ const fetchDeptWiseIncomeStatement = async (params: {
     departmentWiseIncomeStatement(params) as PipelineStage[]
   );
 };
+
+const fetchDeptWiseCollectionSummery = async (params: {
+  from: Date;
+  to: Date;
+}) => {
+  return await Order.aggregate(
+    departmentWiseCollectionSummeryPipeline(params) as PipelineStage[]
+  );
+};
+
+const fetchDeptWIseDoctorPerformance = async (params: {
+  from: Date;
+  to: Date;
+  refBy: string;
+}) => {
+  return await Order.aggregate(
+    doctorPerformanceSummeryDeptWisePipeline(params)
+  );
+};
+const fetchTestWIseDoctorPerformance = async (params: {
+  from: Date;
+  to: Date;
+  refBy: string;
+}) => {
+  return await Order.aggregate(
+    doctorPerformanceSummeryTestWisePipeline(params)
+  );
+};
 export const FinancialReportService = {
   fetchOverAllComission,
   fetchDoctorPerformanceSummery,
   fetchTestWiseIncomeStatement,
   fetchDeptWiseIncomeStatement,
+  fetchDeptWiseCollectionSummery,
+  fetchDeptWIseDoctorPerformance,
+  fetchTestWIseDoctorPerformance,
 };

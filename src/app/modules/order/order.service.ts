@@ -465,8 +465,8 @@ const fetchIvoice = async (params: string) => {
   if (refundData.length) {
     netRefundAmount = refundData[0].netAmount;
     grossRefundAmount = refundData[0].grossAmount;
-    remainingRefund = refundData[0].remainingRefund;
-    refundApplied = refundData[0].refundApplied;
+    remainingRefund = Math.ceil(refundData[0].remainingRefund);
+    refundApplied = Math.ceil(refundData[0].refundApplied);
   }
 
   // For Vat
@@ -506,30 +506,38 @@ const fetchIvoice = async (params: string) => {
     consultant,
 
     createdAt: new Date(order[0].createdAt).toLocaleDateString(),
-    paid: order[0].paid,
+    paid: Math.ceil(order[0].paid),
     tt: modifiedTransaction.length > 0,
     tds: modifiedTransaction,
     discount:
       order[0].discountedBy !== 'free'
         ? totalDiscount.length
-          ? totalDiscount[0].totalDiscountAmount + totalDiscount[0].cashDiscount
+          ? Math.ceil(
+              totalDiscount[0].totalDiscountAmount +
+                totalDiscount[0].cashDiscount
+            )
           : 0
         : order[0].totalPrice,
     netPrice:
       order[0].discountedBy !== 'free'
-        ? order[0].totalPrice -
-          (totalDiscount.length ? totalDiscount[0].totalDiscountAmount : 0) -
-          order[0].cashDiscount +
-          vatAmount
+        ? Math.ceil(
+            order[0].totalPrice -
+              (totalDiscount.length
+                ? totalDiscount[0].totalDiscountAmount
+                : 0) -
+              order[0].cashDiscount +
+              vatAmount
+          )
         : 0,
 
-    dueAmount: order[0].discountedBy !== 'free' ? order[0].dueAmount : 0,
+    dueAmount:
+      order[0].discountedBy !== 'free' ? Math.ceil(order[0].dueAmount) : 0,
     parcentDiscount: order[0].parcentDiscount || 0,
     img: barcodeUrl,
     remainingRefund,
     refundApplied,
     vat: order[0].vat,
-    vatAmount: vatAmount,
+    vatAmount: Math.ceil(vatAmount),
   };
 
   const templateHtml = fs.readFileSync(

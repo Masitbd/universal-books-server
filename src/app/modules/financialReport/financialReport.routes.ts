@@ -16,4 +16,18 @@ routes.get(
   '/incomeStatement/deptWise',
   FinancialReportController.getDeptWiseIncomeStatement
 );
+
+routes.get(
+  '/collectionStatement/deptWise',
+  FinancialReportController.getDeptWIseCollectionSummery
+);
+
+routes.get(
+  '/doctorsPerformance/deptWise/:id',
+  FinancialReportController.getDeptWiseDoctorPerformance
+);
+routes.get(
+  '/doctorsPerformance/testWise/:id',
+  FinancialReportController.getTestWiseDoctorPerformance
+);
 export const FinancialReportRoutes = { routes };
