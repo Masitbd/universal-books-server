@@ -8,7 +8,6 @@ import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { DoctorSealRoutes } from '../modules/doctorSeal/seal.routes';
 import { FinancialReportRoutes } from '../modules/financialReport/financialReport.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
-import { incomeStatementRoutes } from '../modules/incomeStatement/incomeStatement.routes';
 import { MiscellaneousRoutes } from '../modules/miscellaneous/miscellaneous.routes';
 import { OrderRoutes } from '../modules/order/order.routes';
 import { PatientRoute } from '../modules/patient/patient.route';
@@ -117,18 +116,12 @@ const moduleRoutes = [
     route: MiscellaneousRoutes.routes,
   },
   {
-
-    path: '/income-statemnet',
-    route: incomeStatementRoutes.router
-  },
-  {
     path: '/refund',
     route: RefundRoutes.routes,
   },
   {
     path: '/financialReport',
     route: FinancialReportRoutes.routes,
-
   },
 ];
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import routes from './app/routes';
@@ -11,12 +10,6 @@ const app: Application = express();
 const corsOptions = {
   origin: 'https://mas-hms-frontend.vercel.app',
 };
-
-app.use((req: Request, res: Response, next: NextFunction) => {
-
-  next();
-});
-
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
