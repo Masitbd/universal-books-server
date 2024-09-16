@@ -2,10 +2,8 @@
 import { createCanvas } from 'canvas';
 import fs from 'fs';
 import httpStatus from 'http-status';
-
 import JsBarcode from 'jsbarcode';
 import { PipelineStage, Types } from 'mongoose';
-
 import path from 'path';
 import { ENUM_TEST_STATUS } from '../../../enums/testStatusEnum';
 import ApiError from '../../../errors/ApiError';
@@ -210,14 +208,12 @@ const fetchAll = async ({
         return;
       } else {
         condition.push({
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [field]: (otherFilterOption as any)[field],
         });
       }
     });
   }
   const isCondition = condition.length > 0 ? { $and: condition } : {};
-
 
   const result = await Order.aggregate(
     orderAggregationPipeline(isCondition, sortOption, skip, limit)
@@ -473,20 +469,6 @@ const fetchIvoice = async (params: string) => {
     refundApplied = Math.ceil(refundData[0].refundApplied);
   }
 
-
-  return {
-    data: result,
-    page: page,
-    limit: limit,
-    skip: skip,
-    totalData: totalDoc,
-  };
-};
-
-const orderPatch = async (param: { id: string; data: Partial<IOrder> }) => {
-  const result = await Order.findOneAndUpdate({ _id: param.id }, param.data, {
-    new: true,
-=======
   // For Vat
   let vatAmount = 0;
   if (order[0].vat) {
@@ -576,7 +558,6 @@ const orderPatch = async (param: { id: string; data: Partial<IOrder> }) => {
         bottom: '0px',
       },
     },
-
   });
   return bufferResult;
 };
@@ -789,176 +770,6 @@ const dueCollection = async (params: { amount: number }, oid: string) => {
   return result;
 };
 
-
-//  get due bills details
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getDueBillsDetailFromDB = async (query: Record<string, any>) => {
-  const { oid } = query;
-  const result = await Order.aggregate([
-    // Match the order based on the 'oid'
-    { $match: { oid } },
-
-    {
-      $lookup: {
-        from: 'doctors',
-        localField: 'refBy',
-        foreignField: '_id',
-        as: 'refBy',
-      },
-    },
-
-    { $unwind: { path: '$refBy', preserveNullAndEmptyArrays: true } },
-
-    // Lookup the 'tests.test' field to populate test details
-    {
-      $lookup: {
-        from: 'tests',
-        localField: 'tests.test',
-        foreignField: '_id',
-        as: 'testDetails',
-      },
-    },
-
-    // Lookup patient details if the uuid exists
-    {
-      $lookup: {
-        from: 'patients',
-        localField: 'uuid',
-        foreignField: 'uuid',
-        as: 'patientFromUUID',
-      },
-    },
-
-    {
-      $project: {
-        _id: 1,
-        oid: 1,
-        totalPrice: 1,
-        cashDiscount: 1,
-        parcentDiscount: 1,
-
-        status: 1,
-        dueAmount: 1,
-        paid: 1,
-        vat: 1,
-        refBy: { name: 1 },
-        patientData: {
-          name: {
-            $cond: {
-              if: {
-                $gt: [{ $size: { $ifNull: ['$patientFromUUID', []] } }, 0],
-              }, // Check if patient data by uuid
-              then: { $arrayElemAt: ['$patientFromUUID.name', 0] }, // Extract name from patientFromUUID
-              else: '$patient.name', // if no uuid set main patient object name here
-            },
-          },
-        },
-        testDetails: { label: 1, price: 1 }, // Include only 'label' and 'price' from test details
-
-        __t: 1,
-        createdAt: 1,
-      },
-    },
-  ]);
-
-  return result;
-};
-
-/// investigation income
-
-const getIncomeStatementFromDB = async (payload: {
-  startDate: string;
-  endDate: string;
-}) => {
-  // Convert and format dates
-  const startDate = new Date(payload.startDate);
-  const endDate = new Date(payload.endDate);
-
-  startDate.setHours(0, 0, 0, 0);
-
-  endDate.setHours(23, 59, 59, 999);
-
-  const query: PipelineStage[] = [
-    {
-      $match: {
-        createdAt: {
-          $gte: startDate,
-          $lte: endDate,
-        },
-      },
-    },
-    {
-      $lookup: {
-        from: 'tests',
-        localField: 'tests.test',
-        foreignField: '_id',
-        as: 'testDetails',
-      },
-    },
-    {
-      $unwind: {
-        path: '$testDetails', // unwind to get each test
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $group: {
-        _id: {
-          oid: '$oid',
-          groupDate: {
-            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
-          },
-        },
-        totalPrice: { $first: '$totalPrice' },
-        totalTestPrice: { $sum: '$testDetails.price' },
-        cashDiscount: { $first: '$cashDiscount' },
-        parcentDiscount: { $first: '$parcentDiscount' },
-        dueAmount: { $first: '$dueAmount' },
-        paid: { $first: '$paid' },
-        vat: { $first: '$vat' },
-        uuid: { $first: '$uuid' }, // Keep uuid if needed
-        records: {
-          $push: {
-            oid: '$oid',
-            uuid: '$uuid',
-            totalPrice: '$totalPrice',
-            totalTestPrice: { $sum: '$testDetails.price' },
-            cashDiscount: '$cashDiscount',
-            parcentDiscount: '$parcentDiscount',
-            dueAmount: '$dueAmount',
-            paid: '$paid',
-            vat: '$vat',
-          },
-        },
-      },
-    },
-    {
-      $sort: { oid: -1 }, // Sort by oid
-    },
-    {
-      $group: {
-        _id: '$_id.groupDate',
-
-        records: {
-          $push: {
-            $first: '$records',
-          },
-        },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        groupDate: '$_id',
-
-        records: 1,
-      },
-    },
-  ];
-
-  const result = await Order.aggregate(query);
-
 const singleOrderstatusChanger = async (params: {
   reportGroup: string;
   oid: string;
@@ -1055,7 +866,6 @@ const singleOrderstatusChanger = async (params: {
     }
   }
   const result = await order.save();
-
   return result;
 };
 
@@ -1065,8 +875,6 @@ export const OrderService = {
   orderPatch,
   fetchIvoice,
   dueCollection,
-  getIncomeStatementFromDB,
-  getDueBillsDetailFromDB,
   fetchSingle,
   singleOrderstatusChanger,
 };
