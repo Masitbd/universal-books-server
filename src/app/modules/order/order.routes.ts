@@ -13,6 +13,10 @@ routes.post(
   ),
   OrderController.createNewOrder
 );
+// income
+routes.post('/income-statement', OrderController.getIncomeStatement);
+// due detials
+routes.get('/due-details', OrderController.getDueDetails);
 routes.get('/', OrderController.getAllOrder);
 routes.get('/:oid', OrderController.getSIngle);
 routes.patch('/:id', OrderController.updateOrder);

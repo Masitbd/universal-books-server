@@ -123,6 +123,25 @@ const statusChanger = catchAsync(
   }
 );
 
+const getIncomeStatement = catchAsync(async (req: Request, res: Response) => {
+  const result = await OrderService.getIncomeStatementFromDB(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Income Statement retrived successfully',
+    data: result,
+  });
+});
+const getDueDetails = catchAsync(async (req: Request, res: Response) => {
+  const result = await OrderService.getDueBillsDetailFromDB(req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'due dettails featched successfully',
+    data: result,
+  });
+});
+
 export const OrderController = {
   createNewOrder,
   getAllOrder,
@@ -131,4 +150,6 @@ export const OrderController = {
   dueCollection,
   getSIngle,
   statusChanger,
+  getIncomeStatement,
+  getDueDetails,
 };
