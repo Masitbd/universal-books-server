@@ -1,6 +1,7 @@
 import { PipelineStage } from 'mongoose';
 import { Order } from '../order/order.model';
 import {
+  clientWiseIncomeStatementPipeline,
   departmentWiseCollectionSummeryPipeline,
   departmentWiseIncomeStatement,
   doctorOverAllSummeryByRefByPipeline,
@@ -81,6 +82,10 @@ const fetchTestWIseDoctorPerformance = async (params: {
     doctorPerformanceSummeryTestWisePipeline(params)
   );
 };
+
+const clientWiseIncomeStatement = async (params: { from: Date; to: Date }) => {
+  return await Order.aggregate(clientWiseIncomeStatementPipeline(params));
+};
 export const FinancialReportService = {
   fetchOverAllComission,
   fetchDoctorPerformanceSummery,
@@ -89,4 +94,5 @@ export const FinancialReportService = {
   fetchDeptWiseCollectionSummery,
   fetchDeptWIseDoctorPerformance,
   fetchTestWIseDoctorPerformance,
+  clientWiseIncomeStatement,
 };

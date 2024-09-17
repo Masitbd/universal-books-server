@@ -11,6 +11,10 @@ routes.get(
   '/incomeStatement/testWise',
   FinancialReportController.getTestWiseIncomeStatement
 );
+routes.get(
+  '/incomeStatement/clientWise',
+  FinancialReportController.clientWiseIncomeStatement
+);
 
 routes.get(
   '/incomeStatement/deptWise',

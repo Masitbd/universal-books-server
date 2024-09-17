@@ -7,7 +7,6 @@ import { FinancialReportService } from './financialReport.service';
 
 const getOverAllComission = catchAsync(async (req: Request, res: Response) => {
   const filteredField = pick(req.query, ['from', 'to']);
-  console.log(filteredField);
   const result = await FinancialReportService.fetchOverAllComission(
     filteredField as unknown as { from: Date; to: Date }
   );
@@ -130,6 +129,24 @@ const getTestWiseDoctorPerformance = catchAsync(
     });
   }
 );
+
+const clientWiseIncomeStatement = catchAsync(
+  async (req: Request, res: Response) => {
+    const filteredField = pick(req.query, ['from', 'to']);
+
+    const result = await FinancialReportService.clientWiseIncomeStatement({
+      from: filteredField.from as unknown as Date,
+      to: filteredField.to as unknown as Date,
+    });
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Client wise income statement featched successfully',
+      data: result,
+    });
+  }
+);
 export const FinancialReportController = {
   getOverAllComission,
   getDoctorPerformanceSUmmery,
@@ -138,4 +155,5 @@ export const FinancialReportController = {
   getDeptWIseCollectionSummery,
   getDeptWiseDoctorPerformance,
   getTestWiseDoctorPerformance,
+  clientWiseIncomeStatement,
 };

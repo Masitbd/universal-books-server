@@ -1551,3 +1551,219 @@ export const doctorPerformanceSummeryTestWisePipeline = (params: {
     },
   ];
 };
+
+export const clientWiseIncomeStatementPipeline = (params: {
+  from: Date;
+  to: Date;
+}): PipelineStage[] => {
+  return [
+    {
+      $match: {
+        discountedBy: { $ne: 'free' },
+        createdAt: {
+          $lte: new Date(params.to),
+          $gte: new Date(params.from),
+        },
+      },
+    },
+    {
+      $unwind: '$tests',
+    },
+    {
+      $lookup: {
+        from: 'tests',
+        localField: 'tests.test',
+        foreignField: '_id',
+        as: 'td',
+      },
+    },
+    {
+      $unwind: '$td',
+    },
+    {
+      $match: {
+        $and: [
+          {
+            'tests.status': { $ne: 'refunded' },
+          },
+          { 'tests.status': { $ne: 'free' } },
+        ],
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'patients',
+        localField: 'uuid',
+        foreignField: 'uuid',
+        as: 'patientData',
+      },
+    },
+    {
+      $unwind: { path: '$patientData', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $addFields: {
+        patient: {
+          $cond: {
+            if: { $eq: ['$patientType', 'registered'] },
+            then: '$patientData',
+            else: '$patient',
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        pd: {
+          $cond: {
+            if: {
+              $or: [
+                { $gt: ['$parcentDiscount', 0] },
+                { $gt: ['$tests.discount', 0] },
+              ],
+            },
+            then: {
+              $cond: {
+                if: { $gt: ['$tests.discount', 0] },
+                then: {
+                  $divide: [
+                    { $multiply: ['$td.price', '$tests.discount'] },
+                    100,
+                  ],
+                },
+                else: {
+                  $cond: {
+                    if: { $gt: ['$parcentDiscount', 0] },
+                    then: {
+                      $divide: [
+                        { $multiply: ['$td.price', '$parcentDiscount'] },
+                        100,
+                      ],
+                    },
+                    else: 0,
+                  },
+                },
+              },
+            },
+            else: 0,
+          },
+        },
+        cd: {
+          $cond: {
+            if: { $gt: ['$cashDiscount', 0] },
+            then: {
+              $floor: {
+                $multiply: [
+                  {
+                    $divide: [
+                      '$cashDiscount',
+                      {
+                        $subtract: [
+                          '$totalPrice',
+                          { $ifNull: ['$tubePrice', 0] },
+                        ],
+                      },
+                    ],
+                  },
+                  '$td.price',
+                ],
+              },
+            },
+            else: 0,
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        totalDiscount: {
+          $add: ['$pd', '$cd'],
+        },
+      },
+    },
+    {
+      $addFields: {
+        va: {
+          $ceil: {
+            $cond: {
+              if: { $gt: ['$vat', 0] },
+              then: {
+                $divide: [
+                  {
+                    $multiply: [
+                      { $subtract: ['$td.price', { $add: ['$pd', '$cd'] }] },
+                      '$vat',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              else: 0,
+            },
+          },
+        },
+      },
+    },
+
+    {
+      $group: {
+        _id: '$oid',
+        totalPrice: { $first: '$totalPrice' },
+        totalDiscount: { $first: '$totalDiscount' },
+        vat: { $sum: '$va' },
+        patient: { $first: '$patient' },
+        createdAt: { $first: '$createdAt' },
+        paid: { $first: '$paid' },
+        dueAmount: { $first: '$dueAmount' },
+      },
+    },
+    {
+      $facet: {
+        mainDocs: [
+          {
+            $project: {
+              totalPrice: 1,
+              totalDiscount: 1,
+              vat: 1,
+              paid: 1,
+              dueAmount: 1,
+              patient: {
+                name: 1,
+                _id: 1,
+              },
+              createdAt: 1,
+            },
+          },
+        ],
+        nameWiseTotalDocs: [
+          {
+            $group: {
+              _id: '$patient.name',
+              totalPrice: { $sum: '$totalPrice' },
+              totalDiscount: { $sum: '$totalDiscount' },
+              vat: { $sum: '$vat' },
+              quantity: { $sum: 1 },
+              paid: { $sum: '$paid' },
+              dueAmount: { $sum: '$dueAmount' },
+            },
+          },
+        ],
+
+        grandTotalDocs: [
+          {
+            $group: {
+              _id: null,
+              totalPrice: { $sum: '$totalPrice' },
+              totalDiscount: { $sum: '$totalDiscount' },
+              vat: { $sum: '$vat' },
+              quantity: { $sum: 1 },
+              paid: { $sum: '$paid' },
+              dueAmount: { $sum: '$dueAmount' },
+            },
+          },
+        ],
+      },
+    },
+  ];
+};
