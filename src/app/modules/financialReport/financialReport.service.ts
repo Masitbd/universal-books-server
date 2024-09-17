@@ -9,6 +9,7 @@ import {
   doctorPerformanceSummeryPipeline,
   doctorPerformanceSummeryTestWisePipeline,
   pipelineForOverAllDoctor,
+  refByWiseIncomeStatementPipeline,
   testWiseIncomeStatementPipeline,
 } from './financialReport.utils';
 
@@ -86,6 +87,11 @@ const fetchTestWIseDoctorPerformance = async (params: {
 const clientWiseIncomeStatement = async (params: { from: Date; to: Date }) => {
   return await Order.aggregate(clientWiseIncomeStatementPipeline(params));
 };
+
+const refByWIseIncomeStatement = async (params: { from: Date; to: Date }) => {
+  return await Order.aggregate(refByWiseIncomeStatementPipeline(params));
+};
+
 export const FinancialReportService = {
   fetchOverAllComission,
   fetchDoctorPerformanceSummery,
@@ -95,4 +101,5 @@ export const FinancialReportService = {
   fetchDeptWIseDoctorPerformance,
   fetchTestWIseDoctorPerformance,
   clientWiseIncomeStatement,
+  refByWIseIncomeStatement,
 };
