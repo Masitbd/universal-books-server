@@ -878,6 +878,7 @@ const getIncomeStatementFromDB = async (payload: {
   // Convert and format dates
   const startDate = new Date(payload.startDate);
   const endDate = new Date(payload.endDate);
+  startDate.setHours(0, 0, 0, 0);
 
   endDate.setHours(23, 59, 59, 999);
 
@@ -936,7 +937,7 @@ const getIncomeStatementFromDB = async (payload: {
       },
     },
     {
-      $sort: { oid: 1 }, // Sort by oid
+      $sort: { oid: -1 }, // Sort by oid
     },
     {
       $group: {
