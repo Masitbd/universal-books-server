@@ -57,6 +57,57 @@ export const pipelineForOverAllDoctor = (params: { from: Date; to: Date }) => {
       $unwind: '$doctor',
     },
     {
+      $facet: {
+        mainDocs: [
+          {
+            $project: {
+              _id: 1,
+              sell: 1,
+              exp: 1,
+              doctor: 1,
+            },
+          },
+        ],
+        totalDocs: [
+          {
+            $group: {
+              _id: null,
+              sell: { $sum: '$sell' },
+              exp: { $sum: '$exp' },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              sell: 1,
+              exp: 1,
+              doctor: { name: 'Total' },
+            },
+          },
+        ],
+      },
+    },
+
+    {
+      $project: {
+        combined: {
+          $concatArrays: ['$mainDocs', '$totalDocs'],
+        },
+      },
+    },
+    {
+      $unwind: '$combined',
+    },
+    {
+      $replaceRoot: { newRoot: '$combined' },
+    },
+    {
+      $sort: {
+        totalPrice: 1,
+      },
+    },
+
+    {
       $setWindowFields: {
         sortBy: { sell: 1 }, // or any other field you want to sort by
         output: {
@@ -2036,6 +2087,234 @@ export const refByWiseIncomeStatementPipeline = (params: {
             },
           },
         ],
+      },
+    },
+  ];
+};
+
+export const dewCollectionSummeryPipeline = (params: {
+  from: Date;
+  to: Date;
+}): PipelineStage[] => {
+  return [
+    {
+      $match: {
+        postedBy: { $ne: null },
+        description: 'Collected due amount',
+        createdAt: {
+          $lte: new Date(params.to),
+          $gte: new Date(params.from),
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'profiles',
+        localField: 'postedBy',
+        foreignField: 'uuid',
+        as: 'postedBy',
+      },
+    },
+    {
+      $unwind: '$postedBy',
+    },
+    {
+      $lookup: {
+        from: 'orders',
+        localField: 'ref',
+        foreignField: '_id',
+        as: 'orderData',
+      },
+    },
+    {
+      $unwind: '$orderData',
+    },
+    {
+      $lookup: {
+        from: 'patients',
+        localField: 'orderData.uuid',
+        foreignField: 'uuid',
+        as: 'patientData',
+      },
+    },
+    {
+      $addFields: {
+        pd: {
+          $cond: {
+            if: { $eq: ['$orderData.patientType', 'registered'] },
+            then: '$patientData',
+            else: ['$orderData.patient'],
+          },
+        },
+      },
+    },
+    {
+      $unwind: '$pd',
+    },
+    {
+      $addFields: {
+        patient: '$pd.name',
+        oid: '$orderData.oid',
+      },
+    },
+
+    {
+      $facet: {
+        mainDocs: [
+          {
+            $project: {
+              createdAt: 1,
+              oid: 1,
+              patient: 1,
+              user: '$postedBy.name',
+              amount: 1,
+            },
+          },
+        ],
+
+        totalDocs: [
+          {
+            $group: { _id: null, amount: { $sum: '$amount' } },
+          },
+          {
+            $project: {
+              amount: 1,
+              createdAt: '$$NOW',
+              patient: 'Total',
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        combined: {
+          $concatArrays: ['$mainDocs', '$totalDocs'],
+        },
+      },
+    },
+    {
+      $unwind: '$combined',
+    },
+    {
+      $replaceRoot: { newRoot: '$combined' },
+    },
+    {
+      $sort: {
+        createdAt: 1,
+      },
+    },
+  ];
+};
+
+export const newBillSummeryPipeline = (params: {
+  from: Date;
+  to: Date;
+}): PipelineStage[] => {
+  return [
+    {
+      $match: {
+        postedBy: { $ne: null },
+        createdAt: {
+          $lte: new Date(params.to),
+          $gte: new Date(params.from),
+        },
+      },
+    },
+    {
+      $sort: {
+        createdAt: 1,
+      },
+    },
+    {
+      $lookup: {
+        from: 'profiles',
+        localField: 'postedBy',
+        foreignField: 'uuid',
+        as: 'postedBy',
+      },
+    },
+    {
+      $unwind: '$postedBy',
+    },
+    {
+      $lookup: {
+        from: 'patients',
+        localField: 'uuid',
+        foreignField: 'uuid',
+        as: 'patientData',
+      },
+    },
+    {
+      $addFields: {
+        pd: {
+          $cond: {
+            if: { $eq: ['$patientType', 'registered'] },
+            then: '$patientData',
+            else: ['$patient'],
+          },
+        },
+      },
+    },
+    {
+      $unwind: '$pd',
+    },
+    {
+      $lookup: {
+        from: 'patients',
+        localField: 'uuid',
+        foreignField: 'uuid',
+        as: 'patientData',
+      },
+    },
+    {
+      $addFields: {
+        patient: '$pd.name',
+      },
+    },
+    {
+      $facet: {
+        mainDocs: [
+          {
+            $project: {
+              createdAt: 1,
+              oid: 1,
+              patient: 1,
+              user: '$postedBy.name',
+              amount: '$totalPrice',
+            },
+          },
+        ],
+        totalDocs: [
+          {
+            $group: { _id: null, amount: { $sum: '$totalPrice' } },
+          },
+          {
+            $project: {
+              amount: 1,
+              patient: 'Total',
+              createdAt: '$$NOW',
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        combined: {
+          $concatArrays: ['$mainDocs', '$totalDocs'],
+        },
+      },
+    },
+    {
+      $unwind: '$combined',
+    },
+    {
+      $replaceRoot: { newRoot: '$combined' },
+    },
+    {
+      $sort: {
+        createdAt: 1,
       },
     },
   ];

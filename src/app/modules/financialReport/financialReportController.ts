@@ -165,6 +165,23 @@ const refByWiseIncomeStatement = catchAsync(
     });
   }
 );
+
+const getEmployeeLedger = catchAsync(async (req: Request, res: Response) => {
+  const filteredField = pick(req.query, ['from', 'to']);
+
+  const result = await FinancialReportService.getEmployeeLedger({
+    from: filteredField.from as unknown as Date,
+    to: filteredField.to as unknown as Date,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Employee Ledger featched successfully',
+    data: result,
+  });
+});
+
 export const FinancialReportController = {
   getOverAllComission,
   getDoctorPerformanceSUmmery,
@@ -175,4 +192,5 @@ export const FinancialReportController = {
   getTestWiseDoctorPerformance,
   clientWiseIncomeStatement,
   refByWiseIncomeStatement,
+  getEmployeeLedger,
 };

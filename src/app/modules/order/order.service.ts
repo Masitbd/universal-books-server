@@ -104,6 +104,7 @@ const postOrder = async (params: IOrder) => {
       transactionType: 'debit',
       ref: result._id,
       uuid: uuid as string,
+      postedBy: params.postedBy,
     });
   }
 
@@ -719,7 +720,11 @@ const fetchSingle = async (params: string) => {
   return order;
 };
 
-const dueCollection = async (params: { amount: number }, oid: string) => {
+const dueCollection = async (
+  params: { amount: number },
+  oid: string,
+  user: string
+) => {
   const doesExists = await Order.findOne({ oid: oid });
   const doesAccountExists = await Account.find({ title: 'Order' });
 
@@ -759,6 +764,7 @@ const dueCollection = async (params: { amount: number }, oid: string) => {
       transactionType: 'debit',
       uuid: uuid ?? doesAccountExists[0].uuid,
       ref: doesExists._id,
+      postedBy: user,
     });
   }
 
@@ -774,6 +780,7 @@ const singleOrderstatusChanger = async (params: {
   reportGroup: string;
   oid: string;
   status: string;
+  user: string;
 }) => {
   const order = await Order.findOne({ oid: params.oid })
     .populate('tests.test')
@@ -862,6 +869,7 @@ const singleOrderstatusChanger = async (params: {
         transactionType: 'credit',
         ref: order._id,
         uuid: doctor.account_number,
+        postedBy: params.user,
       });
     }
   }
