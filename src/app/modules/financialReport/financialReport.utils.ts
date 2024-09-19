@@ -1722,7 +1722,8 @@ export const clientWiseIncomeStatementPipeline = (params: {
       $facet: {
         mainDocs: [
           {
-            $project: {_id:1,
+            $project: {
+              _id: 1,
               totalPrice: 1,
               totalDiscount: 1,
               vat: 1,
