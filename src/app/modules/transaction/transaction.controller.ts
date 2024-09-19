@@ -4,7 +4,11 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { TransactionService } from './transaction.service';
 const createNewTransaciton = catchAsync(async (req: Request, res: Response) => {
-  const result = await TransactionService.postTransaction(req.body);
+  const user = req?.user?.uuid;
+  const result = await TransactionService.postTransaction({
+    ...req.body,
+    postedBy: user,
+  });
   sendResponse(res, {
     statusCode: httpStatus.OK,
     message: 'successfully created transaction',

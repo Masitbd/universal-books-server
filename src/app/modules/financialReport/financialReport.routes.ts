@@ -17,6 +17,10 @@ routes.get(
 );
 
 routes.get(
+  '/incomeStatement/refByWise',
+  FinancialReportController.refByWiseIncomeStatement
+);
+routes.get(
   '/incomeStatement/deptWise',
   FinancialReportController.getDeptWiseIncomeStatement
 );
@@ -34,4 +38,6 @@ routes.get(
   '/doctorsPerformance/testWise/:id',
   FinancialReportController.getTestWiseDoctorPerformance
 );
+routes.get('/employeeLedger', FinancialReportController.getEmployeeLedger);
+
 export const FinancialReportRoutes = { routes };

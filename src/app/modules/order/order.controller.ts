@@ -95,7 +95,12 @@ const getSIngle = catchAsync(
 
 const dueCollection = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await OrderService.dueCollection(req.body, req.params.oid);
+    const user = req?.user?.uuid;
+    const result = await OrderService.dueCollection(
+      req.body,
+      req.params.oid,
+      user
+    );
     // res.send(result);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -108,10 +113,12 @@ const dueCollection = catchAsync(
 
 const statusChanger = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    const user = req?.user?.uuid;
     const result = await OrderService.singleOrderstatusChanger({
       oid: req.params.oid,
       reportGroup: req.body.reportGroup,
       status: req.body.status,
+      user: user,
     });
     // res.send(result);
     sendResponse(res, {
