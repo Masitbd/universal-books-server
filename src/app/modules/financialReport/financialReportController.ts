@@ -182,6 +182,27 @@ const getEmployeeLedger = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllTests = catchAsync(async (req: Request, res: Response) => {
+  const result = await FinancialReportService.fetchAllTest();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Tests featched successfully',
+    data: result,
+  });
+});
+
+const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
+  const result = await FinancialReportService.feacthALlDoctor();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'DOctors featched successfully',
+    data: result,
+  });
+});
 export const FinancialReportController = {
   getOverAllComission,
   getDoctorPerformanceSUmmery,
@@ -193,4 +214,6 @@ export const FinancialReportController = {
   clientWiseIncomeStatement,
   refByWiseIncomeStatement,
   getEmployeeLedger,
+  getAllTests,
+  getAllDoctors,
 };
