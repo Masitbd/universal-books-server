@@ -2,6 +2,7 @@ import express from 'express';
 import { AccountRoute } from '../modules/account/account.route';
 import { BacteriaRoutes } from '../modules/bacteria/bacteria.route';
 import { CommentRoutes } from '../modules/comment/comment.routes';
+import { CompanyInfoRoutes } from '../modules/componayInfo/companyInfo.routes';
 import { ConditionRoutes } from '../modules/condition/condition.routes';
 import { DepartmentRoutes } from '../modules/departments/departments.routes';
 import { DoctorRoutes } from '../modules/doctor/doctor.routes';
@@ -127,6 +128,10 @@ const moduleRoutes = [
   {
     path: '/income-statemnet',
     route: incomeStatementRoutes.router,
+  },
+  {
+    path: '/company-info',
+    route: CompanyInfoRoutes.routes,
   },
 ];
 
