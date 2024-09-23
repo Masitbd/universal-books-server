@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PipelineStage, Types } from 'mongoose';
 
 export const pipelineForOverAllDoctor = (params: { from: Date; to: Date }) => {
@@ -1603,17 +1604,21 @@ export const doctorPerformanceSummeryTestWisePipeline = (params: {
   ];
 };
 
-export const clientWiseIncomeStatementPipeline = (params: {
-  from: Date;
-  to: Date;
-}): PipelineStage[] => {
+export const clientWiseIncomeStatementPipeline = (
+  params: Record<string, any>
+): PipelineStage[] => {
+  const from = params.from ? new Date(params.from) : new Date();
+  const toDate = params.to ? new Date(params.to) : new Date();
+  // from.setHours(0, 0, 0, 0);
+
+  toDate.setUTCHours(23, 59, 59, 999);
   return [
     {
       $match: {
         discountedBy: { $ne: 'free' },
         createdAt: {
-          $lte: new Date(params.to),
-          $gte: new Date(params.from),
+          $gte: from,
+          $lte: toDate,
         },
       },
     },
@@ -1834,18 +1839,22 @@ export const clientWiseIncomeStatementPipeline = (params: {
   ];
 };
 
-export const refByWiseIncomeStatementPipeline = (params: {
-  from: Date;
-  to: Date;
-}): PipelineStage[] => {
+export const refByWiseIncomeStatementPipeline = (
+  params: Record<string, any>
+): PipelineStage[] => {
+  const from = params.from ? new Date(params.from) : new Date();
+  const toDate = params.to ? new Date(params.to) : new Date();
+  // from.setHours(0, 0, 0, 0);
+
+  toDate.setUTCHours(23, 59, 59, 999);
   return [
     {
       $match: {
         refBy: { $ne: null },
         discountedBy: { $ne: 'free' },
         createdAt: {
-          $lte: new Date(params.to),
-          $gte: new Date(params.from),
+          $gte: from,
+          $lte: toDate,
         },
       },
     },
@@ -2208,17 +2217,22 @@ export const dewCollectionSummeryPipeline = (params: {
   ];
 };
 
-export const newBillSummeryPipeline = (params: {
-  from: Date;
-  to: Date;
-}): PipelineStage[] => {
+export const newBillSummeryPipeline = (
+  params: Record<string, any>
+): PipelineStage[] => {
+  const from = params.from ? new Date(params.from) : new Date();
+  const toDate = params.to ? new Date(params.to) : new Date();
+  // from.setHours(0, 0, 0, 0);
+
+  toDate.setUTCHours(23, 59, 59, 999);
+
   return [
     {
       $match: {
         postedBy: { $ne: null },
         createdAt: {
-          $lte: new Date(params.to),
-          $gte: new Date(params.from),
+          $gte: from,
+          $lte: toDate,
         },
       },
     },
