@@ -22,6 +22,10 @@ const transactionSchema = new Schema<ITransaction>(
     uuid: {
       type: String,
     },
+    postedBy: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

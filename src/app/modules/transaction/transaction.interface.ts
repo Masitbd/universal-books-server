@@ -7,4 +7,5 @@ export type ITransaction = {
   transactionType: string;
   uuid?: string;
   createdAt?: Date;
+  postedBy: string;
 };
