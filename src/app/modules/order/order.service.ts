@@ -884,6 +884,9 @@ const getIncomeStatementFromDB = async (payload: {
   endDate: string;
 }) => {
   // Convert and format dates
+
+
+
   const startDate = new Date(payload.startDate);
   const endDate = new Date(payload.endDate);
   startDate.setHours(0, 0, 0, 0);
