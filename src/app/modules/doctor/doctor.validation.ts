@@ -44,7 +44,7 @@ const DoctorValidatorForUpdate = z.object({
       .optional(),
     fatherName: z
       .string({
-        required_error: 'Father Name is required',
+        required_error: 'Father name is required',
       })
       .optional(),
     email: z
@@ -57,8 +57,7 @@ const DoctorValidatorForUpdate = z.object({
         required_error: 'Designation is required',
       })
       .optional(),
-    phone: z
-      .string({
+    phone: z.string({
         required_error: 'Phone Number is required',
       })
       .optional(),
