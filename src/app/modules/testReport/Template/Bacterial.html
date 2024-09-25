@@ -1,0 +1,206 @@
+<style>
+  .info-box {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0px;
+    border: 2px dashed grey;
+    font-size: 16px;
+    line-height: 20px;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: black;
+    font-weight: 500;
+  }
+  .table-box,
+  table,
+  th,
+  td {
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 20px;
+    padding: 0px;
+    border: 3px solid rgb(114, 110, 110);
+    border-collapse: collapse;
+    font-size: 18px;
+    line-height: 20px;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: black;
+    font-weight: 500;
+  }
+
+  .info-box,
+  ul,
+  li {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .table-box,
+  table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+  }
+  .table-box,
+  h2 {
+    text-align: center;
+  }
+
+  th {
+    margin: 10px;
+    padding: 10px;
+    font-weight: 600;
+  }
+  td {
+    margin: 10px;
+    padding: 10px;
+    font-weight: normal;
+    font-size: 16px;
+  }
+  .right,
+  ul {
+    margin-right: 20px;
+  }
+  .report {
+    width: 500px;
+    margin: auto;
+    border: 1px solid;
+    box-shadow: 5px 10px #888888;
+    text-align: center;
+    border-radius: 2px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  h2 {
+    line-height: 10px;
+    font-size: 32px;
+    text-transform: uppercase;
+  }
+  .culture h2 {
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  .culture h4 {
+    font-size: 18px;
+  }
+  @media only screen and (max-width: 600px) {
+    .info-box table tr table td {
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+
+    .info-box table tr table td {
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+  }
+
+  /** RTL **/
+  .rtl {
+    direction: rtl;
+    font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial,
+      sans-serif;
+  }
+
+  .rtl table {
+    text-align: right;
+  }
+
+  .rtl table tr td:nth-child(2) {
+    text-align: left;
+  }
+
+  .left {
+    float: left;
+  }
+  .right {
+    float: right;
+  }
+  .clearfix {
+    overflow: auto;
+  }
+  .main {
+    max-width: 1000px;
+    margin: auto;
+  }
+  .growth h3 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+</style>
+<div style="margin-top: 30px" class="main">
+  <div class="info-Box clearfix">
+    <div class="left">
+      <ul style="list-style-type: none">
+        <li>ID NO: <strong>{{id}}</strong></li>
+        <li>Pataient's Name: <strong>{{patientName}}</strong></li>
+        <li>Ref's By: <strong>{{referredBy}}</strong></li>
+        <li>Specimen: <strong>{{specimen}}</strong></li>
+      </ul>
+    </div>
+    <div class="right">
+      <ul style="list-style-type: none">
+        <li>Receiving Date: <strong>{{receivingDate}}</strong></li>
+        <li>Printed Date: <strong>{{receivingDate}}</strong></li>
+        <li>Age: <strong>{{age}}</strong></li>
+        <li>Sex: <strong>{{sex}}</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="report">
+    <h2>{{department}}</h2>
+  </div>
+  {{#if growth}}
+  <div class="growth">
+    <h4>Shows Growth of: {{bacterias}}</h4>
+
+    <h4>Colony Count<h4/>
+      <div>
+       <h4>1X {{colonyCountT}} 10<sup style="
+        vertical-align: super;
+        font-size: smaller"
+    >
+      {{colonyCountP}}
+    </sup> /ml</h4>
+    </div>
+  </div>
+  <div class="table-box">
+    <h2>ANTIBIOGRAM OF ORGANISMS ISOLATED</h2>
+    <table style="width: 100%">
+      <tr>
+        <th>Antibiotics</th>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+      </tr>
+      {{#each sensitivity}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{A}}</td>
+        <td>{{B}}</td>
+        <td>{{C}}</td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+  <h5>S = Sensitive</h5>
+  <h5>R = Resistant</h5>
+  <h5>M = Moderately Sensitive</h5>
+  <h5>W = Weakly Sensitive</h5>
+  {{else}}
+  <div class="culture">
+    <h2>culture of {{specimen}}</h2>
+    <h4>
+      1. Culture yieded no growth at {{tempretures}} under {{condition}} after
+      {{time}}incubation
+    </h4>
+
+    <h4>
+      Note: EpitHeliel cells <br />
+      Pus cells
+    </h4>
+  </div>
+  {{/if}}
+</div>

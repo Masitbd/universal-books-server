@@ -6,15 +6,14 @@ import { Department } from './departments.model';
 const createDepartment = async (
   payload: IDepartment
 ): Promise<IDepartment | null> => {
-  const result = await Department.create(payload);
-  return result;
+  return await Department.create(payload);
 };
 const getSingleDepartment = async (id: string): Promise<IDepartment | null> => {
   const result = await Department.findOne({ _id: id });
   return result;
 };
 const getAllDepartment = async () => {
-  const result = await Department.find({});
+  const result = await Department.find();
   return result;
 };
 

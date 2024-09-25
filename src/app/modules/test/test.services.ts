@@ -17,6 +17,7 @@ const postTest = async (payload: ITest) => {
 };
 
 const patchTest = async (id: string, payload: Partial<ITest>) => {
+  console.log(payload);
   const result = await Test.findOneAndUpdate({ _id: id }, payload);
   return result;
 };
@@ -27,6 +28,7 @@ const deleteTest = async (id: string) => {
 };
 
 const fetchSingleTest = async (id: string) => {
+  console.log(id, 'id');
   const result = await Test.findOne({ _id: id });
   return result;
 };
@@ -58,6 +60,7 @@ const fetchAllTest = async (filterOption: any, options: any) => {
   }
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const isCondition = andConditions.length > 0 ? { $and: andConditions } : {};
+  const total = await Test.estimatedDocumentCount();
 
   const result = await Test.find(isCondition)
     .limit(limit)
@@ -73,6 +76,7 @@ const fetchAllTest = async (filterOption: any, options: any) => {
     meta: {
       page,
       limit,
+      total,
     },
     data: result,
   };

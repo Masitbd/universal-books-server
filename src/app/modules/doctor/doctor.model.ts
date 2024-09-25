@@ -2,29 +2,40 @@ import { Schema, model } from 'mongoose';
 import { IDoctor } from './doctor.interface';
 
 const doctorSchema = new Schema<IDoctor>({
+  title: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
   },
   fatherName: {
     type: String,
-    required: true,
+  },
+  email: {
+    type: String,
   },
   designation: {
     type: String,
-    required: true,
   },
   phone: {
     type: String,
-    required: true,
+  },
+  code: {
+    type: String,
     unique: true,
   },
   image: {
     type: String,
+  },
+  account_number: {
+    type: String,
     required: true,
   },
-  defaultImage: {
-    type: String,
+  account_id: {
+    type: Schema.Types.ObjectId, // account ---> id
+    ref: 'Account',
     required: true,
   },
 });

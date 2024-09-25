@@ -4,8 +4,11 @@ import { ISpecimen } from './specimen.interfaces';
 import { Specimen } from './specimen.model';
 
 // For posting new specimen information
-const createSpecimen = async (payload: ISpecimen): Promise<void | ISpecimen> => {
+const createSpecimen = async (
+  payload: ISpecimen
+): Promise<void | ISpecimen> => {
   const result = await Specimen.create(payload);
+  console.log(result);
   return result;
 };
 

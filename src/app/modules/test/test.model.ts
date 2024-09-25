@@ -83,6 +83,15 @@ const testSchema = new Schema<ITest, TestModel>(
     },
     resultFields: [
       {
+        investigation: {
+          type: String,
+        },
+        label: {
+          type: String,
+        },
+        description: {
+          type: String,
+        },
         title: {
           type: String,
         },
@@ -98,10 +107,9 @@ const testSchema = new Schema<ITest, TestModel>(
         hasPdrv: {
           type: Boolean,
         },
-        defaultValues: [
+        defaultValue: [
           {
-            type: Schema.Types.ObjectId,
-            ref: 'pdrvs',
+            type: String,
           },
         ],
         resultDescripton: {

@@ -1,0 +1,300 @@
+<style>
+
+    .invoice-box {
+        max-width: auto;
+        margin: auto;
+        /* padding: 30px; */
+        /* border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15); */
+        font-size: 12px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;
+        page-break-inside: avoid;
+    }
+
+    .invoice-box table {
+        width: 100%;
+        line-height: inherit;
+        text-align: left;
+        
+        
+    }
+
+    .invoice-box table td {
+        padding: 5px;
+        vertical-align: top;
+    }
+
+    .invoice-box table tr td:nth-child(2),
+    .invoice-box table tr td:nth-child(4) {
+        text-align: center;
+    }
+
+    .invoice-box table tr.top table td {
+        padding-bottom: 20px;
+    }
+
+    .invoice-box table tr.top table td.title {
+        font-size: 2rem;
+        line-height: 45px;
+        color: #333;
+    }
+
+    .invoice-box table tr.information table td {
+        padding-bottom: 10px;
+    }
+
+    .invoice-box table tr.heading td {
+        background: #eee;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .invoice-box table tr.details td {
+        padding-bottom: 20px;
+    }
+
+    .invoice-box table tr.item td {
+        border-bottom: 1px solid #eee;
+        text-align: center;
+    }
+
+    .invoice-box table tr.item.last td {
+        border-bottom: none;
+    }
+
+    .invoice-box table tr.total td:nth-child(4) {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .invoice-box table tr.top table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+
+        .invoice-box table tr.information table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+    }
+
+    @media print {
+        @page {
+
+            size: A5;
+            orientation: landscape;
+            margin-right:3px ;
+            margin-left: 3px; 
+            margin-top: 0;           
+        }
+        .invoice-box table{
+            font-size: smaller;
+            line-height: normal;
+        }
+    }
+
+    /** RTL **/
+    .rtl {
+        direction: rtl;
+        font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    }
+
+    .rtl table {
+        text-align: right;
+    }
+
+    .rtl table tr td:nth-child(2) {
+        text-align: left;
+    }
+
+    /* .di{
+        position: fixed;
+        bottom: 0;
+        left:  -20px;
+        width: 20%;
+        padding: 10px;
+        text-align: right;
+        margin-top: 10px;
+        margin-right: 20px;
+        border-top: 1px solid black;
+    } */
+</style>
+
+
+
+<div>
+
+   
+    
+  
+    <div class="invoice-box">
+ 
+        <table cellpadding="0" cellspacing="0">
+            <caption>
+                <div style="text-align: center; border-bottom: 2px solid black;">
+                    <h1>Hospital Management System</h1>
+                    <p>
+                        Block - JHA, Mirpur - 6, Dhaka - 1216. Dhaka <br>
+                        Phone: +880 171 333 4444 <br>
+                    </p>
+                   
+                </div>
+            </caption>
+           
+
+            <tr class="information">
+                <td colspan="4">
+                    <table >
+                        <tr>
+                            <td colspan="3" >
+                               <ul style="list-style: none; padding: 0; margin: 0;">
+                              <li>  <b> Order NO.</b> : {{oid}}<br></li>
+                                <li><b>Patient Id</b>: {{uuid}}</li>
+                                <li><b>Name</b>: {{name}}</li>
+                                <li><b>Address</b>: {{address}}</li>
+                                <li style="white-space: nowrap !important;"> <b>Bill Creation Date :</b> {{createdAt}}</li>
+                                <li style="white-space: nowrap !important; "><b>Phone:</b> {{phone}}</li>
+                                {{#if consultant }}
+                                <li style="word-break: break-all;"><b>Consultant</b>: {{consultant}}</li>
+                                {{/if}}
+                               </ul>
+                            </td>
+                            <td  style="text-align: right !important; text-wrap-mode: nowrap;" rowspan="2">
+                                <ul style="list-style: none;">
+                                    <li><img src="{{img}}" alt=""></li>
+                                  
+                                    <li><b>Age :</b> {{age}}</li>
+                                    <li><b>Sex :</b> {{sex}}</li>
+                                   
+                                    
+                                    
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="heading">
+                <td>SL</td>
+                <td style="text-align: left !important;">Item</td>
+                <td>Discount</td>
+                <td>Price</td>
+            </tr>
+
+            {{#each items}}
+            <tr class="item">
+                <td>{{SL}}</td>
+                <td style="text-align: left !important;">{{#if status}}{{name}} <b>(Refunded)</b>{{else}}{{name}}{{/if}}</td>
+                <td>{{#if discount}} {{discount}} % {{/if}}</td>
+                <td>{{#if status}}({{price}}){{else}}{{price}}{{/if}}</td>
+            </tr>
+            {{/each}}
+
+
+            <tr class="total">
+               <td class="title" style="text-align: center; padding: 5px;">
+                    <div style="border: 1px solid black ; border: double; width: 100%; text-align: center; font-family: serif; padding: 5px;">
+
+                        {{#if isFree}}
+                        <h2>
+                            Free Patient
+                        </h2>
+                        {{else}}
+
+                        {{#if isWatermark}}
+                       <h2>DUE</h2>
+                
+                        {{else}}
+                        <h2>
+                            PAID
+                        </h2>
+                        {{/if}}
+                
+                        {{/if}}
+                    </div>
+                </td>
+                <td></td>
+                <td>Total: <br>
+                    {{#if grossRefundAmount}}
+                    Refunded <br>
+                {{/if}}
+                Discount ({{parcentDiscount}} %): <br>
+                Vat ({{vat}} %) : <br>
+                <hr>
+                Net Price: <br>
+                Paid :<br>
+                
+                {{# if refundApplied}}
+                Refunded : <br>
+                {{/if}}
+
+                {{# if remainingRefund}}
+                Cash Refund : <br>
+                {{/if}}
+                <hr>
+                Due: <br>
+            </td>
+                <td>
+                     {{total}} <br />
+                   
+                    
+                     ({{discount}}) <br />
+                     {{vatAmount}} <br>
+                     <hr>
+                     {{netPrice}} <br>
+                    ( {{paid}} ) <br />
+                    {{# if refundApplied}}
+                   {{refundApplied}} <br>
+                    {{/if}}
+
+                    {{# if remainingRefund}}
+                    {{remainingRefund}} <br>
+                    {{/if}}
+                   
+                    <hr>
+                    {{dueAmount}}
+                </td>
+                <br>
+            </tr>
+            {{#if tt}}
+            <tr>
+                <td colspan="4">
+                    <b> Payment History</b>
+                </td>
+            </tr>
+            <tr class="heading">
+                <td>SL</td>
+                <td>Date</td>
+                <td></td>
+                <td>Amount</td>
+            </tr>
+
+            {{#each tds}}
+            <tr class="item">
+                <td>{{SL}}</td>
+                <td>{{date}}</td>
+                <td></td>
+                <td>{{amount}}</td>
+            </tr>
+            {{/each}}
+            {{/if}}
+
+           
+        </table>
+       <!-- <div style="margin-top: 20px; display: flex; justify-items: end; align-items:flex-end;">
+        <div class="di">
+           
+            Desk Incharge
+        
+        </div>
+       </div> -->
+    </div>
+    
+</div>

@@ -5,19 +5,12 @@ const sensitivityValidator = z.object({
     value: z.string({
       required_error: 'Value is required',
     }),
-    description: z.string({
-      required_error: 'Description required',
+    breakPoint: z.string({
+      required_error: 'Value is required',
     }),
-    label: z.string({
-      required_error: 'Label is required',
+    mic: z.string({
+      required_error: 'Value is required',
     }),
-    resultOption: z.array(
-      z.object({
-        label: z.string({ required_error: 'Label is required' }),
-        value: z.string({ required_error: 'Value is required' }),
-      }),
-      { required_error: 'Result Option are required' }
-    ),
   }),
 });
 
@@ -28,26 +21,15 @@ const sensitivityValidatorForPatch = z.object({
         required_error: 'Value is required',
       })
       .optional(),
-    description: z
+    breakPoint: z
       .string({
-        required_error: 'Description required',
+        required_error: 'Value is required',
       })
       .optional(),
-    label: z
+    mic: z
       .string({
-        required_error: 'Label is required',
+        required_error: 'Value is required',
       })
-      .optional(),
-    resultOption: z
-      .array(
-        z
-          .object({
-            label: z.string({ required_error: 'Label is required' }),
-            value: z.string({ required_error: 'Value is required' }).optional(),
-          })
-          .optional(),
-        { required_error: 'Result Option are required' }
-      )
       .optional(),
   }),
 });
