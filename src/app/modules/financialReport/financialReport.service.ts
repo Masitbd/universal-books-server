@@ -12,6 +12,7 @@ import {
   doctorPerformanceSummeryDeptWisePipeline,
   doctorPerformanceSummeryPipeline,
   doctorPerformanceSummeryTestWisePipeline,
+  employeePerfromanceSummeryPipeline,
   newBillSummeryPipeline,
   pipelineForOverAllDoctor,
   refByWiseIncomeStatementPipeline,
@@ -149,6 +150,20 @@ const feacthALlDoctor = async () => {
     },
   ]);
 };
+
+const marketingExecutivePerformance = async (params: {
+  from: Date;
+  to: Date;
+  id: string;
+}) => {
+  return await Order.aggregate(
+    employeePerfromanceSummeryPipeline({
+      from: params.from,
+      to: params.to,
+      id: params.id,
+    })
+  );
+};
 export const FinancialReportService = {
   fetchOverAllComission,
   fetchDoctorPerformanceSummery,
@@ -162,4 +177,5 @@ export const FinancialReportService = {
   getEmployeeLedger,
   fetchAllTest,
   feacthALlDoctor,
+  marketingExecutivePerformance,
 };
