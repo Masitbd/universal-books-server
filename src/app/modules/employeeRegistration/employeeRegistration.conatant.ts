@@ -2,10 +2,10 @@ import { IEmployeeFilterableFields } from './employeeRegistration.interface';
 
 export const employeeFilterableFilds: IEmployeeFilterableFields[] = [
   'searchTerm',
-  'label',
+  'name',
   'dateOfBirth',
   'phoneNo',
   'email',
 ];
 
-export const employeeSearchableFields = ['label,', 'value', 'phoneNo', 'email'];
+export const employeeSearchableFields = ['name', 'phoneNo', 'email'];

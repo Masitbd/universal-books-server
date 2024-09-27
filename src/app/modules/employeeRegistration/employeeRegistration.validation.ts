@@ -2,9 +2,8 @@ import { z } from 'zod';
 
 const EmployeeValidator = z.object({
   body: z.object({
-    value: z.string().optional(),
-    label: z.string({
-      required_error: 'Employee label is required',
+    name: z.string({
+      required_error: 'Employee name is required',
     }),
     fatherName: z.string({
       required_error: 'Father name is required',
@@ -29,9 +28,9 @@ const EmployeeValidator = z.object({
 const EmployeeValidatorForPatch = z.object({
   body: z
     .object({
-      value: z
+      name: z
         .string({
-          required_error: 'Value is required',
+          required_error: 'Name is required',
         })
         .optional(),
       fatherName: z
