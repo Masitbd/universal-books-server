@@ -1,6 +1,5 @@
 export type IEmployeeRegistration = {
-  label: string;
-  value: string;
+  name: string;
   fatherName: string;
   motherName: string;
   gender: string;
@@ -20,7 +19,7 @@ export type IEmployeeRegistration = {
 
 export type IEmployeeFilterableFields =
   | 'searchTerm'
-  | 'label'
+  | 'name'
   | 'dateOfBirth'
   | 'phoneNo'
   | 'email';

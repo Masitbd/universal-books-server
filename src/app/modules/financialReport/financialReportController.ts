@@ -203,6 +203,24 @@ const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const marketingExecutivePerformance = catchAsync(
+  async (req: Request, res: Response) => {
+    const filteredField = pick(req.query, ['from', 'to', 'id']);
+    const result = await FinancialReportService.marketingExecutivePerformance({
+      from: filteredField.from as unknown as Date,
+      to: filteredField.to as unknown as Date,
+      id: filteredField.id as string,
+    });
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Marketing Executive Performance featched successfully',
+      data: result,
+    });
+  }
+);
 export const FinancialReportController = {
   getOverAllComission,
   getDoctorPerformanceSUmmery,
@@ -216,4 +234,5 @@ export const FinancialReportController = {
   getEmployeeLedger,
   getAllTests,
   getAllDoctors,
+  marketingExecutivePerformance,
 };

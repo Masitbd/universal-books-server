@@ -2,14 +2,10 @@ import { model, Schema } from 'mongoose';
 import { IEmployeeRegistration } from './employeeRegistration.interface';
 
 const employeeRegistrationSchema = new Schema<IEmployeeRegistration>({
-  value: {
+  name: {
     type: String,
     required: true,
-    /* unique: true, */
-  },
-  label: {
-    type: String,
-    required: true,
+    index: true,
   },
 
   fatherName: {

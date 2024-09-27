@@ -9,6 +9,7 @@ import { DoctorRoutes } from '../modules/doctor/doctor.routes';
 import { EmployeeRegistrationRoutes } from '../modules/employeeRegistration/employeeRegistration.routes';
 
 import { DoctorSealRoutes } from '../modules/doctorSeal/seal.routes';
+import { FinancialReportRoutes } from '../modules/financialReport/financialReport.routes';
 import { HospitalGroupRoutes } from '../modules/hospitalGroup/hospitalGroup.routes';
 import { incomeStatementRoutes } from '../modules/incomeStatement/incomeStatement.routes';
 import { MiscellaneousRoutes } from '../modules/miscellaneous/miscellaneous.routes';
@@ -71,10 +72,9 @@ const moduleRoutes = [
   },
   {
     path: '/employeeRegistration',
-    route: EmployeeRegistrationRoutes.routes,}
-  ,
+    route: EmployeeRegistrationRoutes.routes,
+  },
   {
-
     path: '/transaction',
     route: TransactionRoute.routes,
   },
