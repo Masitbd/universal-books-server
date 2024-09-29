@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
 import { createCanvas } from 'canvas';
 import fs from 'fs';
 import httpStatus from 'http-status';
 import JsBarcode from 'jsbarcode';
-import { PipelineStage, Types } from 'mongoose';
+import mongoose, { PipelineStage, Types } from 'mongoose';
 import path from 'path';
 import { ENUM_TEST_STATUS } from '../../../enums/testStatusEnum';
 import ApiError from '../../../errors/ApiError';
@@ -885,13 +886,89 @@ const getIncomeStatementFromDB = async (payload: {
 }) => {
   // Convert and format dates
 
-
-
   const startDate = new Date(payload.startDate);
   const endDate = new Date(payload.endDate);
-  startDate.setHours(0, 0, 0, 0);
+  startDate.setUTCHours(0, 0, 0, 0);
 
-  endDate.setHours(23, 59, 59, 999);
+  endDate.setUTCHours(23, 59, 59, 999);
+
+  // const query = [
+  //   {
+  //     $match: {
+  //       createdAt: {
+  //         $gte: startDate,
+  //         $lte: endDate,
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: 'tests',
+  //       localField: 'tests.test',
+  //       foreignField: '_id',
+  //       as: 'testDetails',
+  //     },
+  //   },
+  //   {
+  //     $unwind: {
+  //       path: '$testDetails', // unwind to get each test
+  //       preserveNullAndEmptyArrays: true,
+  //     },
+  //   },
+  //   {
+  //     $group: {
+  //       _id: {
+  //         oid: '$oid',
+  //         groupDate: {
+  //           $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+  //         },
+  //       },
+  //       totalPrice: { $first: '$totalPrice' },
+  //       totalTestPrice: { $sum: '$testDetails.price' },
+  //       cashDiscount: { $first: '$cashDiscount' },
+  //       parcentDiscount: { $first: '$parcentDiscount' },
+  //       dueAmount: { $first: '$dueAmount' },
+  //       paid: { $first: '$paid' },
+  //       vat: { $first: '$vat' },
+  //       uuid: { $first: '$uuid' }, // Keep uuid if needed
+  //       records: {
+  //         $push: {
+  //           oid: '$oid',
+  //           uuid: '$uuid',
+  //           totalPrice: '$totalPrice',
+  //           totalTestPrice: { $sum: '$testDetails.price' },
+  //           cashDiscount: '$cashDiscount',
+  //           parcentDiscount: '$parcentDiscount',
+  //           dueAmount: '$dueAmount',
+  //           paid: '$paid',
+  //           vat: '$vat',
+  //         },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $sort: { oid: -1 }, // Sort by oid
+  //   },
+  //   {
+  //     $group: {
+  //       _id: '$_id.groupDate',
+
+  //       records: {
+  //         $push: {
+  //           $first: '$records',
+  //         },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       _id: 0,
+  //       groupDate: '$_id',
+
+  //       records: 1,
+  //     },
+  //   },
+  // ];
 
   const query = [
     {
@@ -900,6 +977,12 @@ const getIncomeStatementFromDB = async (payload: {
           $gte: startDate,
           $lte: endDate,
         },
+      },
+    },
+    {
+      $unwind: {
+        path: '$tests', // Unwind the tests array from the order collection
+        preserveNullAndEmptyArrays: true,
       },
     },
     {
@@ -912,10 +995,84 @@ const getIncomeStatementFromDB = async (payload: {
     },
     {
       $unwind: {
-        path: '$testDetails', // unwind to get each test
+        path: '$testDetails',
         preserveNullAndEmptyArrays: true,
       },
     },
+    {
+      $addFields: {
+        pd: {
+          $cond: {
+            if: {
+              $or: [
+                { $gt: [{ $ifNull: ['$tests.discount', 0] }, 0] }, // Test-level discount
+                { $gt: [{ $ifNull: ['$parcentDiscount', 0] }, 0] }, // Overall percent discount
+              ],
+            },
+            then: {
+              $cond: {
+                if: { $gt: [{ $ifNull: ['$tests.discount', 0] }, 0] }, // If test-level discount exists
+                then: {
+                  $divide: [
+                    {
+                      $multiply: [
+                        '$testDetails.price',
+                        { $ifNull: ['$tests.discount', 0] },
+                      ],
+                    },
+                    100,
+                  ],
+                },
+                else: {
+                  $divide: [
+                    {
+                      $multiply: [
+                        '$testDetails.price',
+                        { $ifNull: ['$parcentDiscount', 0] },
+                      ],
+                    },
+                    100,
+                  ],
+                },
+              },
+            },
+            else: 0, // No discount exists
+          },
+        },
+
+        // Cash Discount (cd) applied to the test price
+        cd: { $ifNull: ['$cashDiscount', 0] },
+
+        // Total Discount: Sum of cash discount (cd) and percent discount (pd)
+        // totalDiscount: {
+        //   $sum: [{ $ifNull: ['$pd', 0] }, { $ifNull: ['$cd', 0] }],
+        // },
+
+        vatAmount: {
+          $cond: {
+            if: { $gt: ['$vat', 0] }, // Check if VAT exists
+            then: {
+              $multiply: [
+                {
+                  $subtract: [
+                    '$totalPrice',
+                    {
+                      $add: [
+                        { $ifNull: ['$cd', 0] }, // Ensure cashDiscount is treated properly
+                        { $ifNull: ['$pd', 0] }, // Ensure parcentDiscountAmount is treated properly
+                      ],
+                    },
+                  ], // Net amount after discount
+                },
+                { $divide: ['$vat', 100] }, // Calculate VAT amount
+              ],
+            },
+            else: 0, // No VAT to add
+          },
+        },
+      },
+    },
+
     {
       $group: {
         _id: {
@@ -926,38 +1083,62 @@ const getIncomeStatementFromDB = async (payload: {
         },
         totalPrice: { $first: '$totalPrice' },
         totalTestPrice: { $sum: '$testDetails.price' },
-        cashDiscount: { $first: '$cashDiscount' },
-        parcentDiscount: { $first: '$parcentDiscount' },
+        totalDiscount: { $sum: '$totalDiscount' }, // Sum of all discounts
+        discountedPrice: { $first: '$discountedPrice' },
+        vat: { $first: '$vatAmount' }, // VAT in amount
+        finalPrice: { $first: '$finalPrice' }, // Total after adding VAT
         dueAmount: { $first: '$dueAmount' },
         paid: { $first: '$paid' },
-        vat: { $first: '$vat' },
-        uuid: { $first: '$uuid' }, // Keep uuid if needed
+        uuid: { $first: '$uuid' },
         records: {
           $push: {
             oid: '$oid',
             uuid: '$uuid',
             totalPrice: '$totalPrice',
             totalTestPrice: { $sum: '$testDetails.price' },
-            cashDiscount: '$cashDiscount',
-            parcentDiscount: '$parcentDiscount',
-            dueAmount: '$dueAmount',
+
+            vat: '$vatAmount',
+            finalPrice: '$finalPrice',
+            cashDiscount: '$cd',
+            parcentDiscountAmount: '$pd',
+
+            totalDis: {
+              $add: [
+                { $ifNull: ['$cd', 0] }, // Ensure cashDiscount is treated properly
+                { $ifNull: ['$pd', 0] }, // Ensure parcentDiscountAmount is treated properly
+              ],
+            },
+
+            totalAmount: {
+              $subtract: [
+                {
+                  $add: [
+                    { $toDouble: { $ifNull: ['$totalPrice', 0] } }, // Use totalPrice directly
+                    { $ifNull: ['$vatAmount', 0] }, // Ensure VAT is treated properly
+                  ],
+                },
+                {
+                  $add: [
+                    { $ifNull: ['$cd', 0] }, // Ensure cashDiscount is treated properly
+                    { $ifNull: ['$pd', 0] }, // Ensure parcentDiscountAmount is treated properly
+                  ],
+                },
+              ],
+            },
+
             paid: '$paid',
-            vat: '$vat',
           },
         },
       },
     },
     {
-      $sort: { oid: -1 }, // Sort by oid
+      $sort: { oid: -1 },
     },
     {
       $group: {
         _id: '$_id.groupDate',
-
         records: {
-          $push: {
-            $first: '$records',
-          },
+          $push: { $first: '$records' },
         },
       },
     },
@@ -965,7 +1146,6 @@ const getIncomeStatementFromDB = async (payload: {
       $project: {
         _id: 0,
         groupDate: '$_id',
-
         records: 1,
       },
     },
@@ -978,22 +1158,49 @@ const getIncomeStatementFromDB = async (payload: {
 //  get due bills details
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const getDueBillsDetailFromDB = async (query: Record<string, any>) => {
-  const { oid } = query;
+  const { oid, refBy, startDate, endDate } = query;
+
+  const fromDate = new Date(startDate);
+  const toDate = new Date(endDate);
+  // startDate.setUTCHours(0, 0, 0, 0);
+
+  toDate.setUTCHours(23, 59, 59, 999);
+  // Initialize the match stage with an empty filter
+  const match: Record<string, any> = {};
+
+  // Apply OID filter if provided
+  if (oid) {
+    match.oid = oid;
+  }
+
+  if (refBy) {
+    match.refBy = new mongoose.Types.ObjectId(refBy);
+  }
+
+  // Apply date range filter if provided
+  if (startDate && endDate) {
+    match.createdAt = {
+      $gte: fromDate,
+      $lte: toDate,
+    };
+  }
+
   const result = await Order.aggregate([
-    // Match the order based on the 'oid'
-    { $match: { oid } },
+    // Apply the match filter for oid, refBy, or date range
+    { $match: match },
 
     {
       $lookup: {
         from: 'doctors',
         localField: 'refBy',
         foreignField: '_id',
-        as: 'refBy',
+        as: 'refDoctor',
       },
     },
 
-    { $unwind: { path: '$refBy', preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: '$refDoctor', preserveNullAndEmptyArrays: true } },
 
     // Lookup the 'tests.test' field to populate test details
     {
@@ -1016,18 +1223,112 @@ const getDueBillsDetailFromDB = async (query: Record<string, any>) => {
     },
 
     {
+      $addFields: {
+        pd: {
+          $cond: {
+            if: {
+              $or: [
+                {
+                  $gt: [
+                    { $ifNull: [{ $arrayElemAt: ['$tests.discount', 0] }, 0] },
+                    0,
+                  ],
+                },
+                { $gt: [{ $ifNull: ['$parcentDiscount', 0] }, 0] },
+              ],
+            },
+            then: {
+              $cond: {
+                if: {
+                  $gt: [
+                    { $ifNull: [{ $arrayElemAt: ['$tests.discount', 0] }, 0] },
+                    0,
+                  ],
+                },
+                then: {
+                  $divide: [
+                    {
+                      $multiply: [
+                        { $arrayElemAt: ['$testDetails.price', 0] }, // Get first price from testDetails
+                        {
+                          $ifNull: [
+                            { $arrayElemAt: ['$tests.discount', 0] },
+                            0,
+                          ],
+                        },
+                      ],
+                    },
+                    100,
+                  ],
+                },
+                else: {
+                  $divide: [
+                    {
+                      $multiply: [
+                        { $arrayElemAt: ['$testDetails.price', 0] }, // Get first price from testDetails
+                        { $ifNull: ['$parcentDiscount', 0] },
+                      ],
+                    },
+                    100,
+                  ],
+                },
+              },
+            },
+            else: 0,
+          },
+        },
+
+        cd: { $ifNull: ['$cashDiscount', 0] },
+
+        vatAmount: {
+          $cond: {
+            if: { $gt: ['$vat', 0] },
+            then: {
+              $multiply: [
+                {
+                  $subtract: [
+                    '$totalPrice',
+                    {
+                      $add: [{ $ifNull: ['$cd', 0] }, { $ifNull: ['$pd', 0] }],
+                    },
+                  ],
+                },
+                { $divide: ['$vat', 100] },
+              ],
+            },
+            else: 0,
+          },
+        },
+      },
+    },
+
+    // Project required fields
+    {
       $project: {
         _id: 1,
         oid: 1,
         totalPrice: 1,
         cashDiscount: 1,
-        parcentDiscount: 1,
-
-        status: 1,
-        dueAmount: 1,
+        parcentDiscount: '$pd',
+        totalAmount: {
+          $subtract: [
+            {
+              $add: [
+                { $toDouble: { $ifNull: ['$totalPrice', 0] } }, // Use totalPrice directly
+                { $ifNull: ['$vatAmount', 0] }, // Ensure VAT is treated properly
+              ],
+            },
+            {
+              $add: [
+                { $ifNull: ['$cd', 0] }, // Ensure cashDiscount is treated properly
+                { $ifNull: ['$pd', 0] }, // Ensure parcentDiscountAmount is treated properly
+              ],
+            },
+          ],
+        },
         paid: 1,
         vat: 1,
-        refBy: { name: 1 },
+        refDoctor: { name: 1 }, // Include only the doctor's name
         patientData: {
           name: {
             $cond: {
@@ -1035,14 +1336,43 @@ const getDueBillsDetailFromDB = async (query: Record<string, any>) => {
                 $gt: [{ $size: { $ifNull: ['$patientFromUUID', []] } }, 0],
               }, // Check if patient data by uuid
               then: { $arrayElemAt: ['$patientFromUUID.name', 0] }, // Extract name from patientFromUUID
-              else: '$patient.name', // if no uuid set main patient object name here
+              else: '$patient.name', // If no uuid, use the main patient object name
             },
           },
         },
         testDetails: { label: 1, price: 1 }, // Include only 'label' and 'price' from test details
-
         __t: 1,
         createdAt: 1,
+      },
+    },
+
+    // Group the results by refBy.name
+    {
+      $group: {
+        _id: '$refDoctor.name', // Group by doctor name (refBy)
+        records: {
+          $push: {
+            oid: '$oid',
+            totalPrice: '$totalPrice',
+            cashDiscount: '$cashDiscount',
+            parcentDiscount: '$parcentDiscount',
+            dueAmount: '$dueAmount',
+            paid: '$paid',
+            totalAmount: '$totalAmount',
+            patientData: '$patientData',
+            testDetails: '$testDetails',
+            createdAt: '$createdAt',
+          },
+        },
+      },
+    },
+
+    // Rename the _id field to refBy for clarity
+    {
+      $project: {
+        _id: 0, // Exclude _id
+        refBy: '$_id', // Rename _id to refBy
+        records: 1, // Include the records array
       },
     },
   ]);
