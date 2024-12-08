@@ -1,0 +1,15 @@
+.vercel
+# Ignore environment variables file
+.env
+
+# Dependency directories
+node_modules/
+vendor/
+
+# OS generated files
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp

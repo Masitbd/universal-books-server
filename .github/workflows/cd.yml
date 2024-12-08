@@ -1,0 +1,34 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      # install docker in the aws machine if it is not available
+      - name: Install Docker (if not available)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Pull Docker image from Docker Hub
+        run: |
+          docker pull sarker24/universal-books-server:latest || (echo "Failed to pull Docker image." && exit 1)
+
+      - name: Delete Old Docker container
+        run: sudo docker rm -f universal-books-server || true
+
+      - name: Run Docker Container
+        run: sudo docker run -d -p 4002:5000 --name universal-books-server sarker24/universal-books-server

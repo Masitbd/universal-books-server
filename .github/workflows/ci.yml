@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  #pull_request:
+  #branches:
+  #- main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: set up node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: install dependencies
+        run: npm install
+
+      #- name: run test
+      #  run: npm test
+
+      - name: set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Set up Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+
+      - name: Build Docker image
+        run: docker-compose build
+        env:
+          PORT: 4002
+          DEV_DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+
+      - name: To View Docker image
+        run: docker images
+
+      - name: Tag Docker image
+        run: docker tag universal-books-server_app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/universal-books-server:latest
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/universal-books-server:latest
+
+      #- name: Post build cleanup
+      #run: docker system prune -f
