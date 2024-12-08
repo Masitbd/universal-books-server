@@ -175,7 +175,7 @@ const run = async () => {
 run().catch((err) => console.log(err));
 
 app.get('/', (req, res) => {
-  res.send('Hello World, running container and test my file');
+  res.send('Hello World, running container and test my file master');
 });
 
 const server = app.listen(port, '0.0.0.0', () => {
